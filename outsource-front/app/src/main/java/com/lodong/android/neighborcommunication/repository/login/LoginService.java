@@ -1,0 +1,18 @@
+package com.lodong.android.neighborcommunication.repository.login;
+
+import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.retrofit.RetrofitService;
+import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
+
+public class LoginService {
+    private final String TAG = SignUpService.class.getSimpleName();
+    private RetrofitService retrofitService;
+
+    public LoginService(){
+        retrofitService = RetrofitService.getInstance();
+    }
+
+    public void login(JsonObject jsonObject){
+        retrofitService.getLoginResult(jsonObject);
+    }
+}

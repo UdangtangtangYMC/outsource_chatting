@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/memberListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_list_24"
+        android:title="회원리스트"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/chatRoomListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_chat_24"
+        android:title="채팅방"
+        app:showAsAction="always"/>
+
+</menu>
