@@ -25,7 +25,7 @@ public class AuthService {
     }
 
     private boolean isDuplicated(String username) {
-        return userRepository.findById(username).isPresent();
+        return userRepository.existsById(username);
     }
 
     private void registerNewRabbitMQAccount(String username, boolean durability) {

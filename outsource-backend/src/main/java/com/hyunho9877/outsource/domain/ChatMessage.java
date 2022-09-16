@@ -9,9 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter @Setter @ToString
+@AllArgsConstructor @NoArgsConstructor
 public class ChatMessage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.hyunho9877.outsource.controller;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,15 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/hello")
-    public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
+    public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) throws FirebaseMessagingException {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         log.info("{}", message);
         chatService.send(message);
+        chatService.sendNotification(message);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<?> newChat(@RequestBody String id, @RequestBody String subject) {
-        chatService.registerNewChatRoom(id, subject);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Long> newChat(@RequestBody String id, @RequestBody String subject) {
+        return ResponseEntity.ok(chatService.registerNewChatRoom(id, subject));
     }
 }
