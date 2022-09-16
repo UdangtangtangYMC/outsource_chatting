@@ -45,6 +45,7 @@ public class MemberListFragment extends Fragment {
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         adapter = new MemberListAdapter();
         binding.recyclerview.setAdapter(adapter);
+        viewModel.init();
     }
 
     private void getMemberList(){

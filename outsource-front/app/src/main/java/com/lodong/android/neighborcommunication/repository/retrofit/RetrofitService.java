@@ -78,7 +78,7 @@ public class RetrofitService {
             @Override
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
                 for (MemberDTO memberDTO:response.body()) {
-                    System.out.println(memberDTO.toString());
+                    Log.d(TAG, memberDTO.toString());
                 }
             }
 

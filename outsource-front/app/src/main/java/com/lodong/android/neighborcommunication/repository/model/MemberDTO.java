@@ -2,8 +2,8 @@ package com.lodong.android.neighborcommunication.repository.model;
 
 public class MemberDTO {
     private String id;
-    private String name;
-    private String statusMessage;
+    private String nickName;
+    private String message;
 
     public String getId() {
         return id;
@@ -13,28 +13,28 @@ public class MemberDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
     public String toString() {
         return "MemberDTO{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", statusMessage='" + statusMessage + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

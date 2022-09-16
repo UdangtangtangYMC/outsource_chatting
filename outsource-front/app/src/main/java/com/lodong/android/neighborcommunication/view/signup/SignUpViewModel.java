@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import androidx.lifecycle.ViewModel;
 
+import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 
 import java.lang.ref.WeakReference;
@@ -11,7 +12,7 @@ import java.lang.ref.WeakReference;
 public class SignUpViewModel extends ViewModel {
     private final String TAG = SignUpViewModel.class.getSimpleName();
     private WeakReference<Activity> mRef;
-    private RepositoryImpl repository;
+    private Repository repository;
 
     public void setParent(Activity activity){
         this.mRef = new WeakReference<>(activity);

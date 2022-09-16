@@ -35,11 +35,11 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Vi
         }
 
         public void onBind(MemberDTO member){
-            String name = member.getName();
-            String statusMessage = member.getStatusMessage();
+            String nickName = member.getNickName();
+            String message = member.getMessage();
 
-            txtName.setText(name);
-            txtStatusMessage.setText(statusMessage);
+            txtName.setText(nickName);
+            txtStatusMessage.setText(message);
         }
     }
 
