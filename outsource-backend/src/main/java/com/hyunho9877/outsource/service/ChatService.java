@@ -1,8 +1,12 @@
 package com.hyunho9877.outsource.service;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
 import com.hyunho9877.outsource.domain.ApplicationUser;
 import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.domain.ChatRoom;
+import com.hyunho9877.outsource.domain.Exchange;
 import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.repo.ChatMessageRepository;
 import com.hyunho9877.outsource.repo.ChatRoomRepository;
@@ -25,7 +29,8 @@ public class ChatService {
 
     @Transactional
     public void send(ChatMessage message) {
-
+        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), message);
+        messageRepository.save(message);
     }
 
     @Transactional
@@ -33,7 +38,7 @@ public class ChatService {
 
     }
 
-    public void registerNewChatRoom(String requester, String subject) {
+    public long registerNewChatRoom(String requester, String subject) {
         if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
         ApplicationUser req = userRepository.getReferenceById(requester);
         ApplicationUser sub = userRepository.getReferenceById(subject);
@@ -42,10 +47,27 @@ public class ChatService {
                 .roomUserOne(req)
                 .roomUserTwo(sub)
                 .build();
-        chatRoomRepository.save(chatRoom);
+
+        return chatRoomRepository.save(chatRoom).getRoomId();
     }
 
     private boolean isChatRoomAlreadyExists(String requester, String subject) {
         return chatRoomRepository.existsByUserOneAndUserTwo(requester, subject);
+    }
+
+    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {
+        String token = getFCMToken(chat.getReceiver());
+        Message message = Message.builder()
+                .putData("title", chat.getSender())
+                .putData("body", chat.getMessage())
+                .setToken(token)
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
+    }
+
+    private String getFCMToken(String username) {
+        ApplicationUser applicationUser = userRepository.findById(username).orElseThrow();
+        return applicationUser.getFcmToken();
     }
 }

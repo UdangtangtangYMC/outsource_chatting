@@ -17,6 +17,7 @@ public class UserController {
 
     @GetMapping("/getUsers")
     public List<ApplicationUser> getUsers() {
+        System.out.println("UserController.getUsers");
         return userService.getUsers();
     }
 

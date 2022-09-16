@@ -8,8 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
 @Entity
-@Builder
-@Getter @Setter @ToString
+@Getter @Setter @ToString @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class ApplicationUser {
     @Id
@@ -21,10 +20,15 @@ public class ApplicationUser {
     @Column(nullable = false)
     private String message;
     private boolean receiveNotification;
+    private String fcmToken;
 
     @PrePersist
     public void prePersist() {
         this.message = "";
         this.receiveNotification = true;
+    }
+
+    public static ApplicationUser getPublicProfile(ApplicationUser user) {
+        return new ApplicationUser(user.getId(), null, user.getNickName(), user.getMessage(), user.isReceiveNotification(), null);
     }
 }

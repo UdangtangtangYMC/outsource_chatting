@@ -15,7 +15,7 @@ public class UserService {
     private final ApplicationUserRepository userRepository;
 
     public List<ApplicationUser> getUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll().stream().map(ApplicationUser::getPublicProfile).toList();
     }
 
     @Transactional

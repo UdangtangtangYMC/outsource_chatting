@@ -5,10 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter @ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter @Setter @ToString @Builder
+@AllArgsConstructor @NoArgsConstructor
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
