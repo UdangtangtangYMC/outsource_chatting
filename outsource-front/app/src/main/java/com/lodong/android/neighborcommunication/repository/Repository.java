@@ -21,6 +21,7 @@ public interface Repository {
     public void insertChatMessage(ChatMessageDTO chatMessageDTO);
     public boolean isChatRoomExists(String p1, String p2);
     public LiveData<List<ChatMessageDTO>> getChatMessage(long id);
+    public LiveData<List<ChatRoomDTO>> getChatRoomList();
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);

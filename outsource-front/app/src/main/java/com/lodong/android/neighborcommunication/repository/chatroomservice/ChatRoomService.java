@@ -19,7 +19,12 @@ public class ChatRoomService {
         chatRoomList = chatRoomDao.getAll();
     }
 
-    public void insert(ChatRoomDTO chatRoomDTO) {
+    public LiveData<List<ChatRoomDTO>> getChatRoomList(){
+        chatRoomList = chatRoomDao.getAll();
+        return chatRoomList;
+    }
+
+    public void insert(ChatRoomDTO chatRoomDTO){
         chatRoomDao.insert(chatRoomDTO);
     }
 

@@ -15,7 +15,6 @@ public class ChatRoomDTO {
     @ColumnInfo(name = "participant2")
     private String participant2;
 
-
     public ChatRoomDTO(long id, String participant1, String participant2) {
         this.id = id;
         this.participant1 = participant1;
