@@ -46,12 +46,12 @@ public class ChattingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof CenterViewHolder){
-            ((CenterViewHolder)holder).content.setText(chatMessageList.get(position).getContent());
+            ((CenterViewHolder)holder).content.setText(chatMessageList.get(position).getMessage());
         }else if(holder instanceof LeftViewHolder){
             ((LeftViewHolder) holder).txtName.setText(chatMessageList.get(position).getSender());
-            ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getContent());
+            ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getMessage());
         }else{
-            ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getContent());
+            ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getMessage());
         }
     }
 

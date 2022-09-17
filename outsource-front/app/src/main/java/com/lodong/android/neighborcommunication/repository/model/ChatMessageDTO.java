@@ -30,6 +30,9 @@ public class ChatMessageDTO {
     @ColumnInfo(name = "viewType")
     private int viewType;
 
+    public ChatMessageDTO() {
+    }
+
     public ChatMessageDTO(long chatId, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {
         this.chatId = chatId;
         this.room = chatRoomId;
