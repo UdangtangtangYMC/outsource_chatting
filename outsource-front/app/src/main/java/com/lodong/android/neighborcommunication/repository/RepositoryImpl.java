@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
+import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
 public class RepositoryImpl implements Repository{
@@ -61,4 +62,8 @@ public class RepositoryImpl implements Repository{
 
     }
 
+    @Override
+    public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
+        loginService.setCallBack(callBack);
+    }
 }

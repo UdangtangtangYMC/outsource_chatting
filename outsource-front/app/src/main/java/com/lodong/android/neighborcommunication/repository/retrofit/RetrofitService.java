@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
+import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
 import java.util.List;
@@ -52,15 +53,16 @@ public class RetrofitService {
         });
     }
 
-    public void getLoginResult(JsonObject jsonObject) {
-        retrofitServiceInterface.getLoginResult(jsonObject).enqueue(new Callback<String>() {
+    public void getLoginResult(JsonObject jsonObject, GetLogInResultCallBack callBack) {
+        retrofitServiceInterface.getLoginResult(jsonObject).enqueue(new Callback<MemberDTO>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<MemberDTO> call, Response<MemberDTO> response) {
                 Log.d(TAG, "login is success : " + response.isSuccessful());
+                callBack.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<MemberDTO> call, Throwable t) {
                 Log.e(TAG, t.getMessage());
             }
         });

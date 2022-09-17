@@ -19,9 +19,13 @@ public class AuthService {
         registerNewRabbitMQAccount(savedUser.getId(), true);
     }
 
-    public boolean auth(ApplicationUser user) {
+    public ApplicationUser auth(ApplicationUser user) {
         ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();
-        return applicationUser.getPassword().equals(user.getPassword());
+        if(applicationUser.getPassword().equals(user.getPassword())){
+            return ApplicationUser.getPublicProfile(applicationUser);
+        } else {
+            return null;
+        }
     }
 
     private boolean isDuplicated(String username) {

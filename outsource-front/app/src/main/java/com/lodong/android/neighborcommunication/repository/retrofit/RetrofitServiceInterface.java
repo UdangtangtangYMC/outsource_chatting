@@ -18,7 +18,7 @@ public interface RetrofitServiceInterface {
     Call<SignUpRequestDTO> getSignUpResult(@Body JsonObject jsonObject);
 
     @POST("/api/v1/auth/do")
-    Call<String> getLoginResult(@Body JsonObject jsonObject);
+    Call<MemberDTO> getLoginResult(@Body JsonObject jsonObject);
 
     @GET("/api/v1/user/getUsers")
     Call<List<MemberDTO>> getMemberList();

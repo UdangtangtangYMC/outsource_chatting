@@ -48,7 +48,8 @@ public class AuthController {
                 .nickName(user.getNickName())
                 .build();
 
-        if(authService.auth(applicationUser)) return ResponseEntity.ok().build();
+        ApplicationUser authResult = authService.auth(applicationUser);
+        if(authResult != null) return ResponseEntity.ok(authResult);
         else return ResponseEntity.badRequest().body(applicationUser.getId());
     }
 }
