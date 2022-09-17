@@ -8,6 +8,7 @@ import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 
 import io.reactivex.disposables.Disposable;
@@ -28,6 +29,7 @@ public class StompUtils {
         Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
             String payload = lifecycleEvent.getPayload();
             ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())) repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));
             repository.insertChatMessage(message);
         });
         stompClient.connect();

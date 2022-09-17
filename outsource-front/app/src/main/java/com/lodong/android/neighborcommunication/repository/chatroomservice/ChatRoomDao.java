@@ -24,4 +24,6 @@ public interface ChatRoomDao {
     @Query("SELECT * FROM chatRoom")
     LiveData<List<ChatRoomDTO>> getAll();
 
+    @Query("select exists (select 1 from chatroom c where (c.participant1 = :p1 and c.participant2 = :p2) or (c.participant1 = :p2 and c.participant2 = :p1))")
+    boolean existsByParticipants(String p1, String p2);
 }

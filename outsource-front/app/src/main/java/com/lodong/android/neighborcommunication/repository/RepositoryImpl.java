@@ -21,7 +21,7 @@ import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallB
 
 import java.util.List;
 
-public class RepositoryImpl implements Repository{
+public class RepositoryImpl implements Repository {
     private final String TAG = RepositoryImpl.class.getSimpleName();
     public static RepositoryImpl instance;
     private SignUpService signUpService;
@@ -98,6 +98,11 @@ public class RepositoryImpl implements Repository{
     @Override
     public void insertChatMessage(ChatMessageDTO chatMessageDTO) {
         chatMessageService.insert(chatMessageDTO);
+    }
+
+    @Override
+    public boolean isChatRoomExists(String p1, String p2) {
+        return chatRoomService.isExists(p1, p2);
     }
 
     @Override

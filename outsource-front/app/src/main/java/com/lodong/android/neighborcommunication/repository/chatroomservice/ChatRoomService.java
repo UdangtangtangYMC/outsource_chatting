@@ -19,11 +19,15 @@ public class ChatRoomService {
         chatRoomList = chatRoomDao.getAll();
     }
 
-    public void insert(ChatRoomDTO chatRoomDTO){
+    public void insert(ChatRoomDTO chatRoomDTO) {
         chatRoomDao.insert(chatRoomDTO);
     }
 
-    public void delete(ChatRoomDTO chatRoomDTO){
+    public void delete(ChatRoomDTO chatRoomDTO) {
         chatRoomDao.delete(chatRoomDTO);
+    }
+
+    public boolean isExists(String p1, String p2) {
+        return chatRoomDao.existsByParticipants(p1, p2);
     }
 }
