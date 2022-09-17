@@ -1,11 +1,14 @@
 package com.lodong.android.neighborcommunication.repository;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+
+import java.util.List;
 
 public interface Repository {
     public void getList();
@@ -16,6 +19,7 @@ public interface Repository {
     public void changeStatusMessage(String id, String newMessage);
     public void insertChatRoom(ChatRoomDTO chatRoomDTO);
     public void insertChatMessage(ChatMessageDTO chatMessageDTO);
+    public LiveData<List<ChatMessageDTO>> getChatMessage(long id);
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);

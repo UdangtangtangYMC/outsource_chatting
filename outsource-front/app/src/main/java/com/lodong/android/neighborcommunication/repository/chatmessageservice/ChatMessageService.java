@@ -11,19 +11,20 @@ import java.util.List;
 
 public class ChatMessageService {
     private ChatMessageDao chatMessageDao;
-    private LiveData<List<ChatMessageDao>> chatMessageList;
+    private LiveData<List<ChatMessageDTO>> chatMessageList;
 
     public ChatMessageService(Application application){
         RoomDB db = RoomDB.getInstance(application);
         chatMessageDao = db.chatMessageDao();
     }
 
-    public LiveData<List<ChatMessageDao>> getChatMessageList() {
+    public LiveData<List<ChatMessageDTO>> getChatMessageList() {
         return chatMessageList;
     }
 
-    public void getChatMessage(long chatRoomId){
-        chatMessageDao.getChatMessage(chatRoomId);
+    public LiveData<List<ChatMessageDTO>> getChatMessage(long chatRoomId){
+        chatMessageList = chatMessageDao.getChatMessage(chatRoomId);
+        return chatMessageList;
     }
 
     public void insert(ChatMessageDTO chatMessageDTO){
