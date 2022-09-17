@@ -6,14 +6,17 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.lodong.android.neighborcommunication.R;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.databinding.ActivityMainBinding;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.utils.preferences.FCMManager;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
+import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
 import com.lodong.android.neighborcommunication.view.callback.GetFCMToken;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,5 +68,6 @@ public class MainActivity extends AppCompatActivity {
     private void sendFCMToken(String fcmToken){
         repository.sendFcmToken(UserInfo.getInstance().getId(),fcmToken);
     }
+
 
 }
