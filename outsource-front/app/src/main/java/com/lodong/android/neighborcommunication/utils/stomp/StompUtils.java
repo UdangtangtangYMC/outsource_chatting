@@ -19,12 +19,8 @@ public class StompUtils {
     private static final String BASE_URL = "ws://49.174.169.48:13883/ws";
     public static final StompUtils INSTANCE = new StompUtils();
     private static final Gson gson = new Gson();
-    private final Repository repository;
+    private static final Repository repository = RepositoryImpl.getInstance();
     private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
-
-    private StompUtils() {
-        this.repository = RepositoryImpl.getInstance();
-    }
 
     public static void init(Context context) {
         String subscribeURL = "/queue/" + getId(context);
@@ -32,7 +28,7 @@ public class StompUtils {
         Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
             String payload = lifecycleEvent.getPayload();
             ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-            Log.d(TAG, message.toString());
+            repository.insertChatMessage(message);
         });
         stompClient.connect();
     }
