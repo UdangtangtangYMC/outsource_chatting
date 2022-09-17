@@ -24,4 +24,6 @@ public class LoginViewModel extends ViewModel {
     public void login(String id, String password){
         repository.login(id, password);
     }
+
+
 }

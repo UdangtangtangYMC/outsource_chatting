@@ -7,16 +7,8 @@ import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
-import org.reactivestreams.Publisher;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
