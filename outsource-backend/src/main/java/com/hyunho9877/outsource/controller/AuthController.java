@@ -67,4 +67,17 @@ public class AuthController {
         authService.signOut(applicationUser);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/fcm")
+    public ResponseEntity<?> registerFCMToken(@RequestBody UserDTO userDTO) {
+
+        ApplicationUser user = ApplicationUser.builder()
+                .id(userDTO.getId())
+                .fcmToken(userDTO.getFcmToken())
+                .build();
+        log.info("fcm received by {} : {}", userDTO.getId(), userDTO.getFcmToken());
+        authService.registerFCMToken(user);
+
+        return ResponseEntity.ok().build();
+    }
 }

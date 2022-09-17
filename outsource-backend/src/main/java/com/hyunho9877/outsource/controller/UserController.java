@@ -30,6 +30,7 @@ public class UserController {
         assert !userDTO.getId().equals("");
         assert !userDTO.getNewMessage().equals("");
 
+        log.info("new profile message received by {} : {}", userDTO.getId(), userDTO.getNewMessage());
         return userService.changeMessage(userDTO.getId(), userDTO.getNewMessage());
     }
 

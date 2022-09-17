@@ -2,6 +2,8 @@ package com.hyunho9877.outsource.controller;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.hyunho9877.outsource.domain.ChatMessage;
+import com.hyunho9877.outsource.domain.ChatRoom;
+import com.hyunho9877.outsource.dto.UserDTO;
 import com.hyunho9877.outsource.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

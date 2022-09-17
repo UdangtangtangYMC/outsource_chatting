@@ -5,6 +5,7 @@ import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.utils.rabbitmq.RabbitMQManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +40,11 @@ public class AuthService {
     public void signOut(ApplicationUser user) {
         ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();
         applicationUser.setFcmToken(null);
+    }
+
+    @Transactional
+    public void registerFCMToken(ApplicationUser user) {
+        ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();
+        applicationUser.setFcmToken(user.getFcmToken());
     }
 }
