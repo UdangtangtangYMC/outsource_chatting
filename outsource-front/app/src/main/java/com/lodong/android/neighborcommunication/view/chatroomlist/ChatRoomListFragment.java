@@ -1,5 +1,6 @@
 package com.lodong.android.neighborcommunication.view.chatroomlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -17,6 +18,7 @@ import com.lodong.android.neighborcommunication.R;
 import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;
+import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class ChatRoomListFragment extends Fragment {
     public void init(){
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         chatRoomAdapter = new ChatRoomAdapter();
+        chatRoomAdapter.setOnChatRoomClickListener(onChatRoomClickListener());
         binding.recyclerview.setAdapter(chatRoomAdapter);
     }
 
@@ -48,5 +51,22 @@ public class ChatRoomListFragment extends Fragment {
         viewModel.getChatRoomList().observe(getViewLifecycleOwner(), chatRoomDTOS -> {
             chatRoomAdapter.changeMemberListAdapter(chatRoomDTOS);
         });
+    }
+
+    public OnChatRoomClickListener onChatRoomClickListener(){
+        return chatRoomDTO -> {
+           /* long id = chatRoomDTO.getId();
+            intentChatRoomActivity(id);*/
+        };
+    }
+
+    private void intentChatRoomActivity(long id){
+        Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
+        intent.putExtra("chatRoomId", id);
+        startActivity(intent);
+    }
+
+    public interface OnChatRoomClickListener{
+        public void onClick(ChatRoomDTO chatRoomDTO);
     }
 }

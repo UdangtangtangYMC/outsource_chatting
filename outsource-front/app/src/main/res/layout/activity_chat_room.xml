@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="activity"
+            type="com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity"/>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +44,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintWidth_percent="0.07"
                 android:background="@drawable/ic_baseline_send_24"
+                android:onClick="@{()->activity.sendMessage()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_percent="1"

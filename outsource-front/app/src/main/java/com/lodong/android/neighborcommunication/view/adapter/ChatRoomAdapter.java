@@ -11,17 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lodong.android.neighborcommunication.R;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
+import com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFragment;
 
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
     private List<ChatRoomDTO> chatRoomList;
+    private ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener;
 
     public ChatRoomAdapter() {}
 
     public void changeMemberListAdapter(List<ChatRoomDTO> chatRoomList){
         this.chatRoomList = chatRoomList;
         notifyDataSetChanged();
+    }
+
+    public void setOnChatRoomClickListener(ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener) {
+        this.onChatRoomClickListener = onChatRoomClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -42,6 +48,10 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
             }
 
             txtNickName.setText(nickName);
+
+            itemView.setOnClickListener(view -> {
+                intentChatRoom(chatRoomDTO);
+            });
         }
     }
 
@@ -60,6 +70,10 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     @Override
     public int getItemCount() {
         return chatRoomList == null ? 0 : chatRoomList.size();
+    }
+
+    public void intentChatRoom(ChatRoomDTO chatRoomDTO){
+        onChatRoomClickListener.onClick(chatRoomDTO);
     }
 
 }

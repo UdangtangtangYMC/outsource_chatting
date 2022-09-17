@@ -1,19 +1,19 @@
 package com.lodong.android.neighborcommunication.view.chatroom;
 
 import android.app.Activity;
-import android.util.Log;
+import android.content.Intent;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -23,18 +23,36 @@ public class ChatRoomViewModel extends ViewModel {
     private Repository repository;
     private WeakReference<Activity> mRef;
 
-    public void init(){
-        repository = RepositoryImpl.getInstance();
-    }
+    private long chatRoomid;
+    private final long noChatRoomId = -99;
+    private String receiver;
 
-    public void setParent(Activity activity){
+    private MutableLiveData<Long> chatRoomIdML = new MutableLiveData<>();
+
+    public void setParent(Activity activity) {
         this.mRef = new WeakReference<>(activity);
     }
 
+    public void init() {
+        repository = RepositoryImpl.getInstance();
+    }
 
-    public void getChatMessageList() {
-        long chatRoomId = 1;
-        repository.getChatMessage(chatRoomId).observe((LifecycleOwner) mRef.get(),
-                chatMessageDTOS -> Log.d(TAG, chatMessageDTOS.toString()));
+    public void getChatRoomId(){
+        Intent intent = mRef.get().getIntent();
+        chatRoomid = intent.getLongExtra("chatRoomId", noChatRoomId);
+        chatRoomIdML.setValue(chatRoomid);
+    }
+
+    public void sendMessage(String message){
+      /*  ChatMessage chatMessage = new ChatMessage();
+        StompUtils.INSTANCE.send(message);*/
+    }
+
+    public LiveData<List<ChatMessageDTO>> getChatMessageList(long chatRoomId) {
+        return repository.getChatMessage(chatRoomId);
+    }
+
+    public MutableLiveData<Long> getChatRoomIdML() {
+        return chatRoomIdML;
     }
 }

@@ -21,6 +21,6 @@ public interface ChatMessageDao {
     @Delete
     void delete(ChatMessageDTO chatMessageDTO);
 
-    @Query("SELECT * FROM chatMessage WHERE chatId = :chatRoomId")
+    @Query("SELECT * FROM chatMessage WHERE chatRoomId = :chatRoomId")
     LiveData<List<ChatMessageDTO>> getChatMessage(long chatRoomId);
 }
