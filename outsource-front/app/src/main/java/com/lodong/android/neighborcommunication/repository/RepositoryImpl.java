@@ -1,13 +1,19 @@
 package com.lodong.android.neighborcommunication.repository;
 
+import android.app.Application;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.changestatusmessage.ChangeStatusMessageService;
+import com.lodong.android.neighborcommunication.repository.chatmessageservice.ChatMessageService;
+import com.lodong.android.neighborcommunication.repository.chatroomservice.ChatRoomService;
 import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
+import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
@@ -19,6 +25,8 @@ public class RepositoryImpl implements Repository{
     private MemberListService memberListService;
     private FCMTokenService fcmTokenService;
     private ChangeStatusMessageService changeStatusMessageService;
+    private ChatRoomService chatRoomService;
+    private ChatMessageService chatMessageService;
 
     private RepositoryImpl(){
         signUpService = new SignUpService();
@@ -26,6 +34,8 @@ public class RepositoryImpl implements Repository{
         memberListService = new MemberListService();
         fcmTokenService = new FCMTokenService();
         changeStatusMessageService = new ChangeStatusMessageService();
+        chatRoomService = new ChatRoomService(MainApplication.getInstance());
+        chatMessageService = new ChatMessageService(MainApplication.getInstance());
     }
 
     public static RepositoryImpl getInstance(){
@@ -78,6 +88,15 @@ public class RepositoryImpl implements Repository{
     }
 
     @Override
+    public void insertChatRoom(ChatRoomDTO chatRoomDTO) {
+        chatRoomService.insert(chatRoomDTO);
+    }
+    @Override
+    public void insertChatMessage(ChatMessageDTO chatMessageDTO) {
+        chatMessageService.insert(chatMessageDTO);
+    }
+
+    @Override
     public void setGetMemberListCallBack(GetMemberListCallBack callBack) {
         memberListService.setGetMemberListCallBack(callBack);
     }
@@ -86,6 +105,8 @@ public class RepositoryImpl implements Repository{
     public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
         loginService.setCallBack(callBack);
     }
+
+
 
     @Override
     public void getList() {
