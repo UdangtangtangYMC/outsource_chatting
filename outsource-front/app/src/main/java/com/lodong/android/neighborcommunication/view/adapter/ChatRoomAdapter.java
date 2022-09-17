@@ -35,10 +35,10 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
 
         public void onBind(ChatRoomDTO chatRoomDTO){
             String nickName = null;
-            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getParticipant1())){
-                nickName = chatRoomDTO.getParticipant2();
+            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getRoomUserOne())){
+                nickName = chatRoomDTO.getRoomUserTwo();
             }else{
-                nickName = chatRoomDTO.getParticipant1();
+                nickName = chatRoomDTO.getRoomUserOne();
             }
 
             txtNickName.setText(nickName);

@@ -1,6 +1,5 @@
 package com.lodong.android.neighborcommunication.repository;
 
-import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,12 +11,14 @@ import com.lodong.android.neighborcommunication.repository.chatroomservice.ChatR
 import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
 import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
 import java.util.List;
 
@@ -80,7 +81,6 @@ public class RepositoryImpl implements Repository {
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("fcmToken", fcmToken);
         fcmTokenService.sendFcmToken(jsonObject);
-
     }
 
     @Override
@@ -106,6 +106,11 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void createChatRoom(String id, String subject, ChatMessage message) {
+        chatRoomService.createNewChatRoom(id, subject, message);
+    }
+
+    @Override
     public LiveData<List<ChatMessageDTO>> getChatMessage(long id) {
         return chatMessageService.getChatMessage(id);
     }
@@ -123,6 +128,11 @@ public class RepositoryImpl implements Repository {
     @Override
     public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
         loginService.setCallBack(callBack);
+    }
+
+    @Override
+    public void setRoomCreatedCallBack(RoomCreateCallBack callBack) {
+        chatRoomService.setCallBack(callBack);
     }
 
 

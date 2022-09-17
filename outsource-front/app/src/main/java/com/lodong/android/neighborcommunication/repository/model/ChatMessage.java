@@ -3,6 +3,7 @@ package com.lodong.android.neighborcommunication.repository.model;
 import java.io.Serializable;
 
 public class ChatMessage implements Serializable {
+    private long roomId;
     private String sender;
     private String receiver;
     private String message;
@@ -11,6 +12,14 @@ public class ChatMessage implements Serializable {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+    }
+
+    public long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public String getSender() {
@@ -40,7 +49,8 @@ public class ChatMessage implements Serializable {
     @Override
     public String toString() {
         return "ChatMessage{" +
-                "sender='" + sender + '\'' +
+                "roomId=" + roomId +
+                ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", message='" + message + '\'' +
                 '}';

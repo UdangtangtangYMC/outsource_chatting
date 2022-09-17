@@ -10,6 +10,7 @@ import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
+import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
 import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
@@ -29,7 +30,8 @@ public class StompUtils {
         Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
             String payload = lifecycleEvent.getPayload();
             ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())) repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));
+            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));
             repository.insertChatMessage(message);
         });
         stompClient.connect();
@@ -45,7 +47,28 @@ public class StompUtils {
 
     public void send(ChatMessage message) {
         Log.d(TAG, message.toString());
-        String toJson = gson.toJson(message);
-        stompClient.send("/pub/hello", toJson).subscribe();
+        if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())){
+            repository.setRoomCreatedCallBack(getRoomCreateCallBack());
+            repository.createChatRoom(message.getSender(), message.getReceiver(), message);
+        } else {
+            String toJson = gson.toJson(message);
+            stompClient.send("/pub/msg", toJson);
+        }
+    }
+
+    public RoomCreateCallBack getRoomCreateCallBack() {
+        return new RoomCreateCallBack() {
+            @Override
+            public void onSuccess(ChatRoomDTO chatRoom, ChatMessage message) {
+                message.setRoomId(chatRoom.getRoomId());
+                String toJson = new Gson().toJson(message);
+                stompClient.send("/pub/msg", toJson);
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+                Log.e(TAG, "room create error occurred");
+            }
+        };
     }
 }

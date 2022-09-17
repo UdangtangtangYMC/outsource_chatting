@@ -7,41 +7,75 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "chatRoom")
 public class ChatRoomDTO {
     @PrimaryKey(autoGenerate = false)
-    private long id;
+    @ColumnInfo(name = "room_id")
+    private long roomId;
 
-    @ColumnInfo(name = "participant1")
-    private String participant1;
+    @ColumnInfo(name = "room_user_one")
+    private String roomUserOne;
 
-    @ColumnInfo(name = "participant2")
-    private String participant2;
+    @ColumnInfo(name = "room_user_two")
+    private String roomUserTwo;
 
-    public ChatRoomDTO(long id, String participant1, String participant2) {
-        this.id = id;
-        this.participant1 = participant1;
-        this.participant2 = participant2;
+    @ColumnInfo(name = "room_user_one_nick_name")
+    private String roomUserOneNickName;
+
+    @ColumnInfo(name = "room_user_two_nick_name")
+    private String roomUserTwoNickName;
+
+    public ChatRoomDTO(long roomId, String roomUserOne, String roomUserTwo) {
+        this.roomId = roomId;
+        this.roomUserOne = roomUserOne;
+        this.roomUserTwo = roomUserTwo;
     }
 
-    public long getId() {
-        return id;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
-    public String getParticipant1() {
-        return participant1;
+    public String getRoomUserOne() {
+        return roomUserOne;
     }
 
-    public void setParticipant1(String participant1) {
-        this.participant1 = participant1;
+    public void setRoomUserOne(String roomUserOne) {
+        this.roomUserOne = roomUserOne;
     }
 
-    public String getParticipant2() {
-        return participant2;
+    public String getRoomUserTwo() {
+        return roomUserTwo;
     }
 
-    public void setParticipant2(String participant2) {
-        this.participant2 = participant2;
+    public void setRoomUserTwo(String roomUserTwo) {
+        this.roomUserTwo = roomUserTwo;
+    }
+
+    public String getRoomUserOneNickName() {
+        return roomUserOneNickName;
+    }
+
+    public void setRoomUserOneNickName(String roomUserOneNickName) {
+        this.roomUserOneNickName = roomUserOneNickName;
+    }
+
+    public String getRoomUserTwoNickName() {
+        return roomUserTwoNickName;
+    }
+
+    public void setRoomUserTwoNickName(String roomUserTwoNickName) {
+        this.roomUserTwoNickName = roomUserTwoNickName;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRoomDTO{" +
+                "roomId=" + roomId +
+                ", roomUserOne='" + roomUserOne + '\'' +
+                ", roomUserTwo='" + roomUserTwo + '\'' +
+                ", roomUserOneNickName='" + roomUserOneNickName + '\'' +
+                ", roomUserTwoNickName='" + roomUserTwoNickName + '\'' +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package com.lodong.android.neighborcommunication.repository.retrofit;
 
 
 import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
 
@@ -9,7 +10,6 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface RetrofitServiceInterface {
@@ -29,4 +29,6 @@ public interface RetrofitServiceInterface {
     @POST("api/v1/user/setProfileMessage")
     Call<String> changeStatusMessage(@Body JsonObject jsonObject);
 
+    @POST("/api/v1/chat/new")
+    Call<ChatRoomDTO> createNewChatRoom(@Body JsonObject jsonObject);
 }

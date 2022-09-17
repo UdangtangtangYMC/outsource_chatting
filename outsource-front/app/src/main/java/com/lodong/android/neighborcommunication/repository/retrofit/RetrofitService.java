@@ -3,10 +3,13 @@ package com.lodong.android.neighborcommunication.repository.retrofit;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
 import java.util.List;
 
@@ -113,6 +116,18 @@ public class RetrofitService {
         });
     }
 
+    public void newChatRoom(JsonObject roomDTO, ChatMessage message, RoomCreateCallBack callBack) {
+        retrofitServiceInterface.createNewChatRoom(roomDTO).enqueue(new Callback<ChatRoomDTO>() {
+            @Override
+            public void onResponse(Call<ChatRoomDTO> call, Response<ChatRoomDTO> response) {
+                Log.d(TAG, response.body().toString());
+                callBack.onSuccess(response.body(), message);
+            }
 
+            @Override
+            public void onFailure(Call<ChatRoomDTO> call, Throwable t) {
 
+            }
+        });
+    }
 }
