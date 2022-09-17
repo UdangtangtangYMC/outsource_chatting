@@ -17,10 +17,4 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
-
-    @Test
-    public void 아오빡쳐(){
-        Repository repository = RepositoryImpl.getInstance();
-        repository.getMemberList();
-    }
 }

@@ -20,6 +20,10 @@ public interface RetrofitServiceInterface {
     @POST("/api/v1/auth/do")
     Call<MemberDTO> getLoginResult(@Body JsonObject jsonObject);
 
-    @GET("/api/v1/user/getUsers")
-    Call<List<MemberDTO>> getMemberList();
+    @POST("/api/v1/user/getUsers")
+    Call<List<MemberDTO>> getMemberList(@Body JsonObject jsonObject);
+
+    @POST("")
+    Call<String> sendFcmToken(@Body JsonObject jsonObject);
+
 }

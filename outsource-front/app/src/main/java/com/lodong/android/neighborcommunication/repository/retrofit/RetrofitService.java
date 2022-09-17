@@ -68,14 +68,13 @@ public class RetrofitService {
         });
     }
 
-    public void getMemberList(GetMemberListCallBack callBack) {
-        retrofitServiceInterface.getMemberList().enqueue(new Callback<List<MemberDTO>>() {
+    public void getMemberList(JsonObject jsonObject, GetMemberListCallBack callBack) {
+        retrofitServiceInterface.getMemberList(jsonObject).enqueue(new Callback<List<MemberDTO>>() {
             @Override
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
-                for (MemberDTO memberDTO:response.body()) {
+                for (MemberDTO memberDTO : response.body()) {
                     Log.d(TAG, memberDTO.toString());
                 }
-
                 callBack.onSuccess(response.body());
             }
 
@@ -83,6 +82,20 @@ public class RetrofitService {
             public void onFailure(Call<List<MemberDTO>> call, Throwable t) {
 
             }
-    });
-}
+        });
+    }
+
+    public void sendFcmToken(JsonObject jsonObject){
+        retrofitServiceInterface.sendFcmToken(jsonObject).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(TAG, response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
 }

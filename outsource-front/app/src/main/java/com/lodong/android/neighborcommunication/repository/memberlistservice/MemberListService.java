@@ -14,8 +14,8 @@ public class MemberListService {
         retrofitService = RetrofitService.getInstance();
     }
 
-    public void getMemberList(){
-        retrofitService.getMemberList(getMemberListCallBack);
+    public void getMemberList(JsonObject jsonObject){
+        retrofitService.getMemberList(jsonObject, getMemberListCallBack);
     }
 
     public void setGetMemberListCallBack(GetMemberListCallBack getMemberListCallBack) {
