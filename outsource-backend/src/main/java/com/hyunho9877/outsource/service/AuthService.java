@@ -35,4 +35,9 @@ public class AuthService {
     private void registerNewRabbitMQAccount(String username, boolean durability) {
         rabbitMQManager.declareQueue(username, durability);
     }
+
+    public void signOut(ApplicationUser user) {
+        ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();
+        applicationUser.setFcmToken(null);
+    }
 }
