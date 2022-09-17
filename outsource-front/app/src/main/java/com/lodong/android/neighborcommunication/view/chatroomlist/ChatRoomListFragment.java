@@ -31,7 +31,7 @@ public class ChatRoomListFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat_room_list, container, false);
         viewModel = new ViewModelProvider(this).get(ChatRoomListViewModel.class);
-
+        viewModel.setParent(getActivity());
         init();
         getChatRoomList();
 
@@ -45,7 +45,7 @@ public class ChatRoomListFragment extends Fragment {
     }
 
     public void getChatRoomList(){
-        viewModel.getChatRoomList().observe(this, chatRoomDTOS -> {
+        viewModel.getChatRoomList().observe(getViewLifecycleOwner(), chatRoomDTOS -> {
             chatRoomAdapter.changeMemberListAdapter(chatRoomDTOS);
         });
     }
