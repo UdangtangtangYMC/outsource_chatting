@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NeighborCommunication"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".view.chatroom.ChatRoomActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".view.splash.SplashActivity"
             android:exported="true">
@@ -32,19 +35,23 @@
         <activity
             android:name=".view.MainActivity"
             android:exported="true" />
+
         <service
             android:name=".utils.preferences.FCMService"
+            android:directBootAware="true"
             android:enabled="true"
-            android:exported="true"
-            android:directBootAware="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_launcher_foreground" />
-            <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-                 notification message. See README(https://goo.gl/6BKBk7) for more. -->
+            <!--
+                 Set color used with incoming notification messages. This is used when no color is set for the incoming
+                 notification message. See README(https://goo.gl/6BKBk7) for more.
+            -->
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/white" />
