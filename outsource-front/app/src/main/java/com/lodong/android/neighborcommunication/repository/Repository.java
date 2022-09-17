@@ -11,6 +11,7 @@ public interface Repository {
     public void login(String id, String password);
     public void getMemberList(String id);
     public void sendFcmToken(String id, String fcm);
+    public void changeStatusMessage(String id, String newMessage);
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);

@@ -34,6 +34,7 @@ public class MemberListFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_member_list, container, false);
         viewModel = new ViewModelProvider(this).get(MemberListViewModel.class);
+        viewModel.setParent(getActivity());
         binding.setViewModel(viewModel);
         Log.d(TAG, "onCreateView");
 
@@ -55,6 +56,7 @@ public class MemberListFragment extends Fragment {
         binding.recyclerview.setAdapter(adapter);
         viewModel.init();
     }
+
 
     private void settingLiveData(){
         viewModel.getMemberListML().observe(getViewLifecycleOwner(), memberList -> {

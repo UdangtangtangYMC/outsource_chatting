@@ -3,6 +3,8 @@ package com.lodong.android.neighborcommunication.repository;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.changestatusmessage.ChangeStatusMessageService;
+import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
@@ -15,11 +17,15 @@ public class RepositoryImpl implements Repository{
     private SignUpService signUpService;
     private LoginService loginService;
     private MemberListService memberListService;
+    private FCMTokenService fcmTokenService;
+    private ChangeStatusMessageService changeStatusMessageService;
 
     private RepositoryImpl(){
         signUpService = new SignUpService();
         loginService = new LoginService();
         memberListService = new MemberListService();
+        fcmTokenService = new FCMTokenService();
+        changeStatusMessageService = new ChangeStatusMessageService();
     }
 
     public static RepositoryImpl getInstance(){
@@ -59,6 +65,16 @@ public class RepositoryImpl implements Repository{
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("fcmToken", fcmToken);
+        fcmTokenService.sendFcmToken(jsonObject);
+
+    }
+
+    @Override
+    public void changeStatusMessage(String id, String newMessage) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("newMessage", newMessage);
+        changeStatusMessageService.sendFcmToken(jsonObject);
     }
 
     @Override

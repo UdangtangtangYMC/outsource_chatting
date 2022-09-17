@@ -89,6 +89,20 @@ public class RetrofitService {
         retrofitServiceInterface.sendFcmToken(jsonObject).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                /*Log.d(TAG, response.body());*/
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    public void changeStatusMessage(JsonObject jsonObject){
+        retrofitServiceInterface.changeStatusMessage(jsonObject).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
                 Log.d(TAG, response.body());
             }
 
@@ -98,4 +112,5 @@ public class RetrofitService {
             }
         });
     }
+
 }

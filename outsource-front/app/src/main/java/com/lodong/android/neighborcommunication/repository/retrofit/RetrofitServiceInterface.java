@@ -23,7 +23,10 @@ public interface RetrofitServiceInterface {
     @POST("/api/v1/user/getUsers")
     Call<List<MemberDTO>> getMemberList(@Body JsonObject jsonObject);
 
-    @POST("")
+    @POST("api/v1/auth/fcm")
     Call<String> sendFcmToken(@Body JsonObject jsonObject);
+
+    @POST("api/v1/user/setProfileMessage")
+    Call<String> changeStatusMessage(@Body JsonObject jsonObject);
 
 }

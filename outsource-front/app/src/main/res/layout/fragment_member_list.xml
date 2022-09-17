@@ -14,42 +14,61 @@
         android:layout_height="match_parent"
         tools:context=".view.memberlist.MemberListFragment">
 
-        <TextView
-            android:id="@+id/txt_status_message"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_user_info"
+            android:padding="10dp"
+            android:onClick="@{()->viewModel.showAlterStatusMessageDialog()}"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:text="@{viewModel.userStatusMessage}"
-            android:textColor="#333333"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_name"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toRightOf="@id/txt_name"
-            app:layout_constraintTop_toTopOf="@+id/txt_name"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:text="@{viewModel.userNickName}"
-            android:textColor="@color/black"
-            android:textSize="17sp"
-            app:layout_constraintRight_toLeftOf="@+id/txt_status_message"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.userNickName}"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                app:layout_constraintRight_toLeftOf="@+id/txt_status_message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/txt_status_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:text="@{viewModel.userStatusMessage}"
+                android:textColor="#333333"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_name"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@id/txt_name"
+                app:layout_constraintTop_toTopOf="@+id/txt_name"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#676767"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_user_info"
+            app:layout_constraintVertical_bias="0.004" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_name"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_user_info"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

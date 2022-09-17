@@ -35,7 +35,11 @@
         <service
             android:name=".utils.preferences.FCMService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_launcher_foreground" />

@@ -49,6 +49,7 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging-directboot:20.2.0'
 
     implementation 'com.google.code.gson:gson:2.8.2'
 
@@ -66,5 +67,6 @@ dependencies {
     def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
 }
 apply plugin: 'com.google.gms.google-services'

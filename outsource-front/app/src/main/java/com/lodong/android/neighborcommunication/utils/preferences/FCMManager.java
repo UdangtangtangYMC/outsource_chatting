@@ -13,6 +13,7 @@ public class FCMManager {
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        getFCMToken.onFailed(task.getException());
                         return;
                     }
 
@@ -20,6 +21,8 @@ public class FCMManager {
                     String token = task.getResult();
 
                     Log.d(TAG, "nowToken : " + token);
+
+                    getFCMToken.onSuccess(token);
 
                 });
     }

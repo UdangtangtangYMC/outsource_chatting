@@ -14,10 +14,11 @@
         <entry key="..\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/xml/network_security_config.xml" value="0.14479166666666668" />
         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_main.xml" value="0.22592592592592592" />
+        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/dialog_alter_user_info.xml" value="0.3067708333333333" />
         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_chat_room_list.xml" value="0.2" />
-        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_member_list.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_member_list.xml" value="0.264" />
         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_chatroom.xml" value="0.2" />
-        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_member.xml" value="0.4" />
+        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_member.xml" value="0.2" />
       </map>
     </option>
   </component>
