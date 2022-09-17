@@ -29,7 +29,14 @@ public class ChatService {
 
     @Transactional
     public void send(ChatMessage message) {
+        ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();
+        ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();
+
         ChatMessage saved = messageRepository.save(message);
+
+        saved.setSenderNickName(sender.getNickName());
+        saved.setReceiverNickName(receiver.getNickName());
+
         rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);
     }
 
@@ -38,17 +45,22 @@ public class ChatService {
 
     }
 
-    public long registerNewChatRoom(String requester, String subject) {
+    public ChatRoom registerNewChatRoom(String requester, String subject) {
         if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
-        ApplicationUser req = userRepository.getReferenceById(requester);
-        ApplicationUser sub = userRepository.getReferenceById(subject);
+        ApplicationUser req = userRepository.findById(requester).orElseThrow();
+        ApplicationUser sub = userRepository.findById(subject).orElseThrow();
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomUserOne(req)
                 .roomUserTwo(sub)
                 .build();
 
-        return chatRoomRepository.save(chatRoom).getRoomId();
+        ChatRoom save = chatRoomRepository.save(chatRoom);
+        save.setRoomUserOne(ApplicationUser.getPublicProfile(req));
+        save.setRoomUserTwo(ApplicationUser.getPublicProfile(sub));
+        save.setRoomUserOneNickName(req.getNickName());
+        save.setRoomUserTwoNickName(sub.getNickName());
+        return save;
     }
 
     private boolean isChatRoomAlreadyExists(String requester, String subject) {

@@ -3,7 +3,7 @@ package com.hyunho9877.outsource.controller;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.domain.ChatRoom;
-import com.hyunho9877.outsource.dto.UserDTO;
+import com.hyunho9877.outsource.dto.ChatRoomDTO;
 import com.hyunho9877.outsource.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @MessageMapping("/hello")
+    @MessageMapping("/msg")
     public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) throws FirebaseMessagingException {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
         log.info("{}", message);
@@ -33,7 +33,7 @@ public class ChatController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Long> newChat(@RequestBody String id, @RequestBody String subject) {
-        return ResponseEntity.ok(chatService.registerNewChatRoom(id, subject));
+    public ResponseEntity<ChatRoom> newChat(@RequestBody ChatRoomDTO chatRoomDTO) {
+        return ResponseEntity.ok(chatService.registerNewChatRoom(chatRoomDTO.getId(), chatRoomDTO.getSubject()));
     }
 }

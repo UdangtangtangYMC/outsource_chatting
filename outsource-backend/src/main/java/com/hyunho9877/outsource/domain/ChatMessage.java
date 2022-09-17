@@ -23,6 +23,10 @@ public class ChatMessage implements Serializable {
     private String message;
     private String timestamp;
     private boolean confirmed;
+    @Transient
+    private String senderNickName;
+    @Transient
+    private String receiverNickName;
 
     @PrePersist
     public void prePersist() {

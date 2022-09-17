@@ -15,4 +15,8 @@ public class ChatRoom {
     private ApplicationUser roomUserOne;
     @ManyToOne
     private ApplicationUser roomUserTwo;
+    @Transient
+    private String roomUserOneNickName;
+    @Transient
+    private String roomUserTwoNickName;
 }
