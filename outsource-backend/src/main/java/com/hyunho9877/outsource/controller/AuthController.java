@@ -29,6 +29,7 @@ public class AuthController {
                 .id(user.getId())
                 .password(user.getPassword())
                 .nickName(user.getNickName())
+                .fcmToken(user.getFcmToken())
                 .build();
 
         authService.register(applicationUser);
@@ -51,5 +52,19 @@ public class AuthController {
         ApplicationUser authResult = authService.auth(applicationUser);
         if(authResult != null) return ResponseEntity.ok(authResult);
         else return ResponseEntity.badRequest().body(applicationUser.getId());
+    }
+
+    @PostMapping("/out")
+    public ResponseEntity<?> signOut(@RequestBody UserDTO user) {
+        log.info("user data received {}", user);
+
+        ApplicationUser applicationUser = ApplicationUser.builder()
+                .id(user.getId())
+                .password(user.getPassword())
+                .nickName(user.getNickName())
+                .build();
+
+        authService.signOut(applicationUser);
+        return ResponseEntity.ok().build();
     }
 }
