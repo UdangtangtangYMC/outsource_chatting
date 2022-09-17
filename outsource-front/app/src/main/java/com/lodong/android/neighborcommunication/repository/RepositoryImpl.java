@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
+import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
 public class RepositoryImpl implements Repository{
     private final String TAG = RepositoryImpl.class.getSimpleName();
@@ -48,6 +49,11 @@ public class RepositoryImpl implements Repository{
     @Override
     public void getMemberList() {
         memberListService.getMemberList();
+    }
+
+    @Override
+    public void setGetMemberListCallBack(GetMemberListCallBack callBack) {
+        memberListService.setGetMemberListCallBack(callBack);
     }
 
     @Override

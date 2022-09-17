@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.lodong.android.neighborcommunication.R;
@@ -19,12 +20,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         init();
     }
 
     private void init(){
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
+
+
+    }
+    private void settingLoginUserInfo(){
+
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
+import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 
 import org.reactivestreams.Publisher;
 
@@ -73,13 +74,15 @@ public class RetrofitService {
         });
     }
 
-    public void getMemberList() {
+    public void getMemberList(GetMemberListCallBack callBack) {
         retrofitServiceInterface.getMemberList().enqueue(new Callback<List<MemberDTO>>() {
             @Override
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
                 for (MemberDTO memberDTO:response.body()) {
                     Log.d(TAG, memberDTO.toString());
                 }
+
+                callBack.onSuccess(response.body());
             }
 
             @Override
