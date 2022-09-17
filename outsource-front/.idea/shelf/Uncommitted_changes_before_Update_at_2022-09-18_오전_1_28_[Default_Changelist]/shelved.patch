@@ -1,0 +1,167 @@
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view.chatroomlist;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.databinding.DataBindingUtil;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport com.lodong.android.neighborcommunication.R;\r\nimport com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;\r\n\r\npublic class ChatRoomListFragment extends Fragment {\r\n    private FragmentChatRoomListBinding binding;\r\n    private ChatRoomListViewModel viewModel;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat_room_list, container, false);\r\n        viewModel = new ViewModelProvider(this).get(ChatRoomListViewModel.class);\r\n\r\n        return binding.getRoot();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(date 1663432106874)
+@@ -4,7 +4,10 @@
+ 
+ import androidx.databinding.DataBindingUtil;
+ import androidx.fragment.app.Fragment;
++import androidx.lifecycle.Observer;
+ import androidx.lifecycle.ViewModelProvider;
++import androidx.recyclerview.widget.LinearLayoutManager;
++import androidx.recyclerview.widget.RecyclerView;
+ 
+ import android.view.LayoutInflater;
+ import android.view.View;
+@@ -12,6 +15,9 @@
+ 
+ import com.lodong.android.neighborcommunication.R;
+ import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;
++import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
++
++import java.util.List;
+ 
+ public class ChatRoomListFragment extends Fragment {
+     private FragmentChatRoomListBinding binding;
+@@ -26,4 +32,15 @@
+ 
+         return binding.getRoot();
+     }
++
++    public void init(){
++        binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
++
++    }
++
++    public void getChatRoomList(){
++        viewModel.getChatRoomList().observe(this, chatRoomDTOS -> {
++
++        });
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view.chatroomlist;\r\n\r\nimport androidx.lifecycle.ViewModel;\r\n\r\npublic class ChatRoomListViewModel extends ViewModel {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java	(date 1663431982574)
+@@ -1,7 +1,28 @@
+ package com.lodong.android.neighborcommunication.view.chatroomlist;
+ 
++import android.app.Activity;
++
++import androidx.lifecycle.LiveData;
+ import androidx.lifecycle.ViewModel;
+ 
++import com.lodong.android.neighborcommunication.repository.Repository;
++import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
++import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
++
++import java.lang.ref.WeakReference;
++import java.util.List;
++
+ public class ChatRoomListViewModel extends ViewModel {
++    private final String TAG = ChatRoomListViewModel.class.getSimpleName();
++    private WeakReference<Activity> mRef;
++    private Repository repository;
+ 
++    public void setParent(Activity activity){
++        mRef = new WeakReference<>(activity);
++        repository = RepositoryImpl.getInstance();
++    }
++
++    public LiveData<List<ChatRoomDTO>> getChatRoomList(){
++        return repository.getChatRoomList();
++    }
+ }
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.chatroomservice;\r\n\r\nimport android.app.Application;\r\n\r\nimport androidx.lifecycle.LiveData;\r\n\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.repository.roomdb.RoomDB;\r\n\r\nimport java.util.List;\r\n\r\npublic class ChatRoomService {\r\n    private ChatRoomDao chatRoomDao;\r\n    private LiveData<List<ChatRoomDTO>> chatRoomList;\r\n\r\n    public ChatRoomService(Application application) {\r\n        RoomDB db = RoomDB.getInstance(application);\r\n        chatRoomDao = db.chatRoomDao();\r\n        chatRoomList = chatRoomDao.getAll();\r\n    }\r\n\r\n    public void insert(ChatRoomDTO chatRoomDTO){\r\n        chatRoomDao.insert(chatRoomDTO);\r\n    }\r\n\r\n    public void delete(ChatRoomDTO chatRoomDTO){\r\n        chatRoomDao.delete(chatRoomDTO);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomService.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomService.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomService.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomService.java	(date 1663431729118)
+@@ -19,6 +19,11 @@
+         chatRoomList = chatRoomDao.getAll();
+     }
+ 
++    public LiveData<List<ChatRoomDTO>> getChatRoomList(){
++        chatRoomList = chatRoomDao.getAll();
++        return chatRoomList;
++    }
++
+     public void insert(ChatRoomDTO chatRoomDTO){
+         chatRoomDao.insert(chatRoomDTO);
+     }
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/Repository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.lifecycle.LiveData;\r\n\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;\r\n\r\nimport java.util.List;\r\n\r\npublic interface Repository {\r\n    public void getList();\r\n    public void signUp(String id, String password, String nickName);\r\n    public void login(String id, String password);\r\n    public void getMemberList(String id);\r\n    public void sendFcmToken(String id, String fcm);\r\n    public void changeStatusMessage(String id, String newMessage);\r\n    public void insertChatRoom(ChatRoomDTO chatRoomDTO);\r\n    public void insertChatMessage(ChatMessageDTO chatMessageDTO);\r\n    public LiveData<List<ChatMessageDTO>> getChatMessage(long id);\r\n\r\n    //settingCallBack\r\n    public void setGetMemberListCallBack(GetMemberListCallBack callBack);\r\n    public void setGetLogInResultCallBack(GetLogInResultCallBack callBack);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/Repository.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/Repository.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/Repository.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/Repository.java	(date 1663431729129)
+@@ -20,6 +20,7 @@
+     public void insertChatRoom(ChatRoomDTO chatRoomDTO);
+     public void insertChatMessage(ChatMessageDTO chatMessageDTO);
+     public LiveData<List<ChatMessageDTO>> getChatMessage(long id);
++    public LiveData<List<ChatRoomDTO>> getChatRoomList();
+ 
+     //settingCallBack
+     public void setGetMemberListCallBack(GetMemberListCallBack callBack);
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.model;\r\n\r\nimport androidx.room.ColumnInfo;\r\nimport androidx.room.Entity;\r\nimport androidx.room.PrimaryKey;\r\n\r\n@Entity(tableName = \"chatRoom\")\r\npublic class ChatRoomDTO {\r\n    @PrimaryKey(autoGenerate = false)\r\n    private long id;\r\n\r\n    @ColumnInfo(name = \"participant1\")\r\n    private String participant1;\r\n\r\n    @ColumnInfo(name = \"participant2\")\r\n    private String participant2;\r\n\r\n\r\n    public ChatRoomDTO(long id, String participant1, String participant2) {\r\n        this.id = id;\r\n        this.participant1 = participant1;\r\n        this.participant2 = participant2;\r\n    }\r\n\r\n    public long getId() {\r\n        return id;\r\n    }\r\n\r\n    public void setId(long id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getParticipant1() {\r\n        return participant1;\r\n    }\r\n\r\n    public void setParticipant1(String participant1) {\r\n        this.participant1 = participant1;\r\n    }\r\n\r\n    public String getParticipant2() {\r\n        return participant2;\r\n    }\r\n\r\n    public void setParticipant2(String participant2) {\r\n        this.participant2 = participant2;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java	(date 1663431415498)
+@@ -15,7 +15,6 @@
+     @ColumnInfo(name = "participant2")
+     private String participant2;
+ 
+-
+     public ChatRoomDTO(long id, String participant1, String participant2) {
+         this.id = id;
+         this.participant1 = participant1;
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/RepositoryImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository;\r\n\r\nimport android.app.Application;\r\nimport android.util.Log;\r\n\r\nimport androidx.lifecycle.LiveData;\r\n\r\nimport com.google.gson.JsonObject;\r\nimport com.lodong.android.neighborcommunication.repository.changestatusmessage.ChangeStatusMessageService;\r\nimport com.lodong.android.neighborcommunication.repository.chatmessageservice.ChatMessageService;\r\nimport com.lodong.android.neighborcommunication.repository.chatroomservice.ChatRoomService;\r\nimport com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;\r\nimport com.lodong.android.neighborcommunication.repository.login.LoginService;\r\nimport com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.repository.signup.SignUpService;\r\nimport com.lodong.android.neighborcommunication.utils.MainApplication;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;\r\n\r\nimport java.util.List;\r\n\r\npublic class RepositoryImpl implements Repository{\r\n    private final String TAG = RepositoryImpl.class.getSimpleName();\r\n    public static RepositoryImpl instance;\r\n    private SignUpService signUpService;\r\n    private LoginService loginService;\r\n    private MemberListService memberListService;\r\n    private FCMTokenService fcmTokenService;\r\n    private ChangeStatusMessageService changeStatusMessageService;\r\n    private ChatRoomService chatRoomService;\r\n    private ChatMessageService chatMessageService;\r\n\r\n    private RepositoryImpl(){\r\n        signUpService = new SignUpService();\r\n        loginService = new LoginService();\r\n        memberListService = new MemberListService();\r\n        fcmTokenService = new FCMTokenService();\r\n        changeStatusMessageService = new ChangeStatusMessageService();\r\n        chatRoomService = new ChatRoomService(MainApplication.getInstance());\r\n        chatMessageService = new ChatMessageService(MainApplication.getInstance());\r\n    }\r\n\r\n    public static RepositoryImpl getInstance(){\r\n        if(instance == null){\r\n            instance = new RepositoryImpl();\r\n        }\r\n        return instance;\r\n    }\r\n\r\n    @Override\r\n    public void signUp(String id, String password, String nickName) {\r\n        Log.d(TAG, \"signUp\");\r\n        JsonObject jsonObject = new JsonObject();\r\n        jsonObject.addProperty(\"id\", id);\r\n        jsonObject.addProperty(\"password\", password);\r\n        jsonObject.addProperty(\"nickName\", nickName);\r\n        signUpService.signUp(jsonObject);\r\n    }\r\n\r\n    @Override\r\n    public void login(String id, String password) {\r\n        JsonObject jsonObject = new JsonObject();\r\n        jsonObject.addProperty(\"id\", id);\r\n        jsonObject.addProperty(\"password\", password);\r\n        loginService.login(jsonObject);\r\n    }\r\n\r\n    @Override\r\n    public void getMemberList(String id) {\r\n        JsonObject jsonObject = new JsonObject();\r\n        jsonObject.addProperty(\"id\", id);\r\n        memberListService.getMemberList(jsonObject);\r\n    }\r\n\r\n    @Override\r\n    public void sendFcmToken(String id, String fcmToken) {\r\n        JsonObject jsonObject = new JsonObject();\r\n        jsonObject.addProperty(\"id\", id);\r\n        jsonObject.addProperty(\"fcmToken\", fcmToken);\r\n        fcmTokenService.sendFcmToken(jsonObject);\r\n\r\n    }\r\n\r\n    @Override\r\n    public void changeStatusMessage(String id, String newMessage) {\r\n        JsonObject jsonObject = new JsonObject();\r\n        jsonObject.addProperty(\"id\", id);\r\n        jsonObject.addProperty(\"newMessage\", newMessage);\r\n        changeStatusMessageService.sendFcmToken(jsonObject);\r\n    }\r\n\r\n    @Override\r\n    public void insertChatRoom(ChatRoomDTO chatRoomDTO) {\r\n        chatRoomService.insert(chatRoomDTO);\r\n    }\r\n    @Override\r\n    public void insertChatMessage(ChatMessageDTO chatMessageDTO) {\r\n        chatMessageService.insert(chatMessageDTO);\r\n    }\r\n\r\n    @Override\r\n    public LiveData<List<ChatMessageDTO>> getChatMessage(long id) {\r\n        return chatMessageService.getChatMessage(id);\r\n    }\r\n\r\n    @Override\r\n    public void setGetMemberListCallBack(GetMemberListCallBack callBack) {\r\n        memberListService.setGetMemberListCallBack(callBack);\r\n    }\r\n\r\n    @Override\r\n    public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {\r\n        loginService.setCallBack(callBack);\r\n    }\r\n\r\n\r\n    @Override\r\n    public void getList() {\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/RepositoryImpl.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/RepositoryImpl.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/RepositoryImpl.java	(revision 228b39f21d6da0a915e1767538f224602cc41d9a)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/RepositoryImpl.java	(date 1663431759470)
+@@ -105,6 +105,11 @@
+         return chatMessageService.getChatMessage(id);
+     }
+ 
++    @Override
++    public LiveData<List<ChatRoomDTO>> getChatRoomList() {
++        return chatRoomService.getChatRoomList();
++    }
++
+     @Override
+     public void setGetMemberListCallBack(GetMemberListCallBack callBack) {
+         memberListService.setGetMemberListCallBack(callBack);

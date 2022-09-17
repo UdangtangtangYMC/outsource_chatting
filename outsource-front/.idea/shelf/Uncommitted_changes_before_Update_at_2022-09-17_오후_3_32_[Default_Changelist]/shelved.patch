@@ -1,0 +1,211 @@
+Index: app/src/main/res/layout/item_chatroom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item_chatroom.xml b/app/src/main/res/layout/item_chatroom.xml
+new file mode 100644
+--- /dev/null	(date 1663395448178)
++++ b/app/src/main/res/layout/item_chatroom.xml	(date 1663395448178)
+@@ -0,0 +1,41 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:padding="10dp">
++
++    <TextView
++        android:id="@+id/txt_nickName"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="이름"
++        android:textColor="@color/black"
++        android:textSize="16dp"
++        app:layout_constraintBottom_toTopOf="@+id/txt_last_message"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++
++    <TextView
++        android:id="@+id/txt_last_message"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="4dp"
++        android:layout_marginTop="16dp"
++        android:text="마지막 메시지"
++        android:textColor="#373737"
++        app:layout_constraintStart_toStartOf="@+id/txt_nickName"
++        app:layout_constraintTop_toBottomOf="@+id/txt_nickName" />
++
++    <TextView
++        android:id="@+id/txt_last_send_time"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="HH:mm"
++        android:textColor="#373737"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
++
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java
+new file mode 100644
+--- /dev/null	(date 1663395711682)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListViewModel.java	(date 1663395711682)
+@@ -0,0 +1,7 @@
++package com.lodong.android.neighborcommunication.view.chatroomlist;
++
++import androidx.lifecycle.ViewModel;
++
++public class ChatRoomListViewModel extends ViewModel {
++
++}
+Index: app/src/main/res/layout/fragment_chat_room_list.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".view.chatroomlist.ChatRoomListFragment\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:text=\"@string/hello_blank_fragment\" />\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_chat_room_list.xml b/app/src/main/res/layout/fragment_chat_room_list.xml
+--- a/app/src/main/res/layout/fragment_chat_room_list.xml	(revision 4fc2228934c19e9d068615dc2c2cab10b735bbca)
++++ b/app/src/main/res/layout/fragment_chat_room_list.xml	(date 1663395808763)
+@@ -1,14 +1,17 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    tools:context=".view.chatroomlist.ChatRoomListFragment">
++<layout
++    xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools">
++
++    <androidx.constraintlayout.widget.ConstraintLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        tools:context=".view.chatroomlist.ChatRoomListFragment">
+ 
+-    <!-- TODO: Update blank fragment layout -->
+-    <TextView
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:text="@string/hello_blank_fragment" />
++        <androidx.recyclerview.widget.RecyclerView
++            android:id="@+id/recyclerview"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent" />
+ 
+-</FrameLayout>
+\ No newline at end of file
++    </androidx.constraintlayout.widget.ConstraintLayout>
++</layout>
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+new file mode 100644
+--- /dev/null	(date 1663396282932)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java	(date 1663396282932)
+@@ -0,0 +1,10 @@
++package com.lodong.android.neighborcommunication.repository.model;
++
++import androidx.room.Entity;
++import androidx.room.PrimaryKey;
++
++@Entity(tableName = "chatRoom")
++public class ChatRoomDTO {
++    @PrimaryKey(autoGenerate = false)
++    private int id;
++}
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"DesignSurface\">\r\n    <option name=\"filePathToZoomLevelMap\">\r\n      <map>\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/drawable-v24/bnv_tab_item_foreground.xml\" value=\"0.11\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/activity_login.xml\" value=\"0.2828125\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/activity_main.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/activity_sign_up.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/fragment_chat_room_list.xml\" value=\"0.25\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/fragment_member_list.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/layout/item_member.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/menu/bottom_menu.xml\" value=\"0.264\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/xml/network_security_config.xml\" value=\"0.14479166666666668\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_login.xml\" value=\"0.36614583333333334\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_main.xml\" value=\"0.22592592592592592\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_chat_room_list.xml\" value=\"0.36614583333333334\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_member_list.xml\" value=\"0.36614583333333334\" />\r\n        <entry key=\"..\\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_member.xml\" value=\"0.536\" />\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"Android Studio default JDK\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 4fc2228934c19e9d068615dc2c2cab10b735bbca)
++++ b/.idea/misc.xml	(date 1663395456819)
+@@ -14,8 +14,9 @@
+         <entry key="..\:/Users/seongminWoo/Desktop/Project/NeighborCommunication/app/src/main/res/xml/network_security_config.xml" value="0.14479166666666668" />
+         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
+         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/activity_main.xml" value="0.22592592592592592" />
+-        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_chat_room_list.xml" value="0.36614583333333334" />
++        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_chat_room_list.xml" value="0.2" />
+         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/fragment_member_list.xml" value="0.36614583333333334" />
++        <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_chatroom.xml" value="0.2" />
+         <entry key="..\:/Users/seongminWoo/Desktop/Project/outsource_chatting/outsource-front/app/src/main/res/layout/item_member.xml" value="0.536" />
+       </map>
+     </option>
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view.chatroomlist;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport com.lodong.android.neighborcommunication.R;\r\n\r\npublic class ChatRoomListFragment extends Fragment {\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        return inflater.inflate(R.layout.fragment_chat_room_list, container, false);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(revision 4fc2228934c19e9d068615dc2c2cab10b735bbca)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(date 1663395891448)
+@@ -2,20 +2,28 @@
+ 
+ import android.os.Bundle;
+ 
++import androidx.databinding.DataBindingUtil;
+ import androidx.fragment.app.Fragment;
++import androidx.lifecycle.ViewModelProvider;
+ 
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
+ import com.lodong.android.neighborcommunication.R;
++import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;
+ 
+ public class ChatRoomListFragment extends Fragment {
++    private FragmentChatRoomListBinding binding;
++    private ChatRoomListViewModel viewModel;
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         // Inflate the layout for this fragment
+-        return inflater.inflate(R.layout.fragment_chat_room_list, container, false);
++        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat_room_list, container, false);
++        viewModel = new ViewModelProvider(this).get(ChatRoomListViewModel.class);
++
++        return binding.getRoot();
+     }
+ }
+\ No newline at end of file
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n}\r\n\r\nandroid {\r\n    compileSdk 32\r\n\r\n    defaultConfig {\r\n        applicationId \"com.lodong.android.neighborcommunication\"\r\n        minSdk 24\r\n        targetSdk 32\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    dataBinding{\r\n        enabled true\r\n    }\r\n    viewBinding {\r\n        enabled true\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation 'androidx.appcompat:appcompat:1.5.0'\r\n    implementation 'com.google.android.material:material:1.6.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\r\n    implementation 'androidx.navigation:navigation-fragment:2.5.2'\r\n    implementation 'androidx.navigation:navigation-ui:2.5.2'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.3'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'\r\n\r\n    implementation 'com.google.code.gson:gson:2.8.2'\r\n\r\n    implementation 'com.squareup.retrofit2:retrofit:2.6.0'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n    implementation 'com.squareup.retrofit2:converter-scalars:2.6.4'\r\n\r\n    implementation \"io.reactivex.rxjava3:rxjava:3.1.5\"\r\n\r\n    //Navigation\r\n    def nav_version = \"2.1.0\"\r\n    implementation \"androidx.navigation:navigation-fragment:$nav_version\"\r\n    implementation \"androidx.navigation:navigation-ui:$nav_version\"\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 4fc2228934c19e9d068615dc2c2cab10b735bbca)
++++ b/app/build.gradle	(date 1663396202845)
+@@ -58,4 +58,7 @@
+     implementation "androidx.navigation:navigation-fragment:$nav_version"
+     implementation "androidx.navigation:navigation-ui:$nav_version"
+ 
++    def room_version = "2.4.2"
++    implementation "androidx.room:room-runtime:$room_version"
++    annotationProcessor "androidx.room:room-compiler:$room_version"
+ }
+\ No newline at end of file
