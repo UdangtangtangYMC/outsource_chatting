@@ -29,8 +29,8 @@ public class ChatService {
 
     @Transactional
     public void send(ChatMessage message) {
-        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), message);
-        messageRepository.save(message);
+        ChatMessage saved = messageRepository.save(message);
+        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);
     }
 
     @Transactional

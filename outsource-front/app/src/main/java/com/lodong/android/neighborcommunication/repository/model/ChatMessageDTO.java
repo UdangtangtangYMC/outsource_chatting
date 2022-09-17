@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "chatMessage")
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = false)
-    private long id;
+    private long chatId;
 
     @ColumnInfo(name = "chatRoomId")
-    private long chatRoomId;
+    private long room;
 
     @ColumnInfo(name="sender")
     private String sender;
@@ -19,42 +19,42 @@ public class ChatMessageDTO {
     private String receiver;
 
     @ColumnInfo(name="sendTime")
-    private String sendTime;
+    private String timestamp;
 
     @ColumnInfo(name="checkReceipt")
     private boolean checkReceipt;
 
     @ColumnInfo(name="content")
-    private String content;
+    private String message;
 
     @ColumnInfo(name = "viewType")
     private int viewType;
 
-    public ChatMessageDTO(long id, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {
-        this.id = id;
-        this.chatRoomId = chatRoomId;
+    public ChatMessageDTO(long chatId, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {
+        this.chatId = chatId;
+        this.room = chatRoomId;
         this.sender = sender;
         this.receiver = receiver;
-        this.sendTime = sendTime;
+        this.timestamp = sendTime;
         this.checkReceipt = checkReceipt;
-        this.content = content;
+        this.message = content;
         this.viewType = viewType;
     }
 
-    public long getId() {
-        return id;
+    public long getChatId() {
+        return chatId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
     }
 
-    public long getChatRoomId() {
-        return chatRoomId;
+    public long getRoom() {
+        return room;
     }
 
-    public void setChatRoomId(long chatRoomId) {
-        this.chatRoomId = chatRoomId;
+    public void setRoom(long room) {
+        this.room = room;
     }
 
     public String getSender() {
@@ -73,12 +73,12 @@ public class ChatMessageDTO {
         this.receiver = receiver;
     }
 
-    public String getSendTime() {
-        return sendTime;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setSendTime(String sendTime) {
-        this.sendTime = sendTime;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public boolean isCheckReceipt() {
@@ -89,12 +89,12 @@ public class ChatMessageDTO {
         this.checkReceipt = checkReceipt;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getViewType() {
@@ -103,5 +103,19 @@ public class ChatMessageDTO {
 
     public void setViewType(int viewType) {
         this.viewType = viewType;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessageDTO{" +
+                "chatId=" + chatId +
+                ", room=" + room +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", checkReceipt=" + checkReceipt +
+                ", message='" + message + '\'' +
+                ", viewType=" + viewType +
+                '}';
     }
 }
