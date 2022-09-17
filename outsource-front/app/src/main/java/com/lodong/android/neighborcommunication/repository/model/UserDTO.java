@@ -4,6 +4,7 @@ public class UserDTO {
     private String id;
     private String password;
     private String nickName;
+    private String statusMessage;
 
     public String getId() {
         return id;
@@ -27,5 +28,13 @@ public class UserDTO {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 }

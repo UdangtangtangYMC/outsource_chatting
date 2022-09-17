@@ -3,6 +3,7 @@ package com.lodong.android.neighborcommunication.view.memberlist;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
@@ -14,9 +15,15 @@ public class MemberListViewModel extends ViewModel {
     private MutableLiveData<Throwable> errorML = new MutableLiveData<>();
     private Repository repository;
 
+    public String userNickName;
+    public String userStatusMessage;
+
     public void init(){
         repository = RepositoryImpl.getInstance();
         repository.setGetMemberListCallBack(getMemberListCallBack());
+
+        userNickName = UserInfo.getInstance().getNickName();
+        userStatusMessage = UserInfo.getInstance().getMessage();
     }
 
     public void getMemberList() {

@@ -5,11 +5,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.lodong.android.neighborcommunication.R;
+import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.databinding.ActivityMainBinding;
+import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         init();
+        settingLoginUserInfo();
     }
 
     private void init(){
@@ -30,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void settingLoginUserInfo(){
+        String id = PreferenceManager.getId(this);
+        String statusMessage = PreferenceManager.getStatusMessage(this);
+        String nickName = PreferenceManager.getNickName(this);
 
+        UserInfo userInfo = UserInfo.getInstance();
+        userInfo.setId(id);
+        userInfo.setMessage(statusMessage);
+        userInfo.setNickName(nickName);
     }
 }
