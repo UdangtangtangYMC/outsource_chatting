@@ -1,5 +1,6 @@
 package com.hyunho9877.outsource.domain;
 
+import com.google.common.base.Strings;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +26,7 @@ public class ChatMessage implements Serializable {
 
     @PrePersist
     public void prePersist() {
-        if(this.timestamp.equals("")) this.timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now());
+        if(Strings.isNullOrEmpty(timestamp)) this.timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now());
         this.confirmed = false;
     }
 }

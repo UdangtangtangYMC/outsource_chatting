@@ -46,7 +46,6 @@ public class AuthController {
         ApplicationUser applicationUser = ApplicationUser.builder()
                 .id(user.getId())
                 .password(user.getPassword())
-                .nickName(user.getNickName())
                 .build();
 
         ApplicationUser authResult = authService.auth(applicationUser);

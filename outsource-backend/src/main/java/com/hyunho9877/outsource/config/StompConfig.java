@@ -29,7 +29,6 @@ public class StompConfig  implements WebSocketMessageBrokerConfigurer{
                 .setApplicationDestinationPrefixes("/pub")
                 .enableStompBrokerRelay("/topic", "/queue")
                 .setRelayHost("localhost")
-                .setVirtualHost("/")
                 .setRelayPort(1613)
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
@@ -37,9 +36,7 @@ public class StompConfig  implements WebSocketMessageBrokerConfigurer{
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry
-                .addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:8080");
+        registry.addEndpoint("/ws");
     }
 
 
