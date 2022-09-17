@@ -1,6 +1,7 @@
 package com.lodong.android.neighborcommunication.repository.roomdb;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -16,7 +17,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {ChatMessageDTO.class, ChatRoomDTO.class}, version = 4, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
-    private final String TAG = RoomDB.class.getSimpleName();
+    private static final String TAG = RoomDB.class.getSimpleName();
     private static String DATABASE_NAME = "communication";
     private static RoomDB instance;
 
@@ -25,6 +26,7 @@ public abstract class RoomDB extends RoomDatabase {
             = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public synchronized static RoomDB getInstance(Context context){
+        Log.d(TAG, "roomdb create");
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(), RoomDB.class, DATABASE_NAME)
                     .allowMainThreadQueries()

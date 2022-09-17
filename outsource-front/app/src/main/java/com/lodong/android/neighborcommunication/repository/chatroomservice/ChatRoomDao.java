@@ -1,5 +1,6 @@
 package com.lodong.android.neighborcommunication.repository.chatroomservice;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
 import static androidx.room.OnConflictStrategy.REPLACE;
 
 import androidx.lifecycle.LiveData;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Dao
 public interface ChatRoomDao {
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     void insert(ChatRoomDTO chatRoomDTO);
 
     @Delete

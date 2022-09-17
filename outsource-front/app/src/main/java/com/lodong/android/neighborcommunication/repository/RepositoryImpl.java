@@ -3,6 +3,8 @@ package com.lodong.android.neighborcommunication.repository;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.changestatusmessage.ChangeStatusMessageService;
 import com.lodong.android.neighborcommunication.repository.chatmessageservice.ChatMessageService;
@@ -16,6 +18,8 @@ import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
 import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+
+import java.util.List;
 
 public class RepositoryImpl implements Repository{
     private final String TAG = RepositoryImpl.class.getSimpleName();
@@ -97,6 +101,11 @@ public class RepositoryImpl implements Repository{
     }
 
     @Override
+    public LiveData<List<ChatMessageDTO>> getChatMessage(long id) {
+        return chatMessageService.getChatMessage(id);
+    }
+
+    @Override
     public void setGetMemberListCallBack(GetMemberListCallBack callBack) {
         memberListService.setGetMemberListCallBack(callBack);
     }
@@ -105,7 +114,6 @@ public class RepositoryImpl implements Repository{
     public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
         loginService.setCallBack(callBack);
     }
-
 
 
     @Override
