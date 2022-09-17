@@ -16,5 +16,4 @@ public class FCMTokenService {
     public void sendFcmToken(JsonObject jsonObject){
         retrofitService.sendFcmToken(jsonObject);
     }
-
 }

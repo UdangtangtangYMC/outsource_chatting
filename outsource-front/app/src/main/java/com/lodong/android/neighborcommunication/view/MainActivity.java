@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
         repository = RepositoryImpl.getInstance();
+        StompUtils.init(this);
     }
     private void settingLoginUserInfo(){
         String id = PreferenceManager.getId(this);

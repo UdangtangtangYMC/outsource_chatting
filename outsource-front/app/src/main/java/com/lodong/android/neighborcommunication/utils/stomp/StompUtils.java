@@ -12,12 +12,16 @@ import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
 public class StompUtils {
-    private final String TAG = StompUtils.class.getSimpleName();
-    private StompClient stompClient;
-    private final String BASE_URL = "ws://49.174.169.48:13883/ws";
+    private static final String TAG = StompUtils.class.getSimpleName();
+    private static final String BASE_URL = "ws://49.174.169.48:13883/ws";
+    public static final StompUtils INSTANCE = new StompUtils();
+    private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
 
-    public void connect(Context context) {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
+    private StompUtils() {
+
+    }
+
+    public static void init(Context context) {
         String subscribeURL = "/queue/" + getId(context);
         Log.d(TAG, subscribeURL);
         Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
@@ -28,7 +32,7 @@ public class StompUtils {
         stompClient.connect();
     }
 
-    private String getId(Context context) {
+    private static String getId(Context context) {
         return PreferenceManager.getId(context);
     }
 
@@ -41,9 +45,5 @@ public class StompUtils {
         Gson gson = new Gson();
         String toJson = gson.toJson(message);
         stompClient.send("/pub/hello", toJson).subscribe();
-    }
-
-    public boolean isConnected() {
-        return stompClient.isConnected();
     }
 }
