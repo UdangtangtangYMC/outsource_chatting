@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "605640608125",
+    "project_id": "outsource-chatting",
+    "storage_bucket": "outsource-chatting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605640608125:android:1da45d6c44e1ecccd1a414",
+        "android_client_info": {
+          "package_name": "com.lodong.android.neighborcommunication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605640608125-cs0anu9pinqftj7h348u067556ck1si9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lodong.android.neighborcommunication",
+            "certificate_hash": "c8dc673fc6af246e73fff26fb5d97cc542fa28c0"
+          }
+        },
+        {
+          "client_id": "605640608125-pgb4qgnvhfi8e4ddqv84ivqkd0je65rd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR4Y_Qa2NJaxIJghcC2R0glLwxXBurVeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605640608125-pgb4qgnvhfi8e4ddqv84ivqkd0je65rd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

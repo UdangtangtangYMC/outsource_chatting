@@ -9,7 +9,8 @@ public interface Repository {
     public void getList();
     public void signUp(String id, String password, String nickName);
     public void login(String id, String password);
-    public void getMemberList();
+    public void getMemberList(String id);
+    public void sendFcmToken(String id, String fcm);
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);

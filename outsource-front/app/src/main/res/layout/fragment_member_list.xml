@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.lodong.android.neighborcommunication.view.memberlist.MemberListViewModel"/>
@@ -14,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.memberlist.MemberListFragment">
-
 
         <TextView
             android:id="@+id/txt_status_message"

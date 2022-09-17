@@ -27,7 +27,7 @@ public class MemberListViewModel extends ViewModel {
     }
 
     public void getMemberList() {
-        repository.getMemberList();
+        repository.getMemberList(UserInfo.getInstance().getId());
     }
 
     public MutableLiveData<List<MemberDTO>> getMemberListML(){

@@ -48,8 +48,17 @@ public class RepositoryImpl implements Repository{
     }
 
     @Override
-    public void getMemberList() {
-        memberListService.getMemberList();
+    public void getMemberList(String id) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        memberListService.getMemberList(jsonObject);
+    }
+
+    @Override
+    public void sendFcmToken(String id, String fcmToken) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("fcmToken", fcmToken);
     }
 
     @Override
@@ -58,12 +67,13 @@ public class RepositoryImpl implements Repository{
     }
 
     @Override
+    public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
+        loginService.setCallBack(callBack);
+    }
+
+    @Override
     public void getList() {
 
     }
 
-    @Override
-    public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
-        loginService.setCallBack(callBack);
-    }
 }
