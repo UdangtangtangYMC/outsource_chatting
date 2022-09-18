@@ -5,6 +5,7 @@ import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.domain.ChatRoom;
 import com.hyunho9877.outsource.dto.ChatRoomDTO;
 import com.hyunho9877.outsource.service.ChatService;
+import com.hyunho9877.outsource.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private final ChatService chatService;
+    private final UserService userService;
 
     @MessageMapping("/msg")
     public void newUser(@Payload ChatMessage message) throws FirebaseMessagingException {
-        log.info("server message received {}", message);
+        if(userService.isBlocked(message.getSender(), message.getReceiver())) return;
         chatService.send(message);
         chatService.sendNotification(message);
     }

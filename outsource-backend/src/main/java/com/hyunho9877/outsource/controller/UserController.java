@@ -40,6 +40,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/unblock")
+    public ResponseEntity<?> unblock(@RequestBody ChatRoomDTO blockingInfo) {
+        userService.unblock(blockingInfo.getId(), blockingInfo.getSubject());
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/blocking/get")
     public ResponseEntity<List<String>> getBlockList(@RequestBody ChatRoomDTO user) {
         return ResponseEntity.ok(userService.getBlockList(user.getId()));

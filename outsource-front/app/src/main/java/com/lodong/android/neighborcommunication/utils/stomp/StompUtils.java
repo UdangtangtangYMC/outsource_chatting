@@ -63,11 +63,6 @@ public class StompUtils {
         }
     }
 
-    public void insertChatMessage(ChatMessage message){
-
-    }
-
-
     public RoomCreateCallBack getRoomCreateCallBack() {
         return new RoomCreateCallBack() {
             @Override

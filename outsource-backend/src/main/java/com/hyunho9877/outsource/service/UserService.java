@@ -1,6 +1,7 @@
 package com.hyunho9877.outsource.service;
 
 import com.hyunho9877.outsource.domain.ApplicationUser;
+import com.hyunho9877.outsource.domain.BlockKey;
 import com.hyunho9877.outsource.domain.Blocking;
 import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.repo.BlockingRepository;
@@ -36,6 +37,14 @@ public class UserService {
         ApplicationUser requester = userRepository.getReferenceById(id);
         ApplicationUser blockTarget = userRepository.getReferenceById(subject);
         blockingRepository.save(new Blocking(requester.getId(), blockTarget.getId()));
+    }
+
+    public void unblock(String id, String subject) {
+        blockingRepository.deleteById(new BlockKey(id, subject));
+    }
+
+    public boolean isBlocked(String id, String subject) {
+        return blockingRepository.existsById(new BlockKey(subject, id));
     }
 
     public List<String> getBlockList(String id) {
