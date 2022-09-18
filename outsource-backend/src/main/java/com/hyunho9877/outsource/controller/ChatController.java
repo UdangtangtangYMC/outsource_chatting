@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,8 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/msg")
-    public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) throws FirebaseMessagingException {
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
-        log.info("{}", message);
+    public void newUser(@Payload ChatMessage message) throws FirebaseMessagingException {
+        log.info("server message received {}", message);
         chatService.send(message);
         chatService.sendNotification(message);
     }

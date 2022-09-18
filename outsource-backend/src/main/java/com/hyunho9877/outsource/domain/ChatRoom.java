@@ -19,4 +19,8 @@ public class ChatRoom {
     private String roomUserOneNickName;
     @Transient
     private String roomUserTwoNickName;
+    @Transient
+    private String roomUserOneId;
+    @Transient
+    private String roomUserTwoId;
 }

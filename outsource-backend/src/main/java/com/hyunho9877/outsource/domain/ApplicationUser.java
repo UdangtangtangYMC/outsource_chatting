@@ -28,7 +28,13 @@ public class ApplicationUser {
         this.receiveNotification = true;
     }
 
+    public ApplicationUser(String id, String nickName, String message) {
+        this.id = id;
+        this.nickName = nickName;
+        this.message = message;
+    }
+
     public static ApplicationUser getPublicProfile(ApplicationUser user) {
-        return new ApplicationUser(user.getId(), null, user.getNickName(), user.getMessage(), user.isReceiveNotification(), null);
+        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage());
     }
 }

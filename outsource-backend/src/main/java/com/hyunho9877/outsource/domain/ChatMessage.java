@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 
 @Entity
-@Getter @Setter @ToString
+@Getter @Setter @ToString @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class ChatMessage implements Serializable {
     @Id
@@ -27,6 +27,8 @@ public class ChatMessage implements Serializable {
     private String senderNickName;
     @Transient
     private String receiverNickName;
+    @Transient
+    private long roomId;
 
     @PrePersist
     public void prePersist() {

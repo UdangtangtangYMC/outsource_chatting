@@ -6,7 +6,6 @@ import com.google.firebase.messaging.Message;
 import com.hyunho9877.outsource.domain.ApplicationUser;
 import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.domain.ChatRoom;
-import com.hyunho9877.outsource.domain.Exchange;
 import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.repo.ChatMessageRepository;
 import com.hyunho9877.outsource.repo.ChatRoomRepository;
@@ -28,22 +27,27 @@ public class ChatService {
     private final ApplicationUserRepository userRepository;
 
     @Transactional
-    public void send(ChatMessage message) {
+    public ChatMessage send(ChatMessage message) {
         ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();
         ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();
+        ChatRoom chatRoom = chatRoomRepository.findById(message.getRoomId()).orElseThrow();
+        message.setRoom(chatRoom);
 
         ChatMessage saved = messageRepository.save(message);
+        log.info("message saved : {}", saved);
 
         saved.setSenderNickName(sender.getNickName());
         saved.setReceiverNickName(receiver.getNickName());
 
-        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);
+        rabbitTemplate.convertAndSend(message.getReceiver(), saved);
+        return saved;
     }
 
     @Transactional
     public void confirmMessage(String username, String sender) {
 
     }
+
 
     public ChatRoom registerNewChatRoom(String requester, String subject) {
         if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
@@ -56,10 +60,13 @@ public class ChatService {
                 .build();
 
         ChatRoom save = chatRoomRepository.save(chatRoom);
-        save.setRoomUserOne(ApplicationUser.getPublicProfile(req));
-        save.setRoomUserTwo(ApplicationUser.getPublicProfile(sub));
+        save.setRoomUserOne(null);
+        save.setRoomUserTwo(null);
         save.setRoomUserOneNickName(req.getNickName());
         save.setRoomUserTwoNickName(sub.getNickName());
+        save.setRoomUserOneId(req.getId());
+        save.setRoomUserTwoId(sub.getId());
+        log.info("message sending : {}", save);
         return save;
     }
 
@@ -77,6 +84,7 @@ public class ChatService {
                 .setToken(token)
                 .build();
         String response = FirebaseMessaging.getInstance().send(message);
+        rabbitTemplate.convertAndSend(chat.getSender(), chat);
         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
     }
 }
