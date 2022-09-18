@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,8 +19,6 @@ import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomList
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
-
-import java.util.List;
 
 public class ChatRoomListFragment extends Fragment {
     private FragmentChatRoomListBinding binding;
@@ -57,8 +54,8 @@ public class ChatRoomListFragment extends Fragment {
     public OnChatRoomClickListener onChatRoomClickListener(){
         return chatRoomDTO -> {
             long id = chatRoomDTO.getRoomId();
-            String receiver = chatRoomDTO.getRoomUserOne().equals(UserInfo.getInstance().getId())
-                    ? chatRoomDTO.getRoomUserTwo() : chatRoomDTO.getRoomUserOne();
+            String receiver = chatRoomDTO.getRoomUserOneId().equals(UserInfo.getInstance().getId())
+                    ? chatRoomDTO.getRoomUserTwoId() : chatRoomDTO.getRoomUserOneId();
             String receiverNickName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getNickName())
                     ? chatRoomDTO.getRoomUserTwoNickName() : chatRoomDTO.getRoomUserOneNickName();
             intentChatRoomActivity(id, receiver, receiverNickName);

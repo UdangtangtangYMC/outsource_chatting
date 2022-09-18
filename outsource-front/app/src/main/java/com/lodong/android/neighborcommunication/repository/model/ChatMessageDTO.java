@@ -2,15 +2,16 @@ package com.lodong.android.neighborcommunication.repository.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "chatMessage")
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = false)
-    private long chatId;
+    private Long chatId;
 
     @ColumnInfo(name = "chatRoomId")
-    private long room;
+    private Long roomId;
 
     @ColumnInfo(name="sender")
     private String sender;
@@ -30,18 +31,40 @@ public class ChatMessageDTO {
     @ColumnInfo(name = "viewType")
     private int viewType;
 
+    @Ignore
+    private String senderNickName;
+    @Ignore
+    private String receiverNickName;
+
     public ChatMessageDTO() {
     }
 
-    public ChatMessageDTO(long chatId, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {
-        this.chatId = chatId;
-        this.room = chatRoomId;
+    public ChatMessageDTO(long roomId, String sender, String receiver, String message) {
+        this.roomId = roomId;
         this.sender = sender;
         this.receiver = receiver;
-        this.timestamp = sendTime;
+        this.message = message;
+    }
+
+    public ChatMessageDTO(String sender, String receiver, String message) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
+    }
+
+
+
+    public ChatMessageDTO(long chatId, long roomId, String sender, String receiver, String timestamp, boolean checkReceipt, String message, int viewType, String senderNickName, String receiverNickName) {
+        this.chatId = chatId;
+        this.roomId = roomId;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.timestamp = timestamp;
         this.checkReceipt = checkReceipt;
-        this.message = content;
+        this.message = message;
         this.viewType = viewType;
+        this.senderNickName = senderNickName;
+        this.receiverNickName = receiverNickName;
     }
 
     public long getChatId() {
@@ -52,12 +75,12 @@ public class ChatMessageDTO {
         this.chatId = chatId;
     }
 
-    public long getRoom() {
-        return room;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public void setRoom(long room) {
-        this.room = room;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public String getSender() {
@@ -108,17 +131,35 @@ public class ChatMessageDTO {
         this.viewType = viewType;
     }
 
+    public String getSenderNickName() {
+        return senderNickName;
+    }
+
+    public void setSenderNickName(String senderNickName) {
+        this.senderNickName = senderNickName;
+    }
+
+    public String getReceiverNickName() {
+        return receiverNickName;
+    }
+
+    public void setReceiverNickName(String receiverNickName) {
+        this.receiverNickName = receiverNickName;
+    }
+
     @Override
     public String toString() {
         return "ChatMessageDTO{" +
                 "chatId=" + chatId +
-                ", room=" + room +
+                ", roomId=" + roomId +
                 ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 ", checkReceipt=" + checkReceipt +
                 ", message='" + message + '\'' +
                 ", viewType=" + viewType +
+                ", senderNickName='" + senderNickName + '\'' +
+                ", receiverNickName='" + receiverNickName + '\'' +
                 '}';
     }
 }

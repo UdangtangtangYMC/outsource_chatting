@@ -106,7 +106,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void createChatRoom(String id, String subject, ChatMessage message) {
+    public void createChatRoom(String id, String subject, ChatMessageDTO message) {
         chatRoomService.createNewChatRoom(id, subject, message);
     }
 

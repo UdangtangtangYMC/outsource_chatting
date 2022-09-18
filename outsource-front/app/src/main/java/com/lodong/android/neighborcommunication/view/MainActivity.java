@@ -14,6 +14,7 @@ import com.lodong.android.neighborcommunication.databinding.ActivityMainBinding;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.FCMManager;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
@@ -34,13 +35,15 @@ public class MainActivity extends AppCompatActivity {
         getNowFCMToken();
     }
 
-    private void init(){
+    private void init() {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
         repository = RepositoryImpl.getInstance();
         StompUtils.init(this);
+        new Handler().postDelayed(() -> StompUtils.INSTANCE.send(new ChatMessageDTO(5L, "test", "id", "hello again")), 200);
     }
-    private void settingLoginUserInfo(){
+
+    private void settingLoginUserInfo() {
         String id = PreferenceManager.getId(this);
         String statusMessage = PreferenceManager.getStatusMessage(this);
         String nickName = PreferenceManager.getNickName(this);
@@ -50,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
         userInfo.setMessage(statusMessage);
         userInfo.setNickName(nickName);
     }
-    private void getNowFCMToken(){
+
+    private void getNowFCMToken() {
         FCMManager.getNowFCMToken(getFCMToken());
     }
-    public GetFCMToken getFCMToken(){
+
+    public GetFCMToken getFCMToken() {
         return new GetFCMToken() {
             @Override
             public void onSuccess(String fcmToken) {
@@ -66,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
-    private void sendFCMToken(String fcmToken){
-        repository.sendFcmToken(UserInfo.getInstance().getId(),fcmToken);
+
+    private void sendFCMToken(String fcmToken) {
+        repository.sendFcmToken(UserInfo.getInstance().getId(), fcmToken);
     }
 
 

@@ -53,7 +53,7 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     public void sendMessage(String message){
-        ChatMessage chatMessage = new ChatMessage(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
+        ChatMessageDTO chatMessage = new ChatMessageDTO(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
         Log.d(TAG, "send message info : " + chatMessage.toString());
         StompUtils.INSTANCE.send(chatMessage);
     }

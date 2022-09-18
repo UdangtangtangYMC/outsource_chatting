@@ -1,5 +1,6 @@
 package com.lodong.android.neighborcommunication.utils.stomp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -9,12 +10,15 @@ import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
+import com.lodong.android.neighborcommunication.utils.preferences.Code;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
+import ua.naiksoftware.stomp.dto.LifecycleEvent;
 
 public class StompUtils {
     private static final String TAG = StompUtils.class.getSimpleName();
@@ -24,17 +28,21 @@ public class StompUtils {
     private static final Repository repository = RepositoryImpl.getInstance();
     private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
 
+    @SuppressLint("CheckResult")
     public static void init(Context context) {
         String subscribeURL = "/queue/" + getId(context);
         Log.d(TAG, subscribeURL);
-        Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
-            String payload = lifecycleEvent.getPayload();
+        stompClient.connect();
+        stompClient.topic(subscribeURL).subscribe(data -> {
+            String payload = data.getPayload();
             ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
-                repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));
+            Log.d(TAG, message.toString());
+            if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
+            if (message.getSender().equals(getId(context))) message.setViewType(Code.ViewType.RIGHT_CONTENT);
+            else message.setViewType(Code.ViewType.LEFT_CONTENT);
             repository.insertChatMessage(message);
         });
-        stompClient.connect();
     }
 
     private static String getId(Context context) {
@@ -45,9 +53,8 @@ public class StompUtils {
         stompClient.disconnect();
     }
 
-    public void send(ChatMessage message) {
-        Log.d(TAG, message.toString());
-        if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())){
+    public void send(ChatMessageDTO message) {
+        if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {
             repository.setRoomCreatedCallBack(getRoomCreateCallBack());
             repository.createChatRoom(message.getSender(), message.getReceiver(), message);
         } else {
@@ -64,10 +71,11 @@ public class StompUtils {
     public RoomCreateCallBack getRoomCreateCallBack() {
         return new RoomCreateCallBack() {
             @Override
-            public void onSuccess(ChatRoomDTO chatRoom, ChatMessage message) {
+            public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
                 message.setRoomId(chatRoom.getRoomId());
+                repository.insertChatRoom(chatRoom);
                 String toJson = new Gson().toJson(message);
-                stompClient.send("/pub/msg", toJson);
+                stompClient.send("/pub/msg", toJson).subscribe();
             }
 
             @Override

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.retrofit.RetrofitService;
 import com.lodong.android.neighborcommunication.repository.roomdb.RoomDB;
@@ -31,7 +32,7 @@ public class ChatRoomService {
         return chatRoomList;
     }
 
-    public void createNewChatRoom(String id, String subject, ChatMessage message){
+    public void createNewChatRoom(String id, String subject, ChatMessageDTO message){
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("subject", subject);

@@ -2,6 +2,7 @@ package com.lodong.android.neighborcommunication.repository.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "chatRoom")
@@ -10,11 +11,11 @@ public class ChatRoomDTO {
     @ColumnInfo(name = "room_id")
     private long roomId;
 
-    @ColumnInfo(name = "room_user_one")
-    private String roomUserOne;
+    @ColumnInfo(name = "room_user_one_id")
+    private String roomUserOneId;
 
-    @ColumnInfo(name = "room_user_two")
-    private String roomUserTwo;
+    @ColumnInfo(name = "room_user_two_id")
+    private String roomUserTwoId;
 
     @ColumnInfo(name = "room_user_one_nick_name")
     private String roomUserOneNickName;
@@ -22,10 +23,12 @@ public class ChatRoomDTO {
     @ColumnInfo(name = "room_user_two_nick_name")
     private String roomUserTwoNickName;
 
-    public ChatRoomDTO(long roomId, String roomUserOne, String roomUserTwo) {
+    public ChatRoomDTO(long roomId, String roomUserOneId, String roomUserTwoId, String roomUserOneNickName, String roomUserTwoNickName) {
         this.roomId = roomId;
-        this.roomUserOne = roomUserOne;
-        this.roomUserTwo = roomUserTwo;
+        this.roomUserOneId = roomUserOneId;
+        this.roomUserTwoId = roomUserTwoId;
+        this.roomUserOneNickName = roomUserOneNickName;
+        this.roomUserTwoNickName = roomUserTwoNickName;
     }
 
     public long getRoomId() {
@@ -36,20 +39,20 @@ public class ChatRoomDTO {
         this.roomId = roomId;
     }
 
-    public String getRoomUserOne() {
-        return roomUserOne;
+    public String getRoomUserOneId() {
+        return roomUserOneId;
     }
 
-    public void setRoomUserOne(String roomUserOne) {
-        this.roomUserOne = roomUserOne;
+    public void setRoomUserOneId(String roomUserOneId) {
+        this.roomUserOneId = roomUserOneId;
     }
 
-    public String getRoomUserTwo() {
-        return roomUserTwo;
+    public String getRoomUserTwoId() {
+        return roomUserTwoId;
     }
 
-    public void setRoomUserTwo(String roomUserTwo) {
-        this.roomUserTwo = roomUserTwo;
+    public void setRoomUserTwoId(String roomUserTwoId) {
+        this.roomUserTwoId = roomUserTwoId;
     }
 
     public String getRoomUserOneNickName() {
@@ -72,8 +75,8 @@ public class ChatRoomDTO {
     public String toString() {
         return "ChatRoomDTO{" +
                 "roomId=" + roomId +
-                ", roomUserOne='" + roomUserOne + '\'' +
-                ", roomUserTwo='" + roomUserTwo + '\'' +
+                ", roomUserOne='" + roomUserOneId + '\'' +
+                ", roomUserTwo='" + roomUserTwoId + '\'' +
                 ", roomUserOneNickName='" + roomUserOneNickName + '\'' +
                 ", roomUserTwoNickName='" + roomUserTwoNickName + '\'' +
                 '}';
