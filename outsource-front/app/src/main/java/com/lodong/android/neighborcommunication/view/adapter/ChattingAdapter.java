@@ -51,7 +51,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((LeftViewHolder) holder).txtName.setText(chatMessageList.get(position).getSender());
             ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getMessage());
         }else{
-            ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getMessage());
+            ((RightViewHolder) holder).content.setText(chatMessageList.get(position).getMessage());
         }
     }
 
