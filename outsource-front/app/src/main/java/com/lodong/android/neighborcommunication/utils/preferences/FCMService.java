@@ -22,6 +22,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.lodong.android.neighborcommunication.R;
 import com.lodong.android.neighborcommunication.view.MainActivity;
+import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
 import java.io.IOException;
 import java.net.URL;
@@ -86,7 +87,7 @@ public class FCMService extends FirebaseMessagingService{
     }
 
     public void handleMessage(RemoteMessage remoteMessage){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ChatRoomActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT|PendingIntent.FLAG_MUTABLE);
 

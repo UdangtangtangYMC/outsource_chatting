@@ -53,10 +53,10 @@ public class MemberListFragment extends Fragment {
     private void init(){
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         adapter = new MemberListAdapter();
+        adapter.setOnMemberClickListener(getOnMemberClickLisener());
         binding.recyclerview.setAdapter(adapter);
         viewModel.init();
     }
-
 
     private void settingLiveData(){
         viewModel.getMemberListML().observe(getViewLifecycleOwner(), memberList -> {
@@ -76,5 +76,15 @@ public class MemberListFragment extends Fragment {
 
     private void settingMemberList(List<MemberDTO> memberList){
         this.adapter.changeMemberListAdapter(memberList);
+    }
+
+    private OnMemberClickListener getOnMemberClickLisener(){
+        return memberDTO -> {
+            viewModel.showOpenMemberSettingDialog(memberDTO);
+        };
+    }
+
+    public interface OnMemberClickListener{
+        public void onClick(MemberDTO memberDTO);
     }
 }

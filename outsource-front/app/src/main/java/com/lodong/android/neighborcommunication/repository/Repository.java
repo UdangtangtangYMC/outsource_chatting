@@ -22,6 +22,7 @@ public interface Repository {
     public void insertChatMessage(ChatMessageDTO chatMessageDTO);
     public boolean isChatRoomExists(String p1, String p2);
     public void createChatRoom(String id, String subject, ChatMessage message);
+    public ChatRoomDTO getChatRoom(String receiver);
     public LiveData<List<ChatMessageDTO>> getChatMessage(long id);
     public LiveData<List<ChatRoomDTO>> getChatRoomList();
 

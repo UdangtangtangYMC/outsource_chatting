@@ -46,6 +46,10 @@ public class ChatRoomService {
         chatRoomDao.delete(chatRoomDTO);
     }
 
+    public ChatRoomDTO getChatRoom(String receiver){
+        return chatRoomDao.getChatRoom(receiver);
+    }
+
     public void setCallBack(RoomCreateCallBack callBack) {
         this.callBack = callBack;
     }

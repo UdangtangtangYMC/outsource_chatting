@@ -25,4 +25,7 @@ public interface ChatRoomDao {
 
     @Query("select exists (select 1 from chatroom c where (c.room_user_one = :p1 and c.room_user_two = :p2) or (c.room_user_one = :p2 and c.room_user_two = :p1))")
     boolean existsByParticipants(String p1, String p2);
+
+    @Query("select * FROM chatRoom where room_user_one = :receiver or room_user_two = :receiver")
+    ChatRoomDTO getChatRoom(String receiver);
 }

@@ -121,6 +121,11 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public ChatRoomDTO getChatRoom(String receiver) {
+        return chatRoomService.getChatRoom(receiver);
+    }
+
+    @Override
     public void setGetMemberListCallBack(GetMemberListCallBack callBack) {
         memberListService.setGetMemberListCallBack(callBack);
     }
