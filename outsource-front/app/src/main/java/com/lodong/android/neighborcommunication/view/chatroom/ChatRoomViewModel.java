@@ -2,7 +2,9 @@ package com.lodong.android.neighborcommunication.view.chatroom;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -27,6 +29,7 @@ public class ChatRoomViewModel extends ViewModel {
     private long chatRoomid;
     private final long noChatRoomId = -99;
     private String receiver;
+    public ObservableField<String> receiverNickName = new ObservableField<>();
 
     private MutableLiveData<Long> chatRoomIdML = new MutableLiveData<>();
 
@@ -42,11 +45,16 @@ public class ChatRoomViewModel extends ViewModel {
         Intent intent = mRef.get().getIntent();
         chatRoomid = intent.getLongExtra("chatRoomId", noChatRoomId);
         receiver = intent.getStringExtra("receiver");
+        this.receiverNickName.set(intent.getStringExtra("receiverNickName"));
+        Log.d(TAG, "chatRoomid : " + chatRoomid);
+        Log.d(TAG, "receiver : " + receiver);
+        Log.d(TAG, "receiverNickName " + receiverNickName.get());
         chatRoomIdML.setValue(chatRoomid);
     }
 
     public void sendMessage(String message){
         ChatMessage chatMessage = new ChatMessage(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
+        Log.d(TAG, "send message info : " + chatMessage.toString());
         StompUtils.INSTANCE.send(chatMessage);
     }
 

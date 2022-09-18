@@ -1,6 +1,7 @@
 package com.lodong.android.neighborcommunication.view.chatroom;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -29,9 +30,11 @@ public class ChatRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_room);
+        binding.setActivity(this);
         viewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider
                 .AndroidViewModelFactory(getApplication())).get(ChatRoomViewModel.class);
         viewModel.setParent(this);
+        binding.setViewModel(viewModel);
         viewModel.init();
 
         init();
@@ -54,8 +57,13 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     public void sendMessage(){
+        Log.d(TAG, "sendMessage");
         String message = binding.edtMessage.getText().toString();
         viewModel.sendMessage(message);
+    }
+
+    public void openDrawer(){
+        binding.drawer.openDrawer(GravityCompat.END);
     }
 
     private void getChatMessageList(long chatRoomId){

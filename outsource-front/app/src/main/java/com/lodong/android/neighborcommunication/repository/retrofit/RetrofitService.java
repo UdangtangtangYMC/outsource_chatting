@@ -75,9 +75,6 @@ public class RetrofitService {
         retrofitServiceInterface.getMemberList(jsonObject).enqueue(new Callback<List<MemberDTO>>() {
             @Override
             public void onResponse(Call<List<MemberDTO>> call, Response<List<MemberDTO>> response) {
-                for (MemberDTO memberDTO : response.body()) {
-                    Log.d(TAG, memberDTO.toString());
-                }
                 callBack.onSuccess(response.body());
             }
 

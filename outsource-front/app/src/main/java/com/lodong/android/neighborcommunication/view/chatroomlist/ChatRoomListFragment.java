@@ -59,15 +59,18 @@ public class ChatRoomListFragment extends Fragment {
             long id = chatRoomDTO.getRoomId();
             String receiver = chatRoomDTO.getRoomUserOne().equals(UserInfo.getInstance().getId())
                     ? chatRoomDTO.getRoomUserTwo() : chatRoomDTO.getRoomUserOne();
-            intentChatRoomActivity(id, receiver);
+            String receiverNickName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getNickName())
+                    ? chatRoomDTO.getRoomUserTwoNickName() : chatRoomDTO.getRoomUserOneNickName();
+            intentChatRoomActivity(id, receiver, receiverNickName);
 
         };
     }
 
-    private void intentChatRoomActivity(long id, String receiver){
+    private void intentChatRoomActivity(long id, String receiver, String receiverNickName){
         Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
         intent.putExtra("chatRoomId", id);
         intent.putExtra("receiver", receiver);
+        intent.putExtra("receiverNickName", receiverNickName);
         startActivity(intent);
     }
 

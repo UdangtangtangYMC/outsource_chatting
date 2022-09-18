@@ -71,5 +71,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    // Drawerlayout
+    implementation "androidx.drawerlayout:drawerlayout:1.1.1"
+
 }
 apply plugin: 'com.google.gms.google-services'

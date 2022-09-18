@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -29,7 +30,7 @@ public class MemberListViewModel extends ViewModel {
     private Repository repository;
 
     public String userNickName;
-    public String userStatusMessage;
+    public ObservableField<String> userStatusMessage = new ObservableField<>();
 
     public void setParent(Activity activity){
         this.mRef = new WeakReference<>(activity);
@@ -40,7 +41,7 @@ public class MemberListViewModel extends ViewModel {
         repository.setGetMemberListCallBack(getMemberListCallBack());
 
         userNickName = UserInfo.getInstance().getNickName();
-        userStatusMessage = UserInfo.getInstance().getMessage();
+        userStatusMessage.set(UserInfo.getInstance().getMessage());
     }
 
     public void getMemberList() {
@@ -71,7 +72,7 @@ public class MemberListViewModel extends ViewModel {
                 repository.changeStatusMessage(UserInfo.getInstance().getId(), changeMessage);
                 PreferenceManager.setStatusMessage(mRef.get(), changeMessage);
                 UserInfo.getInstance().setMessage(changeMessage);
-                userStatusMessage = changeMessage;
+                userStatusMessage.set(changeMessage);
             }else{
                 Toast.makeText(mRef.get(), "변경된 상태메시지가 없습니다.", Toast.LENGTH_SHORT).show();
             }

@@ -52,9 +52,14 @@ public class StompUtils {
             repository.createChatRoom(message.getSender(), message.getReceiver(), message);
         } else {
             String toJson = gson.toJson(message);
-            stompClient.send("/pub/msg", toJson);
+            stompClient.send("/pub/msg", toJson).subscribe();
         }
     }
+
+    public void insertChatMessage(ChatMessage message){
+
+    }
+
 
     public RoomCreateCallBack getRoomCreateCallBack() {
         return new RoomCreateCallBack() {
@@ -71,4 +76,5 @@ public class StompUtils {
             }
         };
     }
+
 }
