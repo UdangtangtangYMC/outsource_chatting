@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lodong.android.neighborcommunication.R;
+import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;
@@ -55,14 +56,18 @@ public class ChatRoomListFragment extends Fragment {
 
     public OnChatRoomClickListener onChatRoomClickListener(){
         return chatRoomDTO -> {
-           /* long id = chatRoomDTO.getId();
-            intentChatRoomActivity(id);*/
+            long id = chatRoomDTO.getRoomId();
+            String receiver = chatRoomDTO.getRoomUserOne().equals(UserInfo.getInstance().getId())
+                    ? chatRoomDTO.getRoomUserTwo() : chatRoomDTO.getRoomUserOne();
+            intentChatRoomActivity(id, receiver);
+
         };
     }
 
-    private void intentChatRoomActivity(long id){
+    private void intentChatRoomActivity(long id, String receiver){
         Intent intent = new Intent(getActivity(), ChatRoomActivity.class);
         intent.putExtra("chatRoomId", id);
+        intent.putExtra("receiver", receiver);
         startActivity(intent);
     }
 

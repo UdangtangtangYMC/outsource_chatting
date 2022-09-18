@@ -14,6 +14,13 @@ public class ChatMessage implements Serializable {
         this.message = message;
     }
 
+    public ChatMessage(long roomId, String sender, String receiver, String message) {
+        this.roomId = roomId;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
+    }
+
     public long getRoomId() {
         return roomId;
     }

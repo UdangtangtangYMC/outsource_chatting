@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
@@ -40,12 +41,13 @@ public class ChatRoomViewModel extends ViewModel {
     public void getChatRoomId(){
         Intent intent = mRef.get().getIntent();
         chatRoomid = intent.getLongExtra("chatRoomId", noChatRoomId);
+        receiver = intent.getStringExtra("receiver");
         chatRoomIdML.setValue(chatRoomid);
     }
 
     public void sendMessage(String message){
-      /*  ChatMessage chatMessage = new ChatMessage();
-        StompUtils.INSTANCE.send(message);*/
+        ChatMessage chatMessage = new ChatMessage(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
+        StompUtils.INSTANCE.send(chatMessage);
     }
 
     public LiveData<List<ChatMessageDTO>> getChatMessageList(long chatRoomId) {
