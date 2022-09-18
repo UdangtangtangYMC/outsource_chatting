@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
         repository = RepositoryImpl.getInstance();
         StompUtils.init(this);
-        new Handler().postDelayed(() -> StompUtils.INSTANCE.send(new ChatMessageDTO(5L, "test", "id", "hello again")), 200);
     }
 
     private void settingLoginUserInfo() {

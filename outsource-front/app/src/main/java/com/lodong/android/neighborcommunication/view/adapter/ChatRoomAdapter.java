@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lodong.android.neighborcommunication.R;
+import com.lodong.android.neighborcommunication.data.ChatRoomDisplayInfo;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFragment;
@@ -16,12 +17,12 @@ import com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFr
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
-    private List<ChatRoomDTO> chatRoomList;
+    private List<ChatRoomDisplayInfo> chatRoomList;
     private ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener;
 
     public ChatRoomAdapter() {}
 
-    public void changeMemberListAdapter(List<ChatRoomDTO> chatRoomList){
+    public void changeMemberListAdapter(List<ChatRoomDisplayInfo> chatRoomList){
         this.chatRoomList = chatRoomList;
         notifyDataSetChanged();
     }
@@ -31,26 +32,26 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView txtNickName, txtLastMessage;
+        private TextView txtNickName, txtLastMessage, txtLastSendTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNickName = itemView.findViewById(R.id.txt_nickName);
             txtLastMessage = itemView.findViewById(R.id.txt_last_message);
+            txtLastSendTime = itemView.findViewById(R.id.txt_last_send_time);
         }
 
-        public void onBind(ChatRoomDTO chatRoomDTO){
-            String nickName = null;
-            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getRoomUserOneId())){
-                nickName = chatRoomDTO.getRoomUserTwoId();
-            }else{
-                nickName = chatRoomDTO.getRoomUserOneId();
-            }
+        public void onBind(ChatRoomDisplayInfo chatRoom){
+            String nickName = chatRoom.getReceiverNickName();
+            String lastMessage = chatRoom.getLastMessage();
+            String lastTime = chatRoom.getLastMessageTime();
 
             txtNickName.setText(nickName);
+            txtLastMessage.setText(lastMessage);
+            txtLastSendTime.setText(lastTime);
 
             itemView.setOnClickListener(view -> {
-                intentChatRoom(chatRoomDTO);
+                intentChatRoom(chatRoom);
             });
         }
     }
@@ -72,8 +73,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
         return chatRoomList == null ? 0 : chatRoomList.size();
     }
 
-    public void intentChatRoom(ChatRoomDTO chatRoomDTO){
-        onChatRoomClickListener.onClick(chatRoomDTO);
+    public void intentChatRoom(ChatRoomDisplayInfo chatRoomDisplayInfo){
+        onChatRoomClickListener.onClick(chatRoomDisplayInfo);
     }
 
 }

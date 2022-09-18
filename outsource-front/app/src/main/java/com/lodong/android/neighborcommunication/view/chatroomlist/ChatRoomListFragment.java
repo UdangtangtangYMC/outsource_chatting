@@ -5,22 +5,28 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lodong.android.neighborcommunication.R;
+import com.lodong.android.neighborcommunication.data.ChatRoomDisplayInfo;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
+import java.util.List;
+
 public class ChatRoomListFragment extends Fragment {
+    private final String TAG = ChatRoomListFragment.class.getSimpleName();
     private FragmentChatRoomListBinding binding;
     private ChatRoomListViewModel viewModel;
     private ChatRoomAdapter chatRoomAdapter;
@@ -46,18 +52,18 @@ public class ChatRoomListFragment extends Fragment {
     }
 
     public void getChatRoomList(){
-        viewModel.getChatRoomList().observe(getViewLifecycleOwner(), chatRoomDTOS -> {
-            chatRoomAdapter.changeMemberListAdapter(chatRoomDTOS);
+        viewModel.getChatRoomDisplayInfoMutableLiveData().observe(getActivity(), chatRoomDisplayInfos -> {
+            Log.d(TAG, "미얀마");
+            chatRoomAdapter.changeMemberListAdapter(chatRoomDisplayInfos);
         });
+        viewModel.getChatRoomList();
     }
 
     public OnChatRoomClickListener onChatRoomClickListener(){
         return chatRoomDTO -> {
             long id = chatRoomDTO.getRoomId();
-            String receiver = chatRoomDTO.getRoomUserOneId().equals(UserInfo.getInstance().getId())
-                    ? chatRoomDTO.getRoomUserTwoId() : chatRoomDTO.getRoomUserOneId();
-            String receiverNickName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getNickName())
-                    ? chatRoomDTO.getRoomUserTwoNickName() : chatRoomDTO.getRoomUserOneNickName();
+            String receiver = chatRoomDTO.getReceiver();
+            String receiverNickName = chatRoomDTO.getReceiverNickName();
             intentChatRoomActivity(id, receiver, receiverNickName);
 
         };
@@ -72,6 +78,6 @@ public class ChatRoomListFragment extends Fragment {
     }
 
     public interface OnChatRoomClickListener{
-        public void onClick(ChatRoomDTO chatRoomDTO);
+        public void onClick(ChatRoomDisplayInfo chatRoomDisplayInfo);
     }
 }
