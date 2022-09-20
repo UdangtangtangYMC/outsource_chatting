@@ -4,6 +4,7 @@ public class MemberDTO {
     private String id;
     private String nickName;
     private String message;
+    private boolean blocked;
 
     public String getId() {
         return id;
@@ -29,12 +30,21 @@ public class MemberDTO {
         this.message = message;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     @Override
     public String toString() {
         return "MemberDTO{" +
                 "id='" + id + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", message='" + message + '\'' +
+                ", blocked=" + blocked +
                 '}';
     }
 }

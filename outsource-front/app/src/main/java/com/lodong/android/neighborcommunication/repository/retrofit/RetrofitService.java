@@ -3,7 +3,8 @@ package com.lodong.android.neighborcommunication.repository.retrofit;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+import com.lodong.android.neighborcommunication.data.UserInfo;
+import com.lodong.android.neighborcommunication.repository.model.BlockDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
@@ -11,6 +12,8 @@ import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDT
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
 import java.util.List;
 
@@ -124,6 +127,34 @@ public class RetrofitService {
 
             @Override
             public void onFailure(Call<ChatRoomDTO> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void block(MemberDTO dto, UserBlockedCallBack callBack) {
+        retrofitServiceInterface.block(new BlockDTO(UserInfo.getInstance().getId(), dto.getId())).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callBack.onSuccess(dto);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void unblock(MemberDTO dto, UserUnblockedCallBack callBack) {
+        retrofitServiceInterface.unblock(new BlockDTO(UserInfo.getInstance().getId(), dto.getId())).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callBack.onSuccess(dto);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
 
             }
         });

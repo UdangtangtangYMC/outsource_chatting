@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +52,7 @@ public class MemberListFragment extends Fragment {
     private void init(){
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         adapter = new MemberListAdapter();
-        adapter.setOnMemberClickListener(getOnMemberClickLisener());
+        adapter.setOnMemberClickListener(getOnMemberClickListener());
         binding.recyclerview.setAdapter(adapter);
         viewModel.init();
     }
@@ -78,7 +77,7 @@ public class MemberListFragment extends Fragment {
         this.adapter.changeMemberListAdapter(memberList);
     }
 
-    private OnMemberClickListener getOnMemberClickLisener(){
+    private OnMemberClickListener getOnMemberClickListener(){
         return memberDTO -> {
             viewModel.showOpenMemberSettingDialog(memberDTO);
         };

@@ -2,12 +2,14 @@ package com.lodong.android.neighborcommunication.repository;
 
 import androidx.lifecycle.LiveData;
 
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
+import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
 import java.util.List;
 
@@ -25,9 +27,13 @@ public interface Repository {
     public ChatRoomDTO getChatRoom(String receiver);
     public LiveData<List<ChatMessageDTO>> getChatMessage(long id);
     public LiveData<List<ChatRoomDTO>> getChatRoomList();
+    public void block(MemberDTO dto);
+    public void unblock(MemberDTO dto);
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);
     public void setGetLogInResultCallBack(GetLogInResultCallBack callBack);
     public void setRoomCreatedCallBack(RoomCreateCallBack callBack);
+    public void setUserBlockedCallBack(UserBlockedCallBack callBack);
+    public void setUserUnblockedCallBack(UserUnblockedCallBack callBack);
 }

@@ -1,0 +1,116 @@
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/config/StompConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.config;\r\n\r\nimport com.fasterxml.jackson.core.JsonGenerator;\r\nimport com.fasterxml.jackson.databind.JsonSerializer;\r\nimport com.fasterxml.jackson.databind.Module;\r\nimport com.fasterxml.jackson.databind.ObjectMapper;\r\nimport com.fasterxml.jackson.databind.SerializerProvider;\r\nimport com.fasterxml.jackson.databind.module.SimpleModule;\r\nimport org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;\r\nimport org.springframework.amqp.support.converter.MessageConverter;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.messaging.simp.config.MessageBrokerRegistry;\r\nimport org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;\r\nimport org.springframework.web.socket.config.annotation.StompEndpointRegistry;\r\nimport org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;\r\n\r\nimport java.io.IOException;\r\nimport java.time.LocalDateTime;\r\nimport java.time.format.DateTimeFormatter;\r\n\r\n@Configuration\r\n@EnableWebSocketMessageBroker\r\npublic class StompConfig  implements WebSocketMessageBrokerConfigurer{\r\n\r\n    @Override\r\n    public void configureMessageBroker(MessageBrokerRegistry registry) {\r\n        registry\r\n                .setApplicationDestinationPrefixes(\"/pub\")\r\n                .enableStompBrokerRelay(\"/topic\", \"/queue\")\r\n                .setRelayHost(\"localhost\")\r\n                .setRelayPort(1613)\r\n                .setClientLogin(\"guest\")\r\n                .setClientPasscode(\"guest\");\r\n    }\r\n\r\n    @Override\r\n    public void registerStompEndpoints(StompEndpointRegistry registry) {\r\n        registry.addEndpoint(\"/ws\");\r\n    }\r\n\r\n\r\n    @Bean\r\n    public MessageConverter messageConverter() {\r\n        ObjectMapper mapper = new ObjectMapper();\r\n        mapper.registerModule(module());\r\n        return new Jackson2JsonMessageConverter(mapper);\r\n    }\r\n\r\n    @Bean\r\n    public Module module() {\r\n        SimpleModule module = new SimpleModule();\r\n        module.addSerializer(LocalDateTime.class, new JsonSerializer<>() {\r\n            @Override\r\n            public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {\r\n                gen.writeString(DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\").format(value));\r\n            }\r\n        });\r\n\r\n        return module;\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/StompConfig.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/StompConfig.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/StompConfig.java	(revision 76612006ca078b125983cb67f8ec48991f2b37a8)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/StompConfig.java	(date 1663430361185)
+@@ -39,25 +39,4 @@
+         registry.addEndpoint("/ws");
+     }
+ 
+-
+-    @Bean
+-    public MessageConverter messageConverter() {
+-        ObjectMapper mapper = new ObjectMapper();
+-        mapper.registerModule(module());
+-        return new Jackson2JsonMessageConverter(mapper);
+-    }
+-
+-    @Bean
+-    public Module module() {
+-        SimpleModule module = new SimpleModule();
+-        module.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
+-            @Override
+-            public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+-                gen.writeString(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(value));
+-            }
+-        });
+-
+-        return module;
+-    }
+-
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.service;\r\n\r\nimport com.google.firebase.messaging.FirebaseMessaging;\r\nimport com.google.firebase.messaging.FirebaseMessagingException;\r\nimport com.google.firebase.messaging.Message;\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.domain.ChatMessage;\r\nimport com.hyunho9877.outsource.domain.ChatRoom;\r\nimport com.hyunho9877.outsource.domain.Exchange;\r\nimport com.hyunho9877.outsource.repo.ApplicationUserRepository;\r\nimport com.hyunho9877.outsource.repo.ChatMessageRepository;\r\nimport com.hyunho9877.outsource.repo.ChatRoomRepository;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.amqp.rabbit.core.RabbitTemplate;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n\r\n@Service\r\n@Slf4j\r\n@RequiredArgsConstructor\r\npublic class ChatService {\r\n\r\n    private final RabbitTemplate rabbitTemplate;\r\n    private final ChatRoomRepository chatRoomRepository;\r\n    private final ChatMessageRepository messageRepository;\r\n    private final ApplicationUserRepository userRepository;\r\n\r\n    @Transactional\r\n    public void send(ChatMessage message) {\r\n        ChatMessage saved = messageRepository.save(message);\r\n        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);\r\n    }\r\n\r\n    @Transactional\r\n    public void confirmMessage(String username, String sender) {\r\n\r\n    }\r\n\r\n    public long registerNewChatRoom(String requester, String subject) {\r\n        if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();\r\n        ApplicationUser req = userRepository.getReferenceById(requester);\r\n        ApplicationUser sub = userRepository.getReferenceById(subject);\r\n\r\n        ChatRoom chatRoom = ChatRoom.builder()\r\n                .roomUserOne(req)\r\n                .roomUserTwo(sub)\r\n                .build();\r\n\r\n        return chatRoomRepository.save(chatRoom).getRoomId();\r\n    }\r\n\r\n    private boolean isChatRoomAlreadyExists(String requester, String subject) {\r\n        return chatRoomRepository.existsByUserOneAndUserTwo(requester, subject);\r\n    }\r\n\r\n    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {\r\n        String token = getFCMToken(chat.getReceiver());\r\n        Message message = Message.builder()\r\n                .putData(\"title\", chat.getSender())\r\n                .putData(\"body\", chat.getMessage())\r\n                .setToken(token)\r\n                .build();\r\n        String response = FirebaseMessaging.getInstance().send(message);\r\n        log.info(\"chatId : {}, FCM response : {}\", chat.getChatId(), response);\r\n    }\r\n\r\n    private String getFCMToken(String username) {\r\n        ApplicationUser applicationUser = userRepository.findById(username).orElseThrow();\r\n        return applicationUser.getFcmToken();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(revision 76612006ca078b125983cb67f8ec48991f2b37a8)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(date 1663430939069)
+@@ -56,7 +56,9 @@
+     }
+ 
+     public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {
+-        String token = getFCMToken(chat.getReceiver());
++        ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
++        if(!applicationUser.isReceiveNotification()) return;
++        String token = applicationUser.getFcmToken();
+         Message message = Message.builder()
+                 .putData("title", chat.getSender())
+                 .putData("body", chat.getMessage())
+@@ -65,9 +67,4 @@
+         String response = FirebaseMessaging.getInstance().send(message);
+         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
+     }
+-
+-    private String getFCMToken(String username) {
+-        ApplicationUser applicationUser = userRepository.findById(username).orElseThrow();
+-        return applicationUser.getFcmToken();
+-    }
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/config/JsonDateFormatConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/JsonDateFormatConfig.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/JsonDateFormatConfig.java
+new file mode 100644
+--- /dev/null	(date 1663430384294)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/config/JsonDateFormatConfig.java	(date 1663430384294)
+@@ -0,0 +1,39 @@
++package com.hyunho9877.outsource.config;
++
++import com.fasterxml.jackson.core.JsonGenerator;
++import com.fasterxml.jackson.databind.JsonSerializer;
++import com.fasterxml.jackson.databind.Module;
++import com.fasterxml.jackson.databind.ObjectMapper;
++import com.fasterxml.jackson.databind.SerializerProvider;
++import com.fasterxml.jackson.databind.module.SimpleModule;
++import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
++import org.springframework.amqp.support.converter.MessageConverter;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++
++import java.io.IOException;
++import java.time.LocalDateTime;
++import java.time.format.DateTimeFormatter;
++
++@Configuration
++public class JsonDateFormatConfig {
++    @Bean
++    public MessageConverter messageConverter() {
++        ObjectMapper mapper = new ObjectMapper();
++        mapper.registerModule(module());
++        return new Jackson2JsonMessageConverter(mapper);
++    }
++
++    @Bean
++    public Module module() {
++        SimpleModule module = new SimpleModule();
++        module.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
++            @Override
++            public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
++                gen.writeString(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(value));
++            }
++        });
++
++        return module;
++    }
++}

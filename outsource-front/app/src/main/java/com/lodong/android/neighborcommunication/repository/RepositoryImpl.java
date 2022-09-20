@@ -11,14 +11,16 @@ import com.lodong.android.neighborcommunication.repository.chatroomservice.ChatR
 import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
+import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
 import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class RepositoryImpl implements Repository {
     private ChangeStatusMessageService changeStatusMessageService;
     private ChatRoomService chatRoomService;
     private ChatMessageService chatMessageService;
+    private UserBlockedCallBack blockedCallBack;
+    private UserUnblockedCallBack unblockedCallBack;
 
     private RepositoryImpl(){
         signUpService = new SignUpService();
@@ -121,6 +125,16 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void block(MemberDTO dto) {
+        memberListService.block(dto, blockedCallBack);
+    }
+
+    @Override
+    public void unblock(MemberDTO dto) {
+        memberListService.unblock(dto, unblockedCallBack);
+    }
+
+    @Override
     public ChatRoomDTO getChatRoom(String receiver) {
         return chatRoomService.getChatRoom(receiver);
     }
@@ -138,6 +152,16 @@ public class RepositoryImpl implements Repository {
     @Override
     public void setRoomCreatedCallBack(RoomCreateCallBack callBack) {
         chatRoomService.setCallBack(callBack);
+    }
+
+    @Override
+    public void setUserBlockedCallBack(UserBlockedCallBack callBack) {
+        this.blockedCallBack = callBack;
+    }
+
+    @Override
+    public void setUserUnblockedCallBack(UserUnblockedCallBack callBack) {
+        this.unblockedCallBack = callBack;
     }
 
 

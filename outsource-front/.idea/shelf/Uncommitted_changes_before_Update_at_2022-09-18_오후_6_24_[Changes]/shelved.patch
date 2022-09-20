@@ -1,0 +1,840 @@
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.model;\r\n\r\nimport androidx.room.ColumnInfo;\r\nimport androidx.room.Entity;\r\nimport androidx.room.PrimaryKey;\r\n\r\n@Entity(tableName = \"chatMessage\")\r\npublic class ChatMessageDTO {\r\n    @PrimaryKey(autoGenerate = false)\r\n    private long chatId;\r\n\r\n    @ColumnInfo(name = \"chatRoomId\")\r\n    private long room;\r\n\r\n    @ColumnInfo(name=\"sender\")\r\n    private String sender;\r\n\r\n    @ColumnInfo(name=\"receiver\")\r\n    private String receiver;\r\n\r\n    @ColumnInfo(name=\"sendTime\")\r\n    private String timestamp;\r\n\r\n    @ColumnInfo(name=\"checkReceipt\")\r\n    private boolean checkReceipt;\r\n\r\n    @ColumnInfo(name=\"content\")\r\n    private String message;\r\n\r\n    @ColumnInfo(name = \"viewType\")\r\n    private int viewType;\r\n\r\n    public ChatMessageDTO() {\r\n    }\r\n\r\n    public ChatMessageDTO(long chatId, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {\r\n        this.chatId = chatId;\r\n        this.room = chatRoomId;\r\n        this.sender = sender;\r\n        this.receiver = receiver;\r\n        this.timestamp = sendTime;\r\n        this.checkReceipt = checkReceipt;\r\n        this.message = content;\r\n        this.viewType = viewType;\r\n    }\r\n\r\n    public long getChatId() {\r\n        return chatId;\r\n    }\r\n\r\n    public void setChatId(long chatId) {\r\n        this.chatId = chatId;\r\n    }\r\n\r\n    public long getRoom() {\r\n        return room;\r\n    }\r\n\r\n    public void setRoom(long room) {\r\n        this.room = room;\r\n    }\r\n\r\n    public String getSender() {\r\n        return sender;\r\n    }\r\n\r\n    public void setSender(String sender) {\r\n        this.sender = sender;\r\n    }\r\n\r\n    public String getReceiver() {\r\n        return receiver;\r\n    }\r\n\r\n    public void setReceiver(String receiver) {\r\n        this.receiver = receiver;\r\n    }\r\n\r\n    public String getTimestamp() {\r\n        return timestamp;\r\n    }\r\n\r\n    public void setTimestamp(String timestamp) {\r\n        this.timestamp = timestamp;\r\n    }\r\n\r\n    public boolean isCheckReceipt() {\r\n        return checkReceipt;\r\n    }\r\n\r\n    public void setCheckReceipt(boolean checkReceipt) {\r\n        this.checkReceipt = checkReceipt;\r\n    }\r\n\r\n    public String getMessage() {\r\n        return message;\r\n    }\r\n\r\n    public void setMessage(String message) {\r\n        this.message = message;\r\n    }\r\n\r\n    public int getViewType() {\r\n        return viewType;\r\n    }\r\n\r\n    public void setViewType(int viewType) {\r\n        this.viewType = viewType;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"ChatMessageDTO{\" +\r\n                \"chatId=\" + chatId +\r\n                \", room=\" + room +\r\n                \", sender='\" + sender + '\\'' +\r\n                \", receiver='\" + receiver + '\\'' +\r\n                \", timestamp='\" + timestamp + '\\'' +\r\n                \", checkReceipt=\" + checkReceipt +\r\n                \", message='\" + message + '\\'' +\r\n                \", viewType=\" + viewType +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java	(date 1663487793800)
+@@ -2,6 +2,7 @@
+ 
+ import androidx.room.ColumnInfo;
+ import androidx.room.Entity;
++import androidx.room.Ignore;
+ import androidx.room.PrimaryKey;
+ 
+ @Entity(tableName = "chatMessage")
+@@ -10,7 +11,7 @@
+     private long chatId;
+ 
+     @ColumnInfo(name = "chatRoomId")
+-    private long room;
++    private long roomId;
+ 
+     @ColumnInfo(name="sender")
+     private String sender;
+@@ -30,18 +31,25 @@
+     @ColumnInfo(name = "viewType")
+     private int viewType;
+ 
++    @Ignore
++    private String senderNickName;
++    @Ignore
++    private String receiverNickName;
++
+     public ChatMessageDTO() {
+     }
+ 
+-    public ChatMessageDTO(long chatId, long chatRoomId, String sender, String receiver, String sendTime, boolean checkReceipt, String content, int viewType) {
++    public ChatMessageDTO(long chatId, long roomId, String sender, String receiver, String timestamp, boolean checkReceipt, String message, int viewType, String senderNickName, String receiverNickName) {
+         this.chatId = chatId;
+-        this.room = chatRoomId;
++        this.roomId = roomId;
+         this.sender = sender;
+         this.receiver = receiver;
+-        this.timestamp = sendTime;
++        this.timestamp = timestamp;
+         this.checkReceipt = checkReceipt;
+-        this.message = content;
++        this.message = message;
+         this.viewType = viewType;
++        this.senderNickName = senderNickName;
++        this.receiverNickName = receiverNickName;
+     }
+ 
+     public long getChatId() {
+@@ -52,12 +60,12 @@
+         this.chatId = chatId;
+     }
+ 
+-    public long getRoom() {
+-        return room;
++    public long getRoomId() {
++        return roomId;
+     }
+ 
+-    public void setRoom(long room) {
+-        this.room = room;
++    public void setRoomId(long roomId) {
++        this.roomId = roomId;
+     }
+ 
+     public String getSender() {
+@@ -108,17 +116,35 @@
+         this.viewType = viewType;
+     }
+ 
++    public String getSenderNickName() {
++        return senderNickName;
++    }
++
++    public void setSenderNickName(String senderNickName) {
++        this.senderNickName = senderNickName;
++    }
++
++    public String getReceiverNickName() {
++        return receiverNickName;
++    }
++
++    public void setReceiverNickName(String receiverNickName) {
++        this.receiverNickName = receiverNickName;
++    }
++
+     @Override
+     public String toString() {
+         return "ChatMessageDTO{" +
+                 "chatId=" + chatId +
+-                ", room=" + room +
++                ", roomId=" + roomId +
+                 ", sender='" + sender + '\'' +
+                 ", receiver='" + receiver + '\'' +
+                 ", timestamp='" + timestamp + '\'' +
+                 ", checkReceipt=" + checkReceipt +
+                 ", message='" + message + '\'' +
+                 ", viewType=" + viewType +
++                ", senderNickName='" + senderNickName + '\'' +
++                ", receiverNickName='" + receiverNickName + '\'' +
+                 '}';
+     }
+ }
+Index: app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.utils.stomp;\r\n\r\nimport android.content.Context;\r\nimport android.util.Log;\r\n\r\nimport com.google.gson.Gson;\r\nimport com.lodong.android.neighborcommunication.repository.Repository;\r\nimport com.lodong.android.neighborcommunication.repository.RepositoryImpl;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessage;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;\r\nimport com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;\r\n\r\nimport io.reactivex.disposables.Disposable;\r\nimport ua.naiksoftware.stomp.Stomp;\r\nimport ua.naiksoftware.stomp.StompClient;\r\n\r\npublic class StompUtils {\r\n    private static final String TAG = StompUtils.class.getSimpleName();\r\n    private static final String BASE_URL = \"ws://49.174.169.48:13883/ws\";\r\n    public static final StompUtils INSTANCE = new StompUtils();\r\n    private static final Gson gson = new Gson();\r\n    private static final Repository repository = RepositoryImpl.getInstance();\r\n    private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);\r\n\r\n    public static void init(Context context) {\r\n        String subscribeURL = \"/queue/\" + getId(context);\r\n        Log.d(TAG, subscribeURL);\r\n        Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {\r\n            String payload = lifecycleEvent.getPayload();\r\n            ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);\r\n            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver()))\r\n                repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));\r\n            repository.insertChatMessage(message);\r\n        });\r\n        stompClient.connect();\r\n    }\r\n\r\n    private static String getId(Context context) {\r\n        return PreferenceManager.getId(context);\r\n    }\r\n\r\n    public void disconnect() {\r\n        stompClient.disconnect();\r\n    }\r\n\r\n    public void send(ChatMessage message) {\r\n        Log.d(TAG, message.toString());\r\n        if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())){\r\n            repository.setRoomCreatedCallBack(getRoomCreateCallBack());\r\n            repository.createChatRoom(message.getSender(), message.getReceiver(), message);\r\n        } else {\r\n            String toJson = gson.toJson(message);\r\n            stompClient.send(\"/pub/msg\", toJson);\r\n        }\r\n    }\r\n\r\n    public RoomCreateCallBack getRoomCreateCallBack() {\r\n        return new RoomCreateCallBack() {\r\n            @Override\r\n            public void onSuccess(ChatRoomDTO chatRoom, ChatMessage message) {\r\n                message.setRoomId(chatRoom.getRoomId());\r\n                String toJson = new Gson().toJson(message);\r\n                stompClient.send(\"/pub/msg\", toJson);\r\n            }\r\n\r\n            @Override\r\n            public void onFailed(Throwable t) {\r\n                Log.e(TAG, \"room create error occurred\");\r\n            }\r\n        };\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java b/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java	(date 1663493094266)
+@@ -1,5 +1,6 @@
+ package com.lodong.android.neighborcommunication.utils.stomp;
+ 
++import android.annotation.SuppressLint;
+ import android.content.Context;
+ import android.util.Log;
+ 
+@@ -9,10 +10,12 @@
+ import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+ import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+ import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
++import com.lodong.android.neighborcommunication.utils.preferences.Code;
+ import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
+ import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+ 
+ import io.reactivex.disposables.Disposable;
++import io.reactivex.functions.Action;
+ import ua.naiksoftware.stomp.Stomp;
+ import ua.naiksoftware.stomp.StompClient;
+ 
+@@ -24,17 +27,21 @@
+     private static final Repository repository = RepositoryImpl.getInstance();
+     private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
+ 
++    @SuppressLint("CheckResult")
+     public static void init(Context context) {
+         String subscribeURL = "/queue/" + getId(context);
+         Log.d(TAG, subscribeURL);
+-        Disposable subscribe = stompClient.topic(subscribeURL).subscribe(lifecycleEvent -> {
+-            String payload = lifecycleEvent.getPayload();
++        stompClient.connect();
++        stompClient.topic(subscribeURL).subscribe(data -> {
++            String payload = data.getPayload();
+             ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+-            if(!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+-                repository.insertChatRoom(new ChatRoomDTO(message.getRoom(), message.getSender(), message.getReceiver()));
++            Log.d(TAG, message.toString());
++            if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
++                repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
++            if (message.getSender().equals(getId(context))) message.setViewType(Code.ViewType.RIGHT_CONTENT);
++            else message.setViewType(Code.ViewType.LEFT_CONTENT);
+             repository.insertChatMessage(message);
+         });
+-        stompClient.connect();
+     }
+ 
+     private static String getId(Context context) {
+@@ -46,13 +53,12 @@
+     }
+ 
+     public void send(ChatMessage message) {
+-        Log.d(TAG, message.toString());
+-        if(!repository.isChatRoomExists(message.getSender(), message.getReceiver())){
++        if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {
+             repository.setRoomCreatedCallBack(getRoomCreateCallBack());
+             repository.createChatRoom(message.getSender(), message.getReceiver(), message);
+         } else {
+             String toJson = gson.toJson(message);
+-            stompClient.send("/pub/msg", toJson);
++            stompClient.send("/pub/msg", toJson).subscribe();
+         }
+     }
+ 
+@@ -61,6 +67,7 @@
+             @Override
+             public void onSuccess(ChatRoomDTO chatRoom, ChatMessage message) {
+                 message.setRoomId(chatRoom.getRoomId());
++                repository.insertChatRoom(chatRoom);
+                 String toJson = new Gson().toJson(message);
+                 stompClient.send("/pub/msg", toJson);
+             }
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.databinding.DataBindingUtil;\r\nimport androidx.navigation.fragment.NavHostFragment;\r\nimport androidx.navigation.ui.NavigationUI;\r\n\r\nimport android.os.Bundle;\r\nimport android.os.Handler;\r\n\r\nimport com.lodong.android.neighborcommunication.R;\r\nimport com.lodong.android.neighborcommunication.data.UserInfo;\r\nimport com.lodong.android.neighborcommunication.databinding.ActivityMainBinding;\r\nimport com.lodong.android.neighborcommunication.repository.Repository;\r\nimport com.lodong.android.neighborcommunication.repository.RepositoryImpl;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessage;\r\nimport com.lodong.android.neighborcommunication.utils.preferences.FCMManager;\r\nimport com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;\r\nimport com.lodong.android.neighborcommunication.utils.stomp.StompUtils;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetFCMToken;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    private final String TAG = MainActivity.class.getSimpleName();\r\n    private ActivityMainBinding binding;\r\n    private NavHostFragment navHostFragment;\r\n    private Repository repository;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);\r\n        init();\r\n        settingLoginUserInfo();\r\n        getNowFCMToken();\r\n    }\r\n\r\n    private void init(){\r\n        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);\r\n        NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());\r\n        repository = RepositoryImpl.getInstance();\r\n        StompUtils.init(this);\r\n    }\r\n    private void settingLoginUserInfo(){\r\n        String id = PreferenceManager.getId(this);\r\n        String statusMessage = PreferenceManager.getStatusMessage(this);\r\n        String nickName = PreferenceManager.getNickName(this);\r\n\r\n        UserInfo userInfo = UserInfo.getInstance();\r\n        userInfo.setId(id);\r\n        userInfo.setMessage(statusMessage);\r\n        userInfo.setNickName(nickName);\r\n    }\r\n    private void getNowFCMToken(){\r\n        FCMManager.getNowFCMToken(getFCMToken());\r\n    }\r\n    public GetFCMToken getFCMToken(){\r\n        return new GetFCMToken() {\r\n            @Override\r\n            public void onSuccess(String fcmToken) {\r\n                sendFCMToken(fcmToken);\r\n            }\r\n\r\n            @Override\r\n            public void onFailed(Exception e) {\r\n\r\n            }\r\n        };\r\n    }\r\n    private void sendFCMToken(String fcmToken){\r\n        repository.sendFcmToken(UserInfo.getInstance().getId(),fcmToken);\r\n    }\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/MainActivity.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/MainActivity.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/MainActivity.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/MainActivity.java	(date 1663490236936)
+@@ -39,7 +39,9 @@
+         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
+         repository = RepositoryImpl.getInstance();
+         StompUtils.init(this);
++        new Handler().postDelayed(()->StompUtils.INSTANCE.send(new ChatMessage(1L,"test","id","hello")), 200);
+     }
++
+     private void settingLoginUserInfo(){
+         String id = PreferenceManager.getId(this);
+         String statusMessage = PreferenceManager.getStatusMessage(this);
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.model;\r\n\r\nimport androidx.room.ColumnInfo;\r\nimport androidx.room.Entity;\r\nimport androidx.room.PrimaryKey;\r\n\r\n@Entity(tableName = \"chatRoom\")\r\npublic class ChatRoomDTO {\r\n    @PrimaryKey(autoGenerate = false)\r\n    @ColumnInfo(name = \"room_id\")\r\n    private long roomId;\r\n\r\n    @ColumnInfo(name = \"room_user_one\")\r\n    private String roomUserOne;\r\n\r\n    @ColumnInfo(name = \"room_user_two\")\r\n    private String roomUserTwo;\r\n\r\n    @ColumnInfo(name = \"room_user_one_nick_name\")\r\n    private String roomUserOneNickName;\r\n\r\n    @ColumnInfo(name = \"room_user_two_nick_name\")\r\n    private String roomUserTwoNickName;\r\n\r\n    public ChatRoomDTO(long roomId, String roomUserOne, String roomUserTwo) {\r\n        this.roomId = roomId;\r\n        this.roomUserOne = roomUserOne;\r\n        this.roomUserTwo = roomUserTwo;\r\n    }\r\n\r\n    public long getRoomId() {\r\n        return roomId;\r\n    }\r\n\r\n    public void setRoomId(long roomId) {\r\n        this.roomId = roomId;\r\n    }\r\n\r\n    public String getRoomUserOne() {\r\n        return roomUserOne;\r\n    }\r\n\r\n    public void setRoomUserOne(String roomUserOne) {\r\n        this.roomUserOne = roomUserOne;\r\n    }\r\n\r\n    public String getRoomUserTwo() {\r\n        return roomUserTwo;\r\n    }\r\n\r\n    public void setRoomUserTwo(String roomUserTwo) {\r\n        this.roomUserTwo = roomUserTwo;\r\n    }\r\n\r\n    public String getRoomUserOneNickName() {\r\n        return roomUserOneNickName;\r\n    }\r\n\r\n    public void setRoomUserOneNickName(String roomUserOneNickName) {\r\n        this.roomUserOneNickName = roomUserOneNickName;\r\n    }\r\n\r\n    public String getRoomUserTwoNickName() {\r\n        return roomUserTwoNickName;\r\n    }\r\n\r\n    public void setRoomUserTwoNickName(String roomUserTwoNickName) {\r\n        this.roomUserTwoNickName = roomUserTwoNickName;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"ChatRoomDTO{\" +\r\n                \"roomId=\" + roomId +\r\n                \", roomUserOne='\" + roomUserOne + '\\'' +\r\n                \", roomUserTwo='\" + roomUserTwo + '\\'' +\r\n                \", roomUserOneNickName='\" + roomUserOneNickName + '\\'' +\r\n                \", roomUserTwoNickName='\" + roomUserTwoNickName + '\\'' +\r\n                '}';\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatRoomDTO.java	(date 1663487730029)
+@@ -2,6 +2,7 @@
+ 
+ import androidx.room.ColumnInfo;
+ import androidx.room.Entity;
++import androidx.room.Ignore;
+ import androidx.room.PrimaryKey;
+ 
+ @Entity(tableName = "chatRoom")
+@@ -10,11 +11,11 @@
+     @ColumnInfo(name = "room_id")
+     private long roomId;
+ 
+-    @ColumnInfo(name = "room_user_one")
+-    private String roomUserOne;
++    @ColumnInfo(name = "room_user_one_id")
++    private String roomUserOneId;
+ 
+-    @ColumnInfo(name = "room_user_two")
+-    private String roomUserTwo;
++    @ColumnInfo(name = "room_user_two_id")
++    private String roomUserTwoId;
+ 
+     @ColumnInfo(name = "room_user_one_nick_name")
+     private String roomUserOneNickName;
+@@ -22,10 +23,12 @@
+     @ColumnInfo(name = "room_user_two_nick_name")
+     private String roomUserTwoNickName;
+ 
+-    public ChatRoomDTO(long roomId, String roomUserOne, String roomUserTwo) {
++    public ChatRoomDTO(long roomId, String roomUserOneId, String roomUserTwoId, String roomUserOneNickName, String roomUserTwoNickName) {
+         this.roomId = roomId;
+-        this.roomUserOne = roomUserOne;
+-        this.roomUserTwo = roomUserTwo;
++        this.roomUserOneId = roomUserOneId;
++        this.roomUserTwoId = roomUserTwoId;
++        this.roomUserOneNickName = roomUserOneNickName;
++        this.roomUserTwoNickName = roomUserTwoNickName;
+     }
+ 
+     public long getRoomId() {
+@@ -36,20 +39,20 @@
+         this.roomId = roomId;
+     }
+ 
+-    public String getRoomUserOne() {
+-        return roomUserOne;
++    public String getRoomUserOneId() {
++        return roomUserOneId;
+     }
+ 
+-    public void setRoomUserOne(String roomUserOne) {
+-        this.roomUserOne = roomUserOne;
++    public void setRoomUserOneId(String roomUserOneId) {
++        this.roomUserOneId = roomUserOneId;
+     }
+ 
+-    public String getRoomUserTwo() {
+-        return roomUserTwo;
++    public String getRoomUserTwoId() {
++        return roomUserTwoId;
+     }
+ 
+-    public void setRoomUserTwo(String roomUserTwo) {
+-        this.roomUserTwo = roomUserTwo;
++    public void setRoomUserTwoId(String roomUserTwoId) {
++        this.roomUserTwoId = roomUserTwoId;
+     }
+ 
+     public String getRoomUserOneNickName() {
+@@ -72,8 +75,8 @@
+     public String toString() {
+         return "ChatRoomDTO{" +
+                 "roomId=" + roomId +
+-                ", roomUserOne='" + roomUserOne + '\'' +
+-                ", roomUserTwo='" + roomUserTwo + '\'' +
++                ", roomUserOne='" + roomUserOneId + '\'' +
++                ", roomUserTwo='" + roomUserTwoId + '\'' +
+                 ", roomUserOneNickName='" + roomUserOneNickName + '\'' +
+                 ", roomUserTwoNickName='" + roomUserTwoNickName + '\'' +
+                 '}';
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.controller;\r\n\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.dto.UserDTO;\r\nimport com.hyunho9877.outsource.service.UserService;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport java.util.List;\r\n\r\n@Slf4j\r\n@RestController\r\n@RequestMapping(\"/api/v1/user\")\r\n@RequiredArgsConstructor\r\npublic class UserController {\r\n\r\n    private final UserService userService;\r\n\r\n    @PostMapping(\"/getUsers\")\r\n    public List<ApplicationUser> getUsers(@RequestBody UserDTO userDTO) {\r\n        return userService.getUsers(userDTO.getId());\r\n    }\r\n\r\n    @PostMapping(\"/setProfileMessage\")\r\n    public String changeMessage(@RequestBody UserDTO userDTO) {\r\n        assert !userDTO.getId().equals(\"\");\r\n        assert !userDTO.getNewMessage().equals(\"\");\r\n\r\n        log.info(\"new profile message received by {} : {}\", userDTO.getId(), userDTO.getNewMessage());\r\n        return userService.changeMessage(userDTO.getId(), userDTO.getNewMessage());\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/UserController.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/UserController.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/UserController.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/UserController.java	(date 1663484561790)
+@@ -1,14 +1,14 @@
+ package com.hyunho9877.outsource.controller;
+ 
+ import com.hyunho9877.outsource.domain.ApplicationUser;
++import com.hyunho9877.outsource.domain.ChatRoom;
++import com.hyunho9877.outsource.dto.ChatRoomDTO;
+ import com.hyunho9877.outsource.dto.UserDTO;
+ import com.hyunho9877.outsource.service.UserService;
+ import lombok.RequiredArgsConstructor;
+ import lombok.extern.slf4j.Slf4j;
+-import org.springframework.web.bind.annotation.PostMapping;
+-import org.springframework.web.bind.annotation.RequestBody;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RestController;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.*;
+ 
+ import java.util.List;
+ 
+@@ -34,4 +34,20 @@
+         return userService.changeMessage(userDTO.getId(), userDTO.getNewMessage());
+     }
+ 
++    @PostMapping("/block")
++    public ResponseEntity<?> block(@RequestBody ChatRoomDTO blockingInfo) {
++        log.info("blocking requested : {}", blockingInfo);
++        userService.block(blockingInfo.getId(), blockingInfo.getSubject());
++        return ResponseEntity.ok().build();
++    }
++
++    @GetMapping("/blocking/get")
++    public ResponseEntity<List<String>> getBlockList(@RequestBody ChatRoomDTO user) {
++        return ResponseEntity.ok(userService.getBlockList(user.getId()));
++    }
++
++    @GetMapping("/blocked/get")
++    public ResponseEntity<List<String>> getBlockedList(@RequestBody ChatRoomDTO user) {
++        return ResponseEntity.ok(userService.getBlockedList(user.getId()));
++    }
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/repo/BlockingRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/repo/BlockingRepository.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/repo/BlockingRepository.java
+new file mode 100644
+--- /dev/null	(date 1663485232938)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/repo/BlockingRepository.java	(date 1663485232938)
+@@ -0,0 +1,12 @@
++package com.hyunho9877.outsource.repo;
++
++import com.hyunho9877.outsource.domain.BlockKey;
++import com.hyunho9877.outsource.domain.Blocking;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++import java.util.List;
++
++public interface BlockingRepository extends JpaRepository<Blocking, BlockKey> {
++    List<Blocking> findByRequester(String requester);
++    List<Blocking> findByTarget(String target);
++}
+\ No newline at end of file
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.service;\r\n\r\nimport com.google.firebase.messaging.FirebaseMessaging;\r\nimport com.google.firebase.messaging.FirebaseMessagingException;\r\nimport com.google.firebase.messaging.Message;\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.domain.ChatMessage;\r\nimport com.hyunho9877.outsource.domain.ChatRoom;\r\nimport com.hyunho9877.outsource.domain.Exchange;\r\nimport com.hyunho9877.outsource.repo.ApplicationUserRepository;\r\nimport com.hyunho9877.outsource.repo.ChatMessageRepository;\r\nimport com.hyunho9877.outsource.repo.ChatRoomRepository;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.amqp.rabbit.core.RabbitTemplate;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n\r\n@Service\r\n@Slf4j\r\n@RequiredArgsConstructor\r\npublic class ChatService {\r\n\r\n    private final RabbitTemplate rabbitTemplate;\r\n    private final ChatRoomRepository chatRoomRepository;\r\n    private final ChatMessageRepository messageRepository;\r\n    private final ApplicationUserRepository userRepository;\r\n\r\n    @Transactional\r\n    public void send(ChatMessage message) {\r\n        ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();\r\n        ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();\r\n\r\n        ChatMessage saved = messageRepository.save(message);\r\n\r\n        saved.setSenderNickName(sender.getNickName());\r\n        saved.setReceiverNickName(receiver.getNickName());\r\n\r\n        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);\r\n    }\r\n\r\n    @Transactional\r\n    public void confirmMessage(String username, String sender) {\r\n\r\n    }\r\n\r\n    public ChatRoom registerNewChatRoom(String requester, String subject) {\r\n        if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();\r\n        ApplicationUser req = userRepository.findById(requester).orElseThrow();\r\n        ApplicationUser sub = userRepository.findById(subject).orElseThrow();\r\n\r\n        ChatRoom chatRoom = ChatRoom.builder()\r\n                .roomUserOne(req)\r\n                .roomUserTwo(sub)\r\n                .build();\r\n\r\n        ChatRoom save = chatRoomRepository.save(chatRoom);\r\n        save.setRoomUserOne(ApplicationUser.getPublicProfile(req));\r\n        save.setRoomUserTwo(ApplicationUser.getPublicProfile(sub));\r\n        save.setRoomUserOneNickName(req.getNickName());\r\n        save.setRoomUserTwoNickName(sub.getNickName());\r\n        return save;\r\n    }\r\n\r\n    private boolean isChatRoomAlreadyExists(String requester, String subject) {\r\n        return chatRoomRepository.existsByUserOneAndUserTwo(requester, subject);\r\n    }\r\n\r\n    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {\r\n        ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();\r\n        if(!applicationUser.isReceiveNotification()) return;\r\n        String token = applicationUser.getFcmToken();\r\n        Message message = Message.builder()\r\n                .putData(\"title\", chat.getSender())\r\n                .putData(\"body\", chat.getMessage())\r\n                .setToken(token)\r\n                .build();\r\n        String response = FirebaseMessaging.getInstance().send(message);\r\n        log.info(\"chatId : {}, FCM response : {}\", chat.getChatId(), response);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(date 1663492166285)
+@@ -7,6 +7,7 @@
+ import com.hyunho9877.outsource.domain.ChatMessage;
+ import com.hyunho9877.outsource.domain.ChatRoom;
+ import com.hyunho9877.outsource.domain.Exchange;
++import com.hyunho9877.outsource.dto.ChatMessageDTO;
+ import com.hyunho9877.outsource.repo.ApplicationUserRepository;
+ import com.hyunho9877.outsource.repo.ChatMessageRepository;
+ import com.hyunho9877.outsource.repo.ChatRoomRepository;
+@@ -28,16 +29,20 @@
+     private final ApplicationUserRepository userRepository;
+ 
+     @Transactional
+-    public void send(ChatMessage message) {
++    public ChatMessage send(ChatMessage message) {
+         ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();
+         ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();
++        ChatRoom chatRoom = chatRoomRepository.findById(message.getRoomId()).orElseThrow();
++        message.setRoom(chatRoom);
+ 
+         ChatMessage saved = messageRepository.save(message);
++        log.info("message saved : {}", saved);
+ 
+         saved.setSenderNickName(sender.getNickName());
+         saved.setReceiverNickName(receiver.getNickName());
+ 
+         rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), message.getReceiver(), saved);
++        return saved;
+     }
+ 
+     @Transactional
+@@ -45,6 +50,7 @@
+ 
+     }
+ 
++
+     public ChatRoom registerNewChatRoom(String requester, String subject) {
+         if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
+         ApplicationUser req = userRepository.findById(requester).orElseThrow();
+@@ -56,10 +62,13 @@
+                 .build();
+ 
+         ChatRoom save = chatRoomRepository.save(chatRoom);
+-        save.setRoomUserOne(ApplicationUser.getPublicProfile(req));
+-        save.setRoomUserTwo(ApplicationUser.getPublicProfile(sub));
++        save.setRoomUserOne(null);
++        save.setRoomUserTwo(null);
+         save.setRoomUserOneNickName(req.getNickName());
+         save.setRoomUserTwoNickName(sub.getNickName());
++        save.setRoomUserOneId(req.getId());
++        save.setRoomUserTwoId(sub.getId());
++        log.info("message sending : {}", save);
+         return save;
+     }
+ 
+@@ -77,6 +86,7 @@
+                 .setToken(token)
+                 .build();
+         String response = FirebaseMessaging.getInstance().send(message);
++        rabbitTemplate.convertAndSend(Exchange.EXCHANGE.getExchange(), chat.getSender(), chat);
+         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
+     }
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.controller;\r\n\r\nimport com.google.firebase.messaging.FirebaseMessagingException;\r\nimport com.hyunho9877.outsource.domain.ChatMessage;\r\nimport com.hyunho9877.outsource.domain.ChatRoom;\r\nimport com.hyunho9877.outsource.dto.ChatRoomDTO;\r\nimport com.hyunho9877.outsource.service.ChatService;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.messaging.handler.annotation.MessageMapping;\r\nimport org.springframework.messaging.handler.annotation.Payload;\r\nimport org.springframework.messaging.simp.SimpMessageHeaderAccessor;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n@Slf4j\r\n@RestController\r\n@RequiredArgsConstructor\r\n@RequestMapping(\"/api/v1/chat\")\r\npublic class ChatController {\r\n\r\n    private final ChatService chatService;\r\n\r\n    @MessageMapping(\"/msg\")\r\n    public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) throws FirebaseMessagingException {\r\n        headerAccessor.getSessionAttributes().put(\"username\", message.getSender());\r\n        log.info(\"{}\", message);\r\n        chatService.send(message);\r\n        chatService.sendNotification(message);\r\n    }\r\n\r\n    @PostMapping(\"/new\")\r\n    public ResponseEntity<ChatRoom> newChat(@RequestBody ChatRoomDTO chatRoomDTO) {\r\n        return ResponseEntity.ok(chatService.registerNewChatRoom(chatRoomDTO.getId(), chatRoomDTO.getSubject()));\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java	(date 1663492097535)
+@@ -25,9 +25,8 @@
+     private final ChatService chatService;
+ 
+     @MessageMapping("/msg")
+-    public void newUser(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) throws FirebaseMessagingException {
+-        headerAccessor.getSessionAttributes().put("username", message.getSender());
+-        log.info("{}", message);
++    public void newUser(@Payload ChatMessage message) throws FirebaseMessagingException {
++        log.info("server message received {}", message);
+         chatService.send(message);
+         chatService.sendNotification(message);
+     }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/Blocking.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/Blocking.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/Blocking.java
+new file mode 100644
+--- /dev/null	(date 1663484451461)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/Blocking.java	(date 1663484451461)
+@@ -0,0 +1,20 @@
++package com.hyunho9877.outsource.domain;
++
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++
++import javax.persistence.Entity;
++import javax.persistence.Id;
++import javax.persistence.IdClass;
++
++@Entity
++@Getter
++@IdClass(BlockKey.class)
++@AllArgsConstructor @NoArgsConstructor
++public class Blocking {
++    @Id
++    private String requester;
++    @Id
++    private String target;
++}
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view.chatroomlist;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\n\r\nimport androidx.databinding.DataBindingUtil;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.lifecycle.Observer;\r\nimport androidx.lifecycle.ViewModelProvider;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport com.lodong.android.neighborcommunication.R;\r\nimport com.lodong.android.neighborcommunication.data.UserInfo;\r\nimport com.lodong.android.neighborcommunication.databinding.FragmentChatRoomListBinding;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;\r\nimport com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;\r\n\r\nimport java.util.List;\r\n\r\npublic class ChatRoomListFragment extends Fragment {\r\n    private FragmentChatRoomListBinding binding;\r\n    private ChatRoomListViewModel viewModel;\r\n    private ChatRoomAdapter chatRoomAdapter;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat_room_list, container, false);\r\n        viewModel = new ViewModelProvider(this).get(ChatRoomListViewModel.class);\r\n        viewModel.setParent(getActivity());\r\n        init();\r\n        getChatRoomList();\r\n\r\n        return binding.getRoot();\r\n    }\r\n\r\n    public void init(){\r\n        binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));\r\n        chatRoomAdapter = new ChatRoomAdapter();\r\n        chatRoomAdapter.setOnChatRoomClickListener(onChatRoomClickListener());\r\n        binding.recyclerview.setAdapter(chatRoomAdapter);\r\n    }\r\n\r\n    public void getChatRoomList(){\r\n        viewModel.getChatRoomList().observe(getViewLifecycleOwner(), chatRoomDTOS -> {\r\n            chatRoomAdapter.changeMemberListAdapter(chatRoomDTOS);\r\n        });\r\n    }\r\n\r\n    public OnChatRoomClickListener onChatRoomClickListener(){\r\n        return chatRoomDTO -> {\r\n            long id = chatRoomDTO.getRoomId();\r\n            String receiver = chatRoomDTO.getRoomUserOne().equals(UserInfo.getInstance().getId())\r\n                    ? chatRoomDTO.getRoomUserTwo() : chatRoomDTO.getRoomUserOne();\r\n            intentChatRoomActivity(id, receiver);\r\n\r\n        };\r\n    }\r\n\r\n    private void intentChatRoomActivity(long id, String receiver){\r\n        Intent intent = new Intent(getActivity(), ChatRoomActivity.class);\r\n        intent.putExtra(\"chatRoomId\", id);\r\n        intent.putExtra(\"receiver\", receiver);\r\n        startActivity(intent);\r\n    }\r\n\r\n    public interface OnChatRoomClickListener{\r\n        public void onClick(ChatRoomDTO chatRoomDTO);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/chatroomlist/ChatRoomListFragment.java	(date 1663487586479)
+@@ -5,7 +5,6 @@
+ 
+ import androidx.databinding.DataBindingUtil;
+ import androidx.fragment.app.Fragment;
+-import androidx.lifecycle.Observer;
+ import androidx.lifecycle.ViewModelProvider;
+ import androidx.recyclerview.widget.LinearLayoutManager;
+ import androidx.recyclerview.widget.RecyclerView;
+@@ -21,8 +20,6 @@
+ import com.lodong.android.neighborcommunication.view.adapter.ChatRoomAdapter;
+ import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
+ 
+-import java.util.List;
+-
+ public class ChatRoomListFragment extends Fragment {
+     private FragmentChatRoomListBinding binding;
+     private ChatRoomListViewModel viewModel;
+@@ -57,8 +54,8 @@
+     public OnChatRoomClickListener onChatRoomClickListener(){
+         return chatRoomDTO -> {
+             long id = chatRoomDTO.getRoomId();
+-            String receiver = chatRoomDTO.getRoomUserOne().equals(UserInfo.getInstance().getId())
+-                    ? chatRoomDTO.getRoomUserTwo() : chatRoomDTO.getRoomUserOne();
++            String receiver = chatRoomDTO.getRoomUserOneId().equals(UserInfo.getInstance().getId())
++                    ? chatRoomDTO.getRoomUserTwoId() : chatRoomDTO.getRoomUserOneId();
+             intentChatRoomActivity(id, receiver);
+ 
+         };
+Index: app/src/main/java/com/lodong/android/neighborcommunication/view/adapter/ChatRoomAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.view.adapter;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.lodong.android.neighborcommunication.R;\r\nimport com.lodong.android.neighborcommunication.data.UserInfo;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFragment;\r\n\r\nimport java.util.List;\r\n\r\npublic class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {\r\n    private List<ChatRoomDTO> chatRoomList;\r\n    private ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener;\r\n\r\n    public ChatRoomAdapter() {}\r\n\r\n    public void changeMemberListAdapter(List<ChatRoomDTO> chatRoomList){\r\n        this.chatRoomList = chatRoomList;\r\n        notifyDataSetChanged();\r\n    }\r\n\r\n    public void setOnChatRoomClickListener(ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener) {\r\n        this.onChatRoomClickListener = onChatRoomClickListener;\r\n    }\r\n\r\n    public class ViewHolder extends RecyclerView.ViewHolder{\r\n        private TextView txtNickName, txtLastMessage;\r\n\r\n        public ViewHolder(@NonNull View itemView) {\r\n            super(itemView);\r\n            txtNickName = itemView.findViewById(R.id.txt_nickName);\r\n            txtLastMessage = itemView.findViewById(R.id.txt_last_message);\r\n        }\r\n\r\n        public void onBind(ChatRoomDTO chatRoomDTO){\r\n            String nickName = null;\r\n            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getRoomUserOne())){\r\n                nickName = chatRoomDTO.getRoomUserTwo();\r\n            }else{\r\n                nickName = chatRoomDTO.getRoomUserOne();\r\n            }\r\n\r\n            txtNickName.setText(nickName);\r\n\r\n            itemView.setOnClickListener(view -> {\r\n                intentChatRoom(chatRoomDTO);\r\n            });\r\n        }\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chatroom, parent, false);\r\n        return new ViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {\r\n        holder.onBind(this.chatRoomList.get(position));\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return chatRoomList == null ? 0 : chatRoomList.size();\r\n    }\r\n\r\n    public void intentChatRoom(ChatRoomDTO chatRoomDTO){\r\n        onChatRoomClickListener.onClick(chatRoomDTO);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/view/adapter/ChatRoomAdapter.java b/app/src/main/java/com/lodong/android/neighborcommunication/view/adapter/ChatRoomAdapter.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/view/adapter/ChatRoomAdapter.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/view/adapter/ChatRoomAdapter.java	(date 1663487586504)
+@@ -41,10 +41,10 @@
+ 
+         public void onBind(ChatRoomDTO chatRoomDTO){
+             String nickName = null;
+-            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getRoomUserOne())){
+-                nickName = chatRoomDTO.getRoomUserTwo();
++            if(UserInfo.getInstance().getNickName().equals(chatRoomDTO.getRoomUserOneId())){
++                nickName = chatRoomDTO.getRoomUserTwoId();
+             }else{
+-                nickName = chatRoomDTO.getRoomUserOne();
++                nickName = chatRoomDTO.getRoomUserOneId();
+             }
+ 
+             txtNickName.setText(nickName);
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.chatroomservice;\r\n\r\nimport static androidx.room.OnConflictStrategy.IGNORE;\r\n\r\nimport androidx.lifecycle.LiveData;\r\nimport androidx.room.Dao;\r\nimport androidx.room.Delete;\r\nimport androidx.room.Insert;\r\nimport androidx.room.Query;\r\n\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\n\r\nimport java.util.List;\r\n\r\n@Dao\r\npublic interface ChatRoomDao {\r\n    @Insert(onConflict = IGNORE)\r\n    void insert(ChatRoomDTO chatRoomDTO);\r\n\r\n    @Delete\r\n    void delete(ChatRoomDTO chatRoomDTO);\r\n\r\n    @Query(\"SELECT * FROM chatRoom\")\r\n    LiveData<List<ChatRoomDTO>> getAll();\r\n\r\n    @Query(\"select exists (select 1 from chatroom c where (c.room_user_one = :p1 and c.room_user_two = :p2) or (c.room_user_one = :p2 and c.room_user_two = :p1))\")\r\n    boolean existsByParticipants(String p1, String p2);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomDao.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomDao.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomDao.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatroomservice/ChatRoomDao.java	(date 1663487679340)
+@@ -23,6 +23,6 @@
+     @Query("SELECT * FROM chatRoom")
+     LiveData<List<ChatRoomDTO>> getAll();
+ 
+-    @Query("select exists (select 1 from chatroom c where (c.room_user_one = :p1 and c.room_user_two = :p2) or (c.room_user_one = :p2 and c.room_user_two = :p1))")
++    @Query("select exists (select 1 from chatroom c where (c.room_user_one_id = :p1 and c.room_user_two_id = :p2) or (c.room_user_one_id = :p2 and c.room_user_two_id = :p1))")
+     boolean existsByParticipants(String p1, String p2);
+ }
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/.idea/gradle.xml	(date 1663487172269)
+@@ -13,7 +13,6 @@
+             <option value="$PROJECT_DIR$/app" />
+           </set>
+         </option>
+-        <option name="resolveModulePerSourceSet" value="false" />
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatRoom.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.domain;\r\n\r\nimport lombok.*;\r\n\r\nimport javax.persistence.*;\r\n\r\n@Entity\r\n@Getter @Setter @ToString @Builder\r\n@AllArgsConstructor @NoArgsConstructor\r\npublic class ChatRoom {\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    private Long roomId;\r\n    @ManyToOne\r\n    private ApplicationUser roomUserOne;\r\n    @ManyToOne\r\n    private ApplicationUser roomUserTwo;\r\n    @Transient\r\n    private String roomUserOneNickName;\r\n    @Transient\r\n    private String roomUserTwoNickName;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatRoom.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatRoom.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatRoom.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatRoom.java	(date 1663490149097)
+@@ -19,4 +19,8 @@
+     private String roomUserOneNickName;
+     @Transient
+     private String roomUserTwoNickName;
++    @Transient
++    private String roomUserOneId;
++    @Transient
++    private String roomUserTwoId;
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/BlockKey.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/BlockKey.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/BlockKey.java
+new file mode 100644
+--- /dev/null	(date 1663484136958)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/BlockKey.java	(date 1663484136958)
+@@ -0,0 +1,13 @@
++package com.hyunho9877.outsource.domain;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import java.io.Serializable;
++
++@Data
++@NoArgsConstructor @AllArgsConstructor
++public class BlockKey implements Serializable {
++    private String requester;
++    private String target;
++}
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatMessage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.domain;\r\n\r\nimport com.google.common.base.Strings;\r\nimport lombok.*;\r\n\r\nimport javax.persistence.*;\r\nimport java.io.Serializable;\r\nimport java.time.LocalDateTime;\r\nimport java.time.format.DateTimeFormatter;\r\n\r\n\r\n@Entity\r\n@Getter @Setter @ToString\r\n@AllArgsConstructor @NoArgsConstructor\r\npublic class ChatMessage implements Serializable {\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    private Long chatId;\r\n    @ManyToOne\r\n    private ChatRoom room;\r\n    private String sender;\r\n    private String receiver;\r\n    private String message;\r\n    private String timestamp;\r\n    private boolean confirmed;\r\n    @Transient\r\n    private String senderNickName;\r\n    @Transient\r\n    private String receiverNickName;\r\n\r\n    @PrePersist\r\n    public void prePersist() {\r\n        if(Strings.isNullOrEmpty(timestamp)) this.timestamp = DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\").format(LocalDateTime.now());\r\n        this.confirmed = false;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatMessage.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatMessage.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatMessage.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ChatMessage.java	(date 1663489742433)
+@@ -10,7 +10,7 @@
+ 
+ 
+ @Entity
+-@Getter @Setter @ToString
++@Getter @Setter @ToString @Builder
+ @AllArgsConstructor @NoArgsConstructor
+ public class ChatMessage implements Serializable {
+     @Id
+@@ -27,6 +27,8 @@
+     private String senderNickName;
+     @Transient
+     private String receiverNickName;
++    @Transient
++    private long roomId;
+ 
+     @PrePersist
+     public void prePersist() {
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ApplicationUser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.domain;\r\n\r\nimport lombok.*;\r\n\r\nimport javax.persistence.Column;\r\nimport javax.persistence.Entity;\r\nimport javax.persistence.Id;\r\nimport javax.persistence.PrePersist;\r\n\r\n@Entity\r\n@Getter @Setter @ToString @Builder\r\n@AllArgsConstructor @NoArgsConstructor\r\npublic class ApplicationUser {\r\n    @Id\r\n    private String id;\r\n    @Column(nullable = false)\r\n    private String password;\r\n    @Column(nullable = false)\r\n    private String nickName;\r\n    @Column(nullable = false)\r\n    private String message;\r\n    private boolean receiveNotification;\r\n    private String fcmToken;\r\n\r\n    @PrePersist\r\n    public void prePersist() {\r\n        this.message = \"\";\r\n        this.receiveNotification = true;\r\n    }\r\n\r\n    public static ApplicationUser getPublicProfile(ApplicationUser user) {\r\n        return new ApplicationUser(user.getId(), null, user.getNickName(), user.getMessage(), user.isReceiveNotification(), null);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ApplicationUser.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ApplicationUser.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ApplicationUser.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/domain/ApplicationUser.java	(date 1663484448710)
+@@ -2,10 +2,10 @@
+ 
+ import lombok.*;
+ 
+-import javax.persistence.Column;
+-import javax.persistence.Entity;
+-import javax.persistence.Id;
+-import javax.persistence.PrePersist;
++import javax.persistence.*;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.List;
+ 
+ @Entity
+ @Getter @Setter @ToString @Builder
+@@ -28,7 +28,13 @@
+         this.receiveNotification = true;
+     }
+ 
++    public ApplicationUser(String id, String nickName, String message) {
++        this.id = id;
++        this.nickName = nickName;
++        this.message = message;
++    }
++
+     public static ApplicationUser getPublicProfile(ApplicationUser user) {
+-        return new ApplicationUser(user.getId(), null, user.getNickName(), user.getMessage(), user.isReceiveNotification(), null);
++        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage());
+     }
+ }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/dto/ChatMessageDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/dto/ChatMessageDTO.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/dto/ChatMessageDTO.java
+new file mode 100644
+--- /dev/null	(date 1663489396650)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/dto/ChatMessageDTO.java	(date 1663489396650)
+@@ -0,0 +1,43 @@
++package com.hyunho9877.outsource.dto;
++
++import com.hyunho9877.outsource.domain.ChatMessage;
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@NoArgsConstructor
++public class ChatMessageDTO {
++    private long chatId;
++    private long roomId;
++    private String sender;
++    private String receiver;
++    private String timestamp;
++    private String message;
++    private String senderNickName;
++    private String receiverNickName;
++
++    public ChatMessageDTO(long chatId, long roomId, String sender, String receiver, String timestamp, String message, String senderNickName, String receiverNickName) {
++        this.chatId = chatId;
++        this.roomId = roomId;
++        this.sender = sender;
++        this.receiver = receiver;
++        this.timestamp = timestamp;
++        this.message = message;
++        this.senderNickName = senderNickName;
++        this.receiverNickName = receiverNickName;
++    }
++
++    public static ChatMessageDTO from(ChatMessage original) {
++        return new ChatMessageDTO(
++                original.getChatId(),
++                original.getRoomId(),
++                original.getSender(),
++                original.getReceiver(),
++                original.getTimestamp(),
++                original.getMessage(),
++                original.getSenderNickName(),
++                original.getReceiverNickName()
++        );
++    }
++}
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/service/UserService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.service;\r\n\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.repo.ApplicationUserRepository;\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\nimport java.util.List;\r\n\r\n@Service\r\n@RequiredArgsConstructor\r\npublic class UserService {\r\n\r\n    private final ApplicationUserRepository userRepository;\r\n\r\n    public List<ApplicationUser> getUsers(String username) {\r\n        return userRepository.findAll().stream()\r\n                .filter(user->!user.getId().equals(username))\r\n                .map(ApplicationUser::getPublicProfile)\r\n                .toList();\r\n    }\r\n\r\n    @Transactional\r\n    public String changeMessage(String userId, String newMessage) {\r\n        ApplicationUser applicationUser = userRepository.findById(userId).orElseThrow();\r\n        applicationUser.setMessage(newMessage);\r\n        return newMessage;\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/UserService.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/UserService.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/UserService.java	(revision fd22edd5a8197751a4c885daa1e0063a98e31f55)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/UserService.java	(date 1663485336301)
+@@ -1,7 +1,9 @@
+ package com.hyunho9877.outsource.service;
+ 
+ import com.hyunho9877.outsource.domain.ApplicationUser;
++import com.hyunho9877.outsource.domain.Blocking;
+ import com.hyunho9877.outsource.repo.ApplicationUserRepository;
++import com.hyunho9877.outsource.repo.BlockingRepository;
+ import lombok.RequiredArgsConstructor;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+@@ -13,6 +15,7 @@
+ public class UserService {
+ 
+     private final ApplicationUserRepository userRepository;
++    private final BlockingRepository blockingRepository;
+ 
+     public List<ApplicationUser> getUsers(String username) {
+         return userRepository.findAll().stream()
+@@ -28,4 +31,18 @@
+         return newMessage;
+     }
+ 
++    @Transactional
++    public void block(String id, String subject) {
++        ApplicationUser requester = userRepository.getReferenceById(id);
++        ApplicationUser blockTarget = userRepository.getReferenceById(subject);
++        blockingRepository.save(new Blocking(requester.getId(), blockTarget.getId()));
++    }
++
++    public List<String> getBlockList(String id) {
++        return blockingRepository.findByRequester(id).stream().map(Blocking::getTarget).toList();
++    }
++
++    public List<String> getBlockedList(String id) {
++        return blockingRepository.findByTarget(id).stream().map(Blocking::getRequester).toList();
++    }
+ }
+Index: ../outsource-backend/src/test/java/com/hyunho9877/outsource/social/AuthTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/test/java/com/hyunho9877/outsource/social/AuthTest.java b/../outsource-backend/src/test/java/com/hyunho9877/outsource/social/AuthTest.java
+new file mode 100644
+--- /dev/null	(date 1663482981603)
++++ b/../outsource-backend/src/test/java/com/hyunho9877/outsource/social/AuthTest.java	(date 1663482981603)
+@@ -0,0 +1,23 @@
++package com.hyunho9877.outsource.social;
++
++import com.hyunho9877.outsource.domain.ApplicationUser;
++import com.hyunho9877.outsource.repo.ApplicationUserRepository;
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.context.annotation.Description;
++import org.springframework.transaction.annotation.Transactional;
++
++@SpringBootTest
++public class AuthTest {
++    @Autowired
++    ApplicationUserRepository userRepository;
++
++    @Test
++    @Description("블랙리스트 추가")
++    void addBlackList() {
++        ApplicationUser applicationUser = userRepository.findById("test").orElseThrow();
++        ApplicationUser blockTarget = userRepository.findById("id").orElseThrow();
++        applicationUser.getBlockingList().add(blockTarget);
++    }
++}

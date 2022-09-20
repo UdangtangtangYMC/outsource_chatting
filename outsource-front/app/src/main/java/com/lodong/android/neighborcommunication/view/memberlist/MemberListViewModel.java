@@ -3,7 +3,6 @@ package com.lodong.android.neighborcommunication.view.memberlist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,12 +23,13 @@ import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
+import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class MemberListViewModel extends ViewModel {
     private final String TAG = MemberListViewModel.class.getSimpleName();
@@ -104,9 +104,18 @@ public class MemberListViewModel extends ViewModel {
 
         ImageButton sendChatting = dialogView.findViewById(R.id.btn_chat);
         ImageButton reject = dialogView.findViewById(R.id.btn_reject);
+        TextView txtBlock = dialogView.findViewById(R.id.txt_block);
+
+        if(memberDTO.isBlocked()) {
+            reject.setBackgroundResource(R.drawable.ic_baseline_mark_chat_read_24);
+            txtBlock.setText(R.string.unblock);
+        }
+        else {
+            reject.setBackgroundResource(R.drawable.ic_baseline_speaker_notes_off_24);
+            txtBlock.setText(R.string.block);
+        }
 
         TextView txtMemberName = dialogView.findViewById(R.id.txt_member_name);
-
         txtMemberName.setText(memberDTO.getNickName());
 
         sendChatting.setOnClickListener(view -> {
@@ -115,6 +124,13 @@ public class MemberListViewModel extends ViewModel {
         });
 
         reject.setOnClickListener(view -> {
+            if(memberDTO.isBlocked()) {
+                repository.setUserUnblockedCallBack(getUserUnblockedCallBack());
+                unblock(memberDTO);
+            } else {
+                repository.setUserBlockedCallBack(getUserBlockedCallBack());
+                block(memberDTO);
+            }
             alertDialog.dismiss();
         });
     }
@@ -133,6 +149,13 @@ public class MemberListViewModel extends ViewModel {
         mRef.get().startActivity(intent);
     }
 
+    public void block(MemberDTO dto) {
+        repository.block(dto);
+    }
+
+    public void unblock(MemberDTO dto) {
+        repository.unblock(dto);
+    }
 
     public MutableLiveData<List<MemberDTO>> getMemberListML() {
         return this.memberListML;
@@ -152,6 +175,34 @@ public class MemberListViewModel extends ViewModel {
             @Override
             public void onFailed(Throwable t) {
                 errorML.setValue(t);
+            }
+        };
+    }
+
+    public UserBlockedCallBack getUserBlockedCallBack() {
+        return new UserBlockedCallBack() {
+            @Override
+            public void onSuccess(MemberDTO memberDTO) {
+                memberDTO.setBlocked(true);
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+
+            }
+        };
+    }
+
+    public UserUnblockedCallBack getUserUnblockedCallBack() {
+        return new UserUnblockedCallBack() {
+            @Override
+            public void onSuccess(MemberDTO memberDTO) {
+                memberDTO.setBlocked(false);
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+
             }
         };
     }

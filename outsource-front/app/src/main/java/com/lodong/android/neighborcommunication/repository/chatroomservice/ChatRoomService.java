@@ -39,6 +39,10 @@ public class ChatRoomService {
         retrofitService.newChatRoom(jsonObject, message, callBack);
     }
 
+    public boolean reject(String target) {
+        return true;
+    }
+
     public void insert(ChatRoomDTO chatRoomDTO){
         chatRoomDao.insert(chatRoomDTO);
     }

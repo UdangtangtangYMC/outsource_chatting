@@ -2,6 +2,7 @@ package com.lodong.android.neighborcommunication.repository.retrofit;
 
 
 import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.model.BlockDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
@@ -31,4 +32,10 @@ public interface RetrofitServiceInterface {
 
     @POST("/api/v1/chat/new")
     Call<ChatRoomDTO> createNewChatRoom(@Body JsonObject jsonObject);
+
+    @POST("/api/v1/user/block")
+    Call<Void> block(@Body BlockDTO blockDTO);
+
+    @POST("/api/v1/user/unblock")
+    Call<Void> unblock(@Body BlockDTO blockDTO);
 }
