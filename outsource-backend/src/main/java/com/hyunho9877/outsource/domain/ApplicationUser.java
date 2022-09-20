@@ -2,10 +2,7 @@ package com.hyunho9877.outsource.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 
 @Entity
 @Getter @Setter @ToString @Builder
@@ -21,6 +18,8 @@ public class ApplicationUser {
     private String message;
     private boolean receiveNotification;
     private String fcmToken;
+    @Transient
+    private boolean isBlocked;
 
     @PrePersist
     public void prePersist() {
@@ -28,13 +27,14 @@ public class ApplicationUser {
         this.receiveNotification = true;
     }
 
-    public ApplicationUser(String id, String nickName, String message) {
+    public ApplicationUser(String id, String nickName, String message, boolean isBlocked) {
         this.id = id;
         this.nickName = nickName;
         this.message = message;
+        this.isBlocked = isBlocked;
     }
 
-    public static ApplicationUser getPublicProfile(ApplicationUser user) {
-        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage());
+    public static ApplicationUser getPublicProfile(ApplicationUser user, boolean isBlocked) {
+        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage(), isBlocked);
     }
 }

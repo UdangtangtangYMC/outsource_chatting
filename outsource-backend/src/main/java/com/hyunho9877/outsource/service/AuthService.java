@@ -23,7 +23,7 @@ public class AuthService {
     public ApplicationUser auth(ApplicationUser user) {
         ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();
         if(applicationUser.getPassword().equals(user.getPassword())){
-            return ApplicationUser.getPublicProfile(applicationUser);
+            return ApplicationUser.getPublicProfile(applicationUser, false);
         } else {
             return null;
         }

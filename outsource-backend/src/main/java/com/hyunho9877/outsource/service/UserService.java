@@ -6,11 +6,16 @@ import com.hyunho9877.outsource.domain.Blocking;
 import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.repo.BlockingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,9 +24,15 @@ public class UserService {
     private final BlockingRepository blockingRepository;
 
     public List<ApplicationUser> getUsers(String username) {
-        return userRepository.findAll().stream()
-                .filter(user->!user.getId().equals(username))
-                .map(ApplicationUser::getPublicProfile)
+        List<ApplicationUser> users = userRepository.findAll();
+        Set<String> blocking = blockingRepository.findByRequester(username)
+                .stream()
+                .map(Blocking::getTarget)
+                .collect(Collectors.toSet());
+
+        return users.stream()
+                .filter(Predicate.not(user->user.getId().equals(username)))
+                .map(user -> ApplicationUser.getPublicProfile(user, blocking.contains(user.getId())))
                 .toList();
     }
 
