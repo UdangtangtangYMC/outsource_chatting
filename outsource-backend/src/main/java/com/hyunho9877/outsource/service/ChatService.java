@@ -3,6 +3,7 @@ package com.hyunho9877.outsource.service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
+import com.google.gson.Gson;
 import com.hyunho9877.outsource.domain.ApplicationUser;
 import com.hyunho9877.outsource.domain.ChatMessage;
 import com.hyunho9877.outsource.domain.ChatRoom;
@@ -74,8 +75,10 @@ public class ChatService {
         Message message = Message.builder()
                 .putData("title", chat.getSender())
                 .putData("body", chat.getMessage())
+                .putData("dto", new Gson().toJson(ChatMessage.getPublicMessageDetails(chat)))
                 .setToken(token)
                 .build();
+
         String response = FirebaseMessaging.getInstance().send(message);
         rabbitTemplate.convertAndSend(chat.getSender(), chat);
         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);

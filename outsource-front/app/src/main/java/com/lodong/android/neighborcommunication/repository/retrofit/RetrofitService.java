@@ -12,6 +12,7 @@ import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDT
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
@@ -45,12 +46,13 @@ public class RetrofitService {
         return instance;
     }
 
-    public void getSignUpResult(JsonObject jsonObject) {
+    public void getSignUpResult(JsonObject jsonObject, SignUpCallBack callBack) {
         retrofitServiceInterface.getSignUpResult(jsonObject).enqueue(new Callback<SignUpRequestDTO>() {
             @Override
             public void onResponse(Call<SignUpRequestDTO> call, Response<SignUpRequestDTO> response) {
                 SignUpRequestDTO data = response.body();
-                Log.d(TAG, "status code : " + data.getStatus());
+                if(response.code() == 200) callBack.onSuccess();
+                else callBack.onFailed();
             }
 
             @Override

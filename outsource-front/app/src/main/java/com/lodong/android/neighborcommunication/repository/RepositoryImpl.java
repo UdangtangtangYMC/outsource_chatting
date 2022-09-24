@@ -22,6 +22,7 @@ import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
@@ -40,6 +41,7 @@ public class RepositoryImpl implements Repository {
     private ChatDisplayService chatDisplayService;
     private UserBlockedCallBack blockedCallBack;
     private UserUnblockedCallBack unblockedCallBack;
+    private SignUpCallBack signUpCallBack;
 
     private RepositoryImpl(){
         signUpService = new SignUpService();
@@ -192,6 +194,11 @@ public class RepositoryImpl implements Repository {
     @Override
     public void setUserUnblockedCallBack(UserUnblockedCallBack callBack) {
         this.unblockedCallBack = callBack;
+    }
+
+    @Override
+    public void setSignUpCompleteCallBack(SignUpCallBack callBack) {
+        signUpService.setCallBack(callBack);
     }
 
 

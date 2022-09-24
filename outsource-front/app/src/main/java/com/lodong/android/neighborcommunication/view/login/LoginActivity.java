@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.lodong.android.neighborcommunication.R;
 import com.lodong.android.neighborcommunication.databinding.ActivityLoginBinding;
+import com.lodong.android.neighborcommunication.view.signup.SignUpActivity;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = LoginActivity.class.getSimpleName();
@@ -28,5 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         String id = binding.edtId.getText().toString();
         String password = binding.edtPassword.getText().toString();
         viewModel.login(id, password);
+    }
+
+    public void signUp() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 }

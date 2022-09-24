@@ -10,6 +10,7 @@ import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
+import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
@@ -43,4 +44,5 @@ public interface Repository {
     public void setRoomCreatedCallBack(RoomCreateCallBack callBack);
     public void setUserBlockedCallBack(UserBlockedCallBack callBack);
     public void setUserUnblockedCallBack(UserUnblockedCallBack callBack);
+    void setSignUpCompleteCallBack(SignUpCallBack callBack);
 }

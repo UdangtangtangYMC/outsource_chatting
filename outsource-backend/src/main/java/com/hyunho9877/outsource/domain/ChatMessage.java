@@ -35,4 +35,9 @@ public class ChatMessage implements Serializable {
         if(Strings.isNullOrEmpty(timestamp)) this.timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now());
         this.confirmed = false;
     }
+
+    public static ChatMessage getPublicMessageDetails(ChatMessage message) {
+        return new ChatMessage(message.getChatId(), null, message.getSender(), message.getReceiver(), message.getMessage(), message.getTimestamp(), message.isConfirmed(), message.getSenderNickName(), message.getReceiverNickName(), message.getRoomId());
+    }
+
 }
