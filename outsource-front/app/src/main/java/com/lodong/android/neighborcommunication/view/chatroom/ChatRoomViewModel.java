@@ -15,6 +15,7 @@ import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
+import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
 
@@ -55,7 +56,7 @@ public class ChatRoomViewModel extends ViewModel {
     public void sendMessage(String message) {
         ChatMessageDTO chatMessage = new ChatMessageDTO(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
         Log.d(TAG, "send message info : " + chatMessage.toString());
-        StompUtils.INSTANCE.send(chatMessage);
+        StompUtils.INSTANCE.send(chatMessage, getChatRoomIdCallBack());
     }
 
     public LiveData<List<ChatMessageDTO>> getChatMessageList(long chatRoomId) {
@@ -64,5 +65,14 @@ public class ChatRoomViewModel extends ViewModel {
 
     public MutableLiveData<Long> getChatRoomIdML() {
         return chatRoomIdML;
+    }
+
+
+    private GetChatRoomIdCallBack getChatRoomIdCallBack(){
+        return chatRoomId -> changeId(chatRoomId);
+    }
+    public void changeId(long id){
+        chatRoomid = id;
+        chatRoomIdML.setValue(chatRoomid);
     }
 }

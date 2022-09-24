@@ -60,6 +60,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         Log.d(TAG, "sendMessage");
         String message = binding.edtMessage.getText().toString();
         viewModel.sendMessage(message);
+        binding.edtMessage.setText("");
     }
 
     public void openDrawer(){
@@ -71,6 +72,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 -> {
             Log.d(TAG, "chatMessageCount : " + chatMessageDTOS.size());
             adapter.setChatMessageList(chatMessageDTOS);
+            binding.recyclerview.scrollToPosition(chatMessageDTOS.size()-1);
         });
     }
 }

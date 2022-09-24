@@ -12,6 +12,7 @@ import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.Code;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
+import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
 import ua.naiksoftware.stomp.Stomp;
@@ -51,9 +52,9 @@ public class StompUtils {
         stompClient.disconnect();
     }
 
-    public void send(ChatMessageDTO message) {
+    public void send(ChatMessageDTO message, GetChatRoomIdCallBack getChatRoomIdCallBack) {
         if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {
-            repository.setRoomCreatedCallBack(getRoomCreateCallBack());
+            repository.setRoomCreatedCallBack(getRoomCreateCallBack(getChatRoomIdCallBack));
             repository.createChatRoom(message.getSender(), message.getReceiver(), message);
         } else {
             String toJson = gson.toJson(message);
@@ -61,11 +62,12 @@ public class StompUtils {
         }
     }
 
-    public RoomCreateCallBack getRoomCreateCallBack() {
+    public RoomCreateCallBack getRoomCreateCallBack(GetChatRoomIdCallBack getChatRoomIdCallBack) {
         return new RoomCreateCallBack() {
             @Override
             public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
                 message.setRoomId(chatRoom.getRoomId());
+                getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
                 String toJson = new Gson().toJson(message);
                 stompClient.send("/pub/msg", toJson).subscribe();
@@ -74,6 +76,7 @@ public class StompUtils {
             @Override
             public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message) {
                 message.setRoomId(chatRoom.getRoomId());
+                getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
                 String toJson = new Gson().toJson(message);
                 stompClient.send("/pub/msg", toJson).subscribe();
