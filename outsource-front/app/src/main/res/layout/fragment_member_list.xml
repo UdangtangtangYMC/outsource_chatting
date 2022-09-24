@@ -34,18 +34,32 @@
                 app:layout_constraintRight_toLeftOf="@+id/txt_status_message"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/txt_status_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
+                android:layout_marginEnd="348dp"
                 android:text="@{viewModel.userStatusMessage}"
                 android:textColor="#333333"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_name"
+                app:layout_constraintEnd_toStartOf="@+id/img_logout"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toRightOf="@id/txt_name"
                 app:layout_constraintTop_toTopOf="@+id/txt_name"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.75" />
+
+            <ImageView
+                android:id="@+id/img_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_logout_24"
+                android:onClick="@{()->viewModel.logout()}"
+                app:tint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

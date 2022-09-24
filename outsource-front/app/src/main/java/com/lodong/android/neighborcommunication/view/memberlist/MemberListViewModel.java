@@ -21,6 +21,7 @@ import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
+import com.lodong.android.neighborcommunication.utils.AppDataDelete;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
@@ -164,6 +165,34 @@ public class MemberListViewModel extends ViewModel {
 
     public MutableLiveData<Throwable> getErrorML() {
         return this.errorML;
+    }
+
+    public void logout(){
+        showLogoutDialog();
+    }
+
+    public void showLogoutDialog() {
+        View dialogView = mRef.get().getLayoutInflater().inflate(R.layout.dialog_logout_click, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mRef.get());
+        builder.setView(dialogView);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        Button btnOk = dialogView.findViewById(R.id.btn_ok);
+        Button btnNo = dialogView.findViewById(R.id.btn_cancel);
+
+        btnOk.setOnClickListener(view -> {
+            AppDataDelete.clearApplicationData(mRef.get());
+            mRef.get().finishAffinity();
+            System.exit(0);
+            alertDialog.dismiss();
+        });
+
+        btnNo.setOnClickListener(view -> {
+            alertDialog.dismiss();
+        });
     }
 
     public GetMemberListCallBack getMemberListCallBack() {

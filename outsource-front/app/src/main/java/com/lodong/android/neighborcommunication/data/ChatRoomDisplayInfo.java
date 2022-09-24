@@ -54,4 +54,15 @@ public class ChatRoomDisplayInfo {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
+    @Override
+    public String toString() {
+        return "ChatRoomDisplayInfo{" +
+                "roomId=" + roomId +
+                ", receiver='" + receiver + '\'' +
+                ", receiverNickName='" + receiverNickName + '\'' +
+                ", lastMessage='" + lastMessage + '\'' +
+                ", lastMessageTime='" + lastMessageTime + '\'' +
+                '}';
+    }
 }
