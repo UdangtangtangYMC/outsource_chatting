@@ -53,11 +53,14 @@ public class ChatRoomListViewModel extends ViewModel {
             ChatMessageDTO chatMessageDTO = repository.getChatMessageById(messageId);
             ChatRoomDTO chatRoomDTO = repository.getChatRoomById(chatRoomId);
 
-            String receiver = chatMessageDTO.getReceiver();
-            String receiverName = chatMessageDTO.getReceiverNickName();
+            String receiver = chatRoomDTO.getRoomUserOneId().equals(UserInfo.getInstance().getId())
+                    ? chatRoomDTO.getRoomUserTwoId() : chatRoomDTO.getRoomUserOneId();
+            String receiverName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getId())
+                    ? chatRoomDTO.getRoomUserTwoNickName() : chatRoomDTO.getRoomUserOneNickName();
             String lastMessage = chatMessageDTO.getMessage();
             String lastMessageTime = chatMessageDTO.getTimestamp();
             ChatRoomDisplayInfo chatRoomDisplayInfo = new ChatRoomDisplayInfo(receiverName, receiver, chatRoomId, lastMessage, lastMessageTime);
+            Log.d(TAG, chatRoomDisplayInfo.toString());
             chatRoomDisplayInfoList.add(chatRoomDisplayInfo);
         }
         this.chatRoomDisplayInfoMutableLiveData.setValue(chatRoomDisplayInfoList);
