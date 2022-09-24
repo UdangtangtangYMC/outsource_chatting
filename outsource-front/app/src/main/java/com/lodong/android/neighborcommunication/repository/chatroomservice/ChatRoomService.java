@@ -62,4 +62,8 @@ public class ChatRoomService {
     public boolean isExists(String p1, String p2) {
         return chatRoomDao.existsByParticipants(p1, p2);
     }
+
+    public ChatRoomDTO getChatRoomById(long id){
+        return chatRoomDao.getChatRoomById(id);
+    }
 }

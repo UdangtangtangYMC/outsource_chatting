@@ -7,20 +7,21 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.lodong.android.neighborcommunication.repository.ChatDisplayService.ChatDisplayDao;
 import com.lodong.android.neighborcommunication.repository.chatmessageservice.ChatMessageDao;
 import com.lodong.android.neighborcommunication.repository.chatroomservice.ChatRoomDao;
+import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ChatMessageDTO.class, ChatRoomDTO.class}, version = 4, exportSchema = false)
+@Database(entities = {ChatMessageDTO.class, ChatRoomDTO.class, ChatDisplayDTO.class}, version = 4, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
     private static final String TAG = RoomDB.class.getSimpleName();
     private static String DATABASE_NAME = "communication";
     private static RoomDB instance;
-
     public static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriterExcutor
             = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -39,5 +40,7 @@ public abstract class RoomDB extends RoomDatabase {
     public abstract ChatRoomDao chatRoomDao();
 
     public abstract ChatMessageDao chatMessageDao();
+
+    public abstract ChatDisplayDao chatDisplayDao();
 
 }

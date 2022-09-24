@@ -120,6 +120,7 @@ public class MemberListViewModel extends ViewModel {
 
         sendChatting.setOnClickListener(view -> {
             intentChatRoomActivity(memberDTO.getId(), memberDTO.getNickName());
+            Log.d(TAG, memberDTO.toString());
             alertDialog.dismiss();
         });
 

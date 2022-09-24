@@ -35,5 +35,9 @@ public class ChatMessageService {
         chatMessageDao.delete(chatMessageDTO);
     }
 
+    public ChatMessageDTO getChatMessageById(long chatId){
+        return chatMessageDao.getChatMessageById(chatId);
+    }
+
 
 }

@@ -52,8 +52,6 @@ public class ChatMessageDTO {
         this.message = message;
     }
 
-
-
     public ChatMessageDTO(long chatId, long roomId, String sender, String receiver, String timestamp, boolean checkReceipt, String message, int viewType, String senderNickName, String receiverNickName) {
         this.chatId = chatId;
         this.roomId = roomId;

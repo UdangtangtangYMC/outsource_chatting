@@ -5,12 +5,15 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.google.gson.JsonObject;
+import com.lodong.android.neighborcommunication.repository.ChatDisplayService.ChatDisplayService;
 import com.lodong.android.neighborcommunication.repository.changestatusmessage.ChangeStatusMessageService;
 import com.lodong.android.neighborcommunication.repository.chatmessageservice.ChatMessageService;
 import com.lodong.android.neighborcommunication.repository.chatroomservice.ChatRoomService;
 import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenService;
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
+import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
@@ -34,6 +37,7 @@ public class RepositoryImpl implements Repository {
     private ChangeStatusMessageService changeStatusMessageService;
     private ChatRoomService chatRoomService;
     private ChatMessageService chatMessageService;
+    private ChatDisplayService chatDisplayService;
     private UserBlockedCallBack blockedCallBack;
     private UserUnblockedCallBack unblockedCallBack;
 
@@ -45,6 +49,7 @@ public class RepositoryImpl implements Repository {
         changeStatusMessageService = new ChangeStatusMessageService();
         chatRoomService = new ChatRoomService(MainApplication.getInstance());
         chatMessageService = new ChatMessageService(MainApplication.getInstance());
+        chatDisplayService = new ChatDisplayService(MainApplication.getInstance());
     }
 
     public static RepositoryImpl getInstance(){
@@ -132,6 +137,31 @@ public class RepositoryImpl implements Repository {
     @Override
     public void unblock(MemberDTO dto) {
         memberListService.unblock(dto, unblockedCallBack);
+    }
+
+    @Override
+    public ChatMessageDTO getChatMessageById(long chatId) {
+        return chatMessageService.getChatMessageById(chatId);
+    }
+
+    @Override
+    public ChatRoomDTO getChatRoomById(long chatRoomId) {
+        return chatRoomService.getChatRoomById(chatRoomId);
+    }
+
+    @Override
+    public LiveData<List<ChatDisplayDTO>> getChatDisplayList() {
+        return chatDisplayService.getAll();
+    }
+
+    @Override
+    public void updateChatDisplay(long roomId, long messageId) {
+        chatDisplayService.updateValue(roomId, messageId);
+    }
+
+    @Override
+    public void insertChatDisplay(ChatDisplayDTO chatDisplayDTO) {
+        chatDisplayService.insert(chatDisplayDTO);
     }
 
     @Override

@@ -17,7 +17,6 @@ public class LoginService {
     public void login(JsonObject jsonObject){
         retrofitService.getLoginResult(jsonObject, callBack);
     }
-
     public void setCallBack(GetLogInResultCallBack callBack) {
         this.callBack = callBack;
     }

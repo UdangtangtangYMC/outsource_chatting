@@ -7,18 +7,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
+import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.utils.preferences.Code;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
-import ua.naiksoftware.stomp.dto.LifecycleEvent;
 
 public class StompUtils {
     private static final String TAG = StompUtils.class.getSimpleName();
@@ -29,19 +26,20 @@ public class StompUtils {
     private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
 
     @SuppressLint("CheckResult")
-    public static void init(Context context) {
-        String subscribeURL = "/queue/" + getId(context);
-        Log.d(TAG, subscribeURL);
-        stompClient.connect();
-        stompClient.topic(subscribeURL).subscribe(data -> {
-            String payload = data.getPayload();
-            ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-            Log.d(TAG, message.toString());
-            if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
-                repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
-            if (message.getSender().equals(getId(context))) message.setViewType(Code.ViewType.RIGHT_CONTENT);
-            else message.setViewType(Code.ViewType.LEFT_CONTENT);
-            repository.insertChatMessage(message);
+            public static void init(Context context) {
+                String subscribeURL = "/queue/" + getId(context);
+                Log.d(TAG, subscribeURL);
+                stompClient.connect();
+                stompClient.topic(subscribeURL).subscribe(data -> {
+                    String payload = data.getPayload();
+                    ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+                    Log.d(TAG, message.toString());
+                    if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                        repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
+                    if (message.getSender().equals(getId(context))) message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                    else message.setViewType(Code.ViewType.LEFT_CONTENT);
+                    repository.insertChatMessage(message);
+                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
         });
     }
 
@@ -79,5 +77,4 @@ public class StompUtils {
             }
         };
     }
-
 }

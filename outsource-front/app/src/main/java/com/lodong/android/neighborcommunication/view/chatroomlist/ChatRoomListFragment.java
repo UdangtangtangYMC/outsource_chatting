@@ -65,7 +65,6 @@ public class ChatRoomListFragment extends Fragment {
             String receiver = chatRoomDTO.getReceiver();
             String receiverNickName = chatRoomDTO.getReceiverNickName();
             intentChatRoomActivity(id, receiver, receiverNickName);
-
         };
     }
 
