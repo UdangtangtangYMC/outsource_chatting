@@ -23,4 +23,8 @@ public class ChatRoom {
     private String roomUserOneId;
     @Transient
     private String roomUserTwoId;
+
+    public static ChatRoom getPublicRoomDetails(ChatRoom chatRoom) {
+        return new ChatRoom(chatRoom.getRoomId(), null, null, chatRoom.getRoomUserOne().getNickName(), chatRoom.getRoomUserTwo().getNickName(), chatRoom.getRoomUserOne().getId(), chatRoom.getRoomUserTwo().getId());
+    }
 }

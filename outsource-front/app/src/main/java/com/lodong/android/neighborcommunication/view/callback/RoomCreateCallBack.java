@@ -6,5 +6,5 @@ import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 
 public interface RoomCreateCallBack {
     public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message);
-    public void onFailed(Throwable t);
+    public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message);
 }

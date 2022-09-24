@@ -121,8 +121,11 @@ public class RetrofitService {
         retrofitServiceInterface.createNewChatRoom(roomDTO).enqueue(new Callback<ChatRoomDTO>() {
             @Override
             public void onResponse(Call<ChatRoomDTO> call, Response<ChatRoomDTO> response) {
-                Log.d(TAG, response.body().toString());
-                callBack.onSuccess(response.body(), message);
+                if(response.code() == 200) callBack.onSuccess(response.body(), message);
+                else if (response.code() == 400) {
+                    Log.e(TAG, response.errorBody().toString());
+                    callBack.onFailed(response.body(), message);
+                }
             }
 
             @Override

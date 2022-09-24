@@ -72,8 +72,11 @@ public class StompUtils {
             }
 
             @Override
-            public void onFailed(Throwable t) {
-                Log.e(TAG, "room create error occurred");
+            public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message) {
+                message.setRoomId(chatRoom.getRoomId());
+                repository.insertChatRoom(chatRoom);
+                String toJson = new Gson().toJson(message);
+                stompClient.send("/pub/msg", toJson).subscribe();
             }
         };
     }

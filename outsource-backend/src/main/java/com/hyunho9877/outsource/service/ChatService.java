@@ -43,13 +43,12 @@ public class ChatService {
         return saved;
     }
 
-    @Transactional
-    public void confirmMessage(String username, String sender) {
-
-    }
-
     public ChatRoom registerNewChatRoom(String requester, String subject) {
-        if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
+        if(isChatRoomAlreadyExists(requester, subject)){
+            ChatRoom publicRoomDetails = ChatRoom.getPublicRoomDetails(chatRoomRepository.findByRoomUserOneAndRoomUserTwo(requester, subject).orElseThrow());
+            log.debug("already exists : {}", publicRoomDetails);
+            return publicRoomDetails;
+        }
         ApplicationUser req = userRepository.findById(requester).orElseThrow();
         ApplicationUser sub = userRepository.findById(subject).orElseThrow();
 
@@ -59,14 +58,9 @@ public class ChatService {
                 .build();
 
         ChatRoom save = chatRoomRepository.save(chatRoom);
-        save.setRoomUserOne(null);
-        save.setRoomUserTwo(null);
-        save.setRoomUserOneNickName(req.getNickName());
-        save.setRoomUserTwoNickName(sub.getNickName());
-        save.setRoomUserOneId(req.getId());
-        save.setRoomUserTwoId(sub.getId());
-        log.info("message sending : {}", save);
-        return save;
+        ChatRoom publicRoomDetails = ChatRoom.getPublicRoomDetails(save);
+        log.info("room Created : {}", publicRoomDetails);
+        return publicRoomDetails;
     }
 
     private boolean isChatRoomAlreadyExists(String requester, String subject) {
@@ -85,5 +79,9 @@ public class ChatService {
         String response = FirebaseMessaging.getInstance().send(message);
         rabbitTemplate.convertAndSend(chat.getSender(), chat);
         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
+    }
+
+    public ChatRoom getChatRoomId(String id, String subject) {
+        return ChatRoom.getPublicRoomDetails(chatRoomRepository.findByRoomUserOneAndRoomUserTwo(id, subject).orElseThrow());
     }
 }
