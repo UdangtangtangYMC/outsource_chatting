@@ -48,7 +48,6 @@ public class ChatService {
 
     }
 
-
     public ChatRoom registerNewChatRoom(String requester, String subject) {
         if(isChatRoomAlreadyExists(requester, subject)) throw new IllegalStateException();
         ApplicationUser req = userRepository.findById(requester).orElseThrow();

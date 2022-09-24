@@ -26,7 +26,7 @@ public class ChatController {
     private final UserService userService;
 
     @MessageMapping("/msg")
-    public void newUser(@Payload ChatMessage message) throws FirebaseMessagingException {
+    public void sendMessage(@Payload ChatMessage message) throws FirebaseMessagingException {
         if(userService.isBlocked(message.getSender(), message.getReceiver())) return;
         chatService.send(message);
         chatService.sendNotification(message);

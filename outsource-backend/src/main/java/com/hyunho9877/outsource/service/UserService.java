@@ -65,4 +65,16 @@ public class UserService {
     public List<String> getBlockedList(String id) {
         return blockingRepository.findByTarget(id).stream().map(Blocking::getRequester).toList();
     }
+
+    @Transactional
+    public void enableNotification(String id) {
+        ApplicationUser applicationUser = userRepository.findById(id).orElseThrow();
+        applicationUser.setReceiveNotification(true);
+    }
+
+    @Transactional
+    public void disableNotification(String id) {
+        ApplicationUser applicationUser = userRepository.findById(id).orElseThrow();
+        applicationUser.setReceiveNotification(false);
+    }
 }

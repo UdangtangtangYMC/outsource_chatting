@@ -55,4 +55,17 @@ public class UserController {
     public ResponseEntity<List<String>> getBlockedList(@RequestBody ChatRoomDTO user) {
         return ResponseEntity.ok(userService.getBlockedList(user.getId()));
     }
+
+    @PostMapping("/notification/on")
+    public ResponseEntity<?> notificationOn(@RequestBody ChatRoomDTO chatRoomDTO) {
+        userService.enableNotification(chatRoomDTO.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/notification/off")
+    public ResponseEntity<?> notificationOff(@RequestBody ChatRoomDTO chatRoomDTO) {
+        userService.disableNotification(chatRoomDTO.getId());
+        return ResponseEntity.ok().build();
+    }
+
 }
