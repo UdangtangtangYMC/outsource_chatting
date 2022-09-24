@@ -20,21 +20,34 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.lodong.android.neighborcommunication.R;
+import com.lodong.android.neighborcommunication.data.UserInfo;
+import com.lodong.android.neighborcommunication.repository.Repository;
+import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
+import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
+import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.MainActivity;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FCMService extends FirebaseMessagingService{
     private final String TAG = FCMService.class.getSimpleName();
     private final String channelID = "CHATTING";
     private final String channelName = "CHATTING CHANNEL";
     private final String description = "THIS IS CHATTING CHANNEL";
+    private Repository repository;
+    private static final Gson gson = new Gson();
 
 
-    public FCMService() {}
+    public FCMService() {
+        repository = RepositoryImpl.getInstance();
+    }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
@@ -89,6 +102,28 @@ public class FCMService extends FirebaseMessagingService{
     public void handleMessage(RemoteMessage remoteMessage){
         Intent intent = new Intent(this, ChatRoomActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //title이 보내는 사람
+        //body 가 메시지
+        Map<String, String> messageHashMap = remoteMessage.getData();
+        String dto = messageHashMap.get("dto");
+        ChatMessageDTO chatMessage = gson.fromJson(dto, ChatMessageDTO.class);
+        Log.d(TAG, "DTO : " + chatMessage.toString());
+        if (!repository.isChatRoomExists(chatMessage.getSender(), UserInfo.getInstance().getId()))
+            repository.insertChatRoom(new ChatRoomDTO(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getReceiver(), chatMessage.getSenderNickName(), chatMessage.getReceiverNickName()));
+        if (chatMessage.getSender().equals(UserInfo.getInstance().getId())) chatMessage.setViewType(Code.ViewType.RIGHT_CONTENT);
+        else chatMessage.setViewType(Code.ViewType.LEFT_CONTENT);
+        repository.insertChatMessage(chatMessage);
+        repository.insertChatDisplay(new ChatDisplayDTO(chatMessage.getRoomId(), chatMessage.getChatId()));
+
+        long chatRoomId = chatMessage.getRoomId();
+        String receiver = chatMessage.getSender();
+        String receiverNickName = chatMessage.getSenderNickName();
+        intent.putExtra("chatRoomId", chatRoomId);
+        intent.putExtra("receiver", receiver);
+        intent.putExtra("receiverNickName", receiverNickName);
+        Log.d(TAG, "chatRoomId" + chatRoomId);
+        Log.d(TAG, "receiver" + receiver);
+        Log.d(TAG, "receiverNickName" + receiverNickName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT|PendingIntent.FLAG_MUTABLE);
 
         //알림 관련
@@ -115,18 +150,6 @@ public class FCMService extends FirebaseMessagingService{
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-       /* try {
-            URL url = new URL(remoteMessage.getData().get("imgUrl"));
-            //이미지 처리
-            bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            notificationBuilder.setStyle(
-                    new NotificationCompat.BigPictureStyle()
-                            .bigPicture(bigPicture)
-                            .setBigContentTitle(remoteMessage.getData().get("title"))
-                            .setSummaryText(remoteMessage.getData().get("body")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -1,5 +1,7 @@
 package com.lodong.android.neighborcommunication.view.adapter;
 
+import android.icu.text.SimpleDateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +16,35 @@ import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFragment;
 
+import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHolder> {
+    private final String TAG = ChatRoomAdapter.class.getSimpleName();
     private List<ChatRoomDisplayInfo> chatRoomList;
     private ChatRoomListFragment.OnChatRoomClickListener onChatRoomClickListener;
 
     public ChatRoomAdapter() {}
 
     public void changeMemberListAdapter(List<ChatRoomDisplayInfo> chatRoomList){
+        Collections.sort(chatRoomList, (o1, o2) -> {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:MM");
+            Date d1 = null;
+            Date d2 = null;
+            try {
+                d1 = f.parse(o1.getLastMessageTime());
+                d2 = f.parse(o2.getLastMessageTime());
+            } catch (ParseException e) {}
+            if(d1.after(d2)){
+                return 1;
+            }else if(d1.before(d2)){
+                return -1;
+            }
+            return 0;
+        });
         this.chatRoomList = chatRoomList;
         notifyDataSetChanged();
     }
