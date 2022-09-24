@@ -17,6 +17,8 @@ import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.chatroomlist.ChatRoomListFragment;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -30,18 +32,18 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
     public ChatRoomAdapter() {}
 
     public void changeMemberListAdapter(List<ChatRoomDisplayInfo> chatRoomList){
-        Collections.sort(chatRoomList, (o1, o2) -> {
-            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:MM");
-            Date d1 = null;
-            Date d2 = null;
-            try {
-                d1 = f.parse(o1.getLastMessageTime());
-                d2 = f.parse(o2.getLastMessageTime());
-            } catch (ParseException e) {}
-            if(d1.after(d2)){
-                return 1;
-            }else if(d1.before(d2)){
-                return -1;
+        Collections.sort(chatRoomList, (room1, room2) -> {
+            String room1LastMessageTime = room1.getLastMessageTime();
+            String room2LastMessageTime = room2.getLastMessageTime();
+            LocalDateTime room1LastTime;
+            LocalDateTime room2LastTime;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                room1LastTime = LocalDateTime.parse(room1LastMessageTime, formatter);
+                room2LastTime = LocalDateTime.parse(room2LastMessageTime, formatter);
+                if(room1LastTime.isBefore(room2LastTime)) return -1;
+                else if(room1LastTime.isAfter(room2LastTime)) return 1;
+                else return 0;
             }
             return 0;
         });
