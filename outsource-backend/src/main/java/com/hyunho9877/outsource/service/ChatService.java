@@ -77,7 +77,7 @@ public class ChatService {
         Message message = Message.builder()
                 .putData("title", chat.getSender())
                 .putData("body", chat.getMessage())
-                .putData("dto", new Gson().toJson(ChatMessage.getPublicMessageDetails(chat)))
+                .putData("data", new Gson().toJson(ChatMessage.getPublicMessageDetails(chat)))
                 .setToken(token)
                 .build();
         String response = FirebaseMessaging.getInstance().send(message);
