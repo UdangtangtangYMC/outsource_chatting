@@ -45,7 +45,6 @@ public class ChatRoomListViewModel extends ViewModel {
     }
 
     private void settingChatRoomDisplayInfo(List<ChatDisplayDTO> chatDisplayDTOS) {
-        Log.d(TAG, "쌉 미얀마");
         chatRoomDisplayInfoList = new ArrayList<>();
         for(ChatDisplayDTO chatDisplayDTO:chatDisplayDTOS){
             long chatRoomId = chatDisplayDTO.getChatRoomId();
@@ -55,7 +54,7 @@ public class ChatRoomListViewModel extends ViewModel {
 
             String receiver = chatRoomDTO.getRoomUserOneId().equals(UserInfo.getInstance().getId())
                     ? chatRoomDTO.getRoomUserTwoId() : chatRoomDTO.getRoomUserOneId();
-            String receiverName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getId())
+            String receiverName = chatRoomDTO.getRoomUserOneNickName().equals(UserInfo.getInstance().getNickName())
                     ? chatRoomDTO.getRoomUserTwoNickName() : chatRoomDTO.getRoomUserOneNickName();
             String lastMessage = chatMessageDTO.getMessage();
             String lastMessageTime = chatMessageDTO.getTimestamp();

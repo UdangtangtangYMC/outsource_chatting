@@ -53,7 +53,6 @@ public class ChatRoomListFragment extends Fragment {
 
     public void getChatRoomList(){
         viewModel.getChatRoomDisplayInfoMutableLiveData().observe(getActivity(), chatRoomDisplayInfos -> {
-            Log.d(TAG, "미얀마");
             chatRoomAdapter.changeMemberListAdapter(chatRoomDisplayInfos);
         });
         viewModel.getChatRoomList();

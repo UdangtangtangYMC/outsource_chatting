@@ -179,14 +179,14 @@ public class MemberListViewModel extends ViewModel {
     }
 
     private void showSettingDialog() {
-        View dialogView = mRef.get().getLayoutInflater().inflate(R.layout.dialog_setting, null);
-        TextView txtSignOut = dialogView.findViewById(R.id.text_dialog_sign_out);
-        TextView txtPush = dialogView.findViewById(R.id.text_dialog_push);
-        boolean notificationEnabled = PreferenceManager.isNotificationEnabled(mRef.get());
-        if (notificationEnabled) txtPush.setText("푸시 알림 차단");
-        else txtPush.setText("푸시 알림 차단 해제");
+            View dialogView = mRef.get().getLayoutInflater().inflate(R.layout.dialog_setting, null);
+            TextView txtSignOut = dialogView.findViewById(R.id.text_dialog_sign_out);
+            TextView txtPush = dialogView.findViewById(R.id.text_dialog_push);
+            boolean notificationEnabled = PreferenceManager.isNotificationEnabled(mRef.get());
+            if (notificationEnabled) txtPush.setText("푸시 알림 차단");
+            else txtPush.setText("푸시 알림 차단 해제");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mRef.get());
+            AlertDialog.Builder builder = new AlertDialog.Builder(mRef.get());
         builder.setView(dialogView);
 
         final AlertDialog alertDialog = builder.create();
