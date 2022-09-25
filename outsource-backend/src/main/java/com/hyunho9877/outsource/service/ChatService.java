@@ -70,6 +70,8 @@ public class ChatService {
 
     public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {
         ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
+        rabbitTemplate.convertAndSend(chat.getSender(), chat);
+
         if(!applicationUser.isReceiveNotification()) return;
         String token = applicationUser.getFcmToken();
         Message message = Message.builder()
@@ -78,9 +80,7 @@ public class ChatService {
                 .putData("dto", new Gson().toJson(ChatMessage.getPublicMessageDetails(chat)))
                 .setToken(token)
                 .build();
-
         String response = FirebaseMessaging.getInstance().send(message);
-        rabbitTemplate.convertAndSend(chat.getSender(), chat);
         log.info("chatId : {}, FCM response : {}", chat.getChatId(), response);
     }
 

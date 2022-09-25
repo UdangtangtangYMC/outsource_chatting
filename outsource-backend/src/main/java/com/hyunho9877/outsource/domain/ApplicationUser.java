@@ -27,14 +27,15 @@ public class ApplicationUser {
         this.receiveNotification = true;
     }
 
-    public ApplicationUser(String id, String nickName, String message, boolean isBlocked) {
+    public ApplicationUser(String id, String nickName, String message, boolean isBlocked, boolean receiveNotification) {
         this.id = id;
         this.nickName = nickName;
         this.message = message;
         this.isBlocked = isBlocked;
+        this.receiveNotification = receiveNotification;
     }
 
     public static ApplicationUser getPublicProfile(ApplicationUser user, boolean isBlocked) {
-        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage(), isBlocked);
+        return new ApplicationUser(user.getId(), user.getNickName(), user.getMessage(), isBlocked, user.isReceiveNotification());
     }
 }

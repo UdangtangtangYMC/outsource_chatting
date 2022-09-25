@@ -22,17 +22,21 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDTO> registration(@RequestBody UserDTO user) {
+    public ResponseEntity<?> registration(@RequestBody UserDTO user) {
         log.info("user data received {}", user);
 
-        ApplicationUser applicationUser = ApplicationUser.builder()
-                .id(user.getId())
-                .password(user.getPassword())
-                .nickName(user.getNickName())
-                .fcmToken(user.getFcmToken())
-                .build();
+        try {
+            ApplicationUser applicationUser = ApplicationUser.builder()
+                    .id(user.getId())
+                    .password(user.getPassword())
+                    .nickName(user.getNickName())
+                    .fcmToken(user.getFcmToken())
+                    .build();
 
-        authService.register(applicationUser);
+            authService.register(applicationUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         return ResponseEntity.ok(user);
     }
 
