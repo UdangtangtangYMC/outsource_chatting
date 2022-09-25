@@ -20,27 +20,28 @@ import ua.naiksoftware.stomp.StompClient;
 
 public class StompUtils {
     private static final String TAG = StompUtils.class.getSimpleName();
-    private static final String BASE_URL = "ws://49.174.169.48:13883/ws";
+    private static final String BASE_URL = "ws://210.99.223.38:13883/ws";
     public static final StompUtils INSTANCE = new StompUtils();
     private static final Gson gson = new Gson();
     private static final Repository repository = RepositoryImpl.getInstance();
     private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);
 
     @SuppressLint("CheckResult")
-            public static void init(Context context) {
-                String subscribeURL = "/queue/" + getId(context);
-                Log.d(TAG, subscribeURL);
-                stompClient.connect();
-                stompClient.topic(subscribeURL).subscribe(data -> {
-                    String payload = data.getPayload();
-                    ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-                    Log.d(TAG, message.toString());
-                    if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
-                        repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
-                    if (message.getSender().equals(getId(context))) message.setViewType(Code.ViewType.RIGHT_CONTENT);
-                    else message.setViewType(Code.ViewType.LEFT_CONTENT);
-                    repository.insertChatMessage(message);
-                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
+    public static void init(Context context) {
+        String subscribeURL = "/queue/" + getId(context);
+        Log.d(TAG, subscribeURL);
+        stompClient.connect();
+        stompClient.topic(subscribeURL).subscribe(data -> {
+            String payload = data.getPayload();
+            ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+            Log.d(TAG, message.toString());
+            if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
+            if (message.getSender().equals(getId(context)))
+                message.setViewType(Code.ViewType.RIGHT_CONTENT);
+            else message.setViewType(Code.ViewType.LEFT_CONTENT);
+            repository.insertChatMessage(message);
+            repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
         });
     }
 

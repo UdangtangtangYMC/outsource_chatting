@@ -2,6 +2,7 @@ package com.lodong.android.neighborcommunication.view.memberlist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.utils.AppDataDelete;
 import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.NotificationCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
@@ -49,9 +51,11 @@ public class MemberListViewModel extends ViewModel {
     public void init() {
         repository = RepositoryImpl.getInstance();
         repository.setGetMemberListCallBack(getMemberListCallBack());
+        repository.setNotificationCallBack(getNotificationCallBack());
 
         userNickName = UserInfo.getInstance().getNickName();
         userStatusMessage.set(UserInfo.getInstance().getMessage());
+
     }
 
     public void getMemberList() {
@@ -107,11 +111,10 @@ public class MemberListViewModel extends ViewModel {
         ImageButton reject = dialogView.findViewById(R.id.btn_reject);
         TextView txtBlock = dialogView.findViewById(R.id.txt_block);
 
-        if(memberDTO.isBlocked()) {
+        if (memberDTO.isBlocked()) {
             reject.setBackgroundResource(R.drawable.ic_baseline_mark_chat_read_24);
             txtBlock.setText(R.string.unblock);
-        }
-        else {
+        } else {
             reject.setBackgroundResource(R.drawable.ic_baseline_speaker_notes_off_24);
             txtBlock.setText(R.string.block);
         }
@@ -126,7 +129,7 @@ public class MemberListViewModel extends ViewModel {
         });
 
         reject.setOnClickListener(view -> {
-            if(memberDTO.isBlocked()) {
+            if (memberDTO.isBlocked()) {
                 repository.setUserUnblockedCallBack(getUserUnblockedCallBack());
                 unblock(memberDTO);
             } else {
@@ -167,11 +170,41 @@ public class MemberListViewModel extends ViewModel {
         return this.errorML;
     }
 
-    public void logout(){
+    public void logout() {
         showLogoutDialog();
     }
 
-    public void showLogoutDialog() {
+    public void setting() {
+        showSettingDialog();
+    }
+
+    private void showSettingDialog() {
+        View dialogView = mRef.get().getLayoutInflater().inflate(R.layout.dialog_setting, null);
+        TextView txtSignOut = dialogView.findViewById(R.id.text_dialog_sign_out);
+        TextView txtPush = dialogView.findViewById(R.id.text_dialog_push);
+        boolean notificationEnabled = PreferenceManager.isNotificationEnabled(mRef.get());
+        if (notificationEnabled) txtPush.setText("푸시 알림 차단");
+        else txtPush.setText("푸시 알림 차단 해제");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mRef.get());
+        builder.setView(dialogView);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        txtSignOut.setOnClickListener(view -> {
+            showLogoutDialog();
+        });
+
+        txtPush.setOnClickListener(view -> {
+            Log.d(TAG, "is Notification Enabled ? :" + notificationEnabled);
+            if (notificationEnabled) repository.disablePush();
+            else repository.enablePush();
+            alertDialog.dismiss();
+        });
+    }
+
+    private void showLogoutDialog() {
         View dialogView = mRef.get().getLayoutInflater().inflate(R.layout.dialog_logout_click, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mRef.get());
@@ -232,6 +265,22 @@ public class MemberListViewModel extends ViewModel {
 
             @Override
             public void onFailed(Throwable t) {
+
+            }
+        };
+    }
+
+    public NotificationCallBack getNotificationCallBack() {
+        return new NotificationCallBack() {
+            @Override
+            public void onSuccess() {
+                boolean notificationEnabled = PreferenceManager.isNotificationEnabled(mRef.get());
+                PreferenceManager.setNotificationEnabled(mRef.get(), !notificationEnabled);
+                Toast.makeText(mRef.get(), notificationEnabled ? "푸시 알림이 차단 되었습니다." : "푸시 알림이 차단 해제 되었습니다.", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailed() {
 
             }
         };

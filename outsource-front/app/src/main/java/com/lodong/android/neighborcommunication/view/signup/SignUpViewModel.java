@@ -56,8 +56,8 @@ public class SignUpViewModel extends ViewModel {
                 Button okButton = dialogView.findViewById(R.id.btn_ok);
 
                 okButton.setOnClickListener(view -> {
-                    mRef.get().startActivity(new Intent(mRef.get(), LoginActivity.class));
                     alertDialog.dismiss();
+                    mRef.get().finish();
                 });
 
             }

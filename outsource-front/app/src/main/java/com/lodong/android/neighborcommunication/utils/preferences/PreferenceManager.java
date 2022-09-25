@@ -18,6 +18,13 @@ public class PreferenceManager {
         editor.apply();
     }
 
+    public static void setNotificationEnabled(Context context, boolean notification) {
+        SharedPreferences preferences = getPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(UserInfo.Notification.getName(), notification);
+        editor.apply();
+    }
+
     public static void setStatusMessage(Context context, String statusMessage) {
         SharedPreferences preferences = getPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -57,5 +64,10 @@ public class PreferenceManager {
     public static boolean isLogin(Context context) {
         SharedPreferences preferences = getPreferences(context);
         return preferences.getBoolean(UserInfo.IsLogIn.getName(), false);
+    }
+
+    public static boolean isNotificationEnabled(Context context) {
+        SharedPreferences preferences = getPreferences(context);
+        return preferences.getBoolean(UserInfo.Notification.getName(), false);
     }
 }

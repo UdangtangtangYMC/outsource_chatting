@@ -13,7 +13,6 @@ import com.lodong.android.neighborcommunication.repository.fcmservice.FCMTokenSe
 import com.lodong.android.neighborcommunication.repository.login.LoginService;
 import com.lodong.android.neighborcommunication.repository.memberlistservice.MemberListService;
 import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
@@ -21,6 +20,7 @@ import com.lodong.android.neighborcommunication.repository.signup.SignUpService;
 import com.lodong.android.neighborcommunication.utils.MainApplication;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.NotificationCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
@@ -142,6 +142,16 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void enablePush() {
+        loginService.enablePushNotification();
+    }
+
+    @Override
+    public void disablePush() {
+        loginService.disablePushNotification();
+    }
+
+    @Override
     public ChatMessageDTO getChatMessageById(long chatId) {
         return chatMessageService.getChatMessageById(chatId);
     }
@@ -178,7 +188,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void setGetLogInResultCallBack(GetLogInResultCallBack callBack) {
-        loginService.setCallBack(callBack);
+        loginService.setLoginResultCallBack(callBack);
     }
 
     @Override
@@ -199,6 +209,11 @@ public class RepositoryImpl implements Repository {
     @Override
     public void setSignUpCompleteCallBack(SignUpCallBack callBack) {
         signUpService.setCallBack(callBack);
+    }
+
+    @Override
+    public void setNotificationCallBack(NotificationCallBack callBack) {
+        loginService.setNotificationCallBack(callBack);
     }
 
 

@@ -38,4 +38,10 @@ public interface RetrofitServiceInterface {
 
     @POST("/api/v1/user/unblock")
     Call<Void> unblock(@Body BlockDTO blockDTO);
+
+    @POST("/api/v1/user/notification/on")
+    Call<Void> enablePushNotification(@Body JsonObject json);
+
+    @POST("/api/v1/user/notification/off")
+    Call<Void> disablePushNotification(@Body JsonObject json);
 }

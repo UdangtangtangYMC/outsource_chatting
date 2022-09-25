@@ -9,6 +9,7 @@ import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.NotificationCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
@@ -35,6 +36,8 @@ public interface Repository {
     public void insertChatDisplay(ChatDisplayDTO chatDisplayDTO);
     public void block(MemberDTO dto);
     public void unblock(MemberDTO dto);
+    void enablePush();
+    void disablePush();
     public ChatMessageDTO getChatMessageById(long chatId);
     public ChatRoomDTO getChatRoomById(long chatRoomId);
 
@@ -45,4 +48,6 @@ public interface Repository {
     public void setUserBlockedCallBack(UserBlockedCallBack callBack);
     public void setUserUnblockedCallBack(UserUnblockedCallBack callBack);
     void setSignUpCompleteCallBack(SignUpCallBack callBack);
+
+    void setNotificationCallBack(NotificationCallBack callBack);
 }

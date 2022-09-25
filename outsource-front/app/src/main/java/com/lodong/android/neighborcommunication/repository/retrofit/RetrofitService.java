@@ -9,13 +9,16 @@ import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
 import com.lodong.android.neighborcommunication.repository.model.SignUpRequestDTO;
+import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCallBack;
 import com.lodong.android.neighborcommunication.view.callback.GetMemberListCallBack;
+import com.lodong.android.neighborcommunication.view.callback.NotificationCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 import com.lodong.android.neighborcommunication.view.callback.SignUpCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBack;
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
     private static RetrofitService instance;
     private final String TAG = RetrofitService.class.getSimpleName();
-    private final String base_url = "http://49.174.169.48:13883";
+    private final String base_url = "http://210.99.223.38:13883";
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(base_url)
@@ -52,7 +55,15 @@ public class RetrofitService {
             public void onResponse(Call<SignUpRequestDTO> call, Response<SignUpRequestDTO> response) {
                 SignUpRequestDTO data = response.body();
                 if(response.code() == 200) callBack.onSuccess();
-                else callBack.onFailed();
+                else {
+                    try {
+                        Log.e(TAG, response.message());
+                        Log.e(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+
+                    }
+                    callBack.onFailed();
+                }
             }
 
             @Override
@@ -156,6 +167,40 @@ public class RetrofitService {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 callBack.onSuccess(dto);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void enablePushNotification(String id, NotificationCallBack callBack) {
+        Log.d(TAG, "enabling push notification for " + id);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        retrofitServiceInterface.enablePushNotification(jsonObject).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callBack.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void disablePushNotification(String id, NotificationCallBack callBack) {
+        Log.d(TAG, "disabling push notification for " + id);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        retrofitServiceInterface.disablePushNotification(jsonObject).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callBack.onSuccess();
             }
 
             @Override

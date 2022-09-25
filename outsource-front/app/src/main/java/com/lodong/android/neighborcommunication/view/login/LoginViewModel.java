@@ -45,6 +45,7 @@ public class LoginViewModel extends ViewModel {
                 PreferenceManager.setNickName(context, member.getNickName());
                 PreferenceManager.setStatusMessage(context, member.getMessage());
                 PreferenceManager.setIsLogin(context, true);
+                PreferenceManager.setNotificationEnabled(context, member.isReceiveNotification());
 
                 Intent intent = new Intent(context, MainActivity.class);
                 mRef.get().startActivity(intent);

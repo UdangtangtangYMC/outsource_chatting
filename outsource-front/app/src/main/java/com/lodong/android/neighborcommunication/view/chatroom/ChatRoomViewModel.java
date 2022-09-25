@@ -71,6 +71,7 @@ public class ChatRoomViewModel extends ViewModel {
     private GetChatRoomIdCallBack getChatRoomIdCallBack(){
         return chatRoomId -> changeId(chatRoomId);
     }
+
     public void changeId(long id){
         chatRoomid = id;
         chatRoomIdML.setValue(chatRoomid);
