@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 @Entity
 @Getter @Setter @ToString @Builder
 @AllArgsConstructor @NoArgsConstructor

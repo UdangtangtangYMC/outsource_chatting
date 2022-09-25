@@ -105,9 +105,9 @@ public class FCMService extends FirebaseMessagingService{
         //title이 보내는 사람
         //body 가 메시지
         Map<String, String> messageHashMap = remoteMessage.getData();
-        String dto = messageHashMap.get("dto");
+        String dto = messageHashMap.get("data");
         ChatMessageDTO chatMessage = gson.fromJson(dto, ChatMessageDTO.class);
-        Log.d(TAG, "DTO : " + chatMessage.toString());
+        Log.d(TAG, "data : " + chatMessage.toString());
         if (!repository.isChatRoomExists(chatMessage.getSender(), UserInfo.getInstance().getId()))
             repository.insertChatRoom(new ChatRoomDTO(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getReceiver(), chatMessage.getSenderNickName(), chatMessage.getReceiverNickName()));
         if (chatMessage.getSender().equals(UserInfo.getInstance().getId())) chatMessage.setViewType(Code.ViewType.RIGHT_CONTENT);

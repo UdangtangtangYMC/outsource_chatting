@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 
@@ -39,6 +40,10 @@ public class LoginViewModel extends ViewModel {
         return new GetLogInResultCallBack() {
             @Override
             public void onSuccess(MemberDTO member) {
+                if(member == null){
+                    Toast.makeText(mRef.get(), "아이디 혹은 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.d(TAG, member.toString());
                 Context context = mRef.get().getApplicationContext();
                 PreferenceManager.setId(context, member.getId());
