@@ -73,7 +73,12 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     public void changeId(long id){
+        Log.d(TAG, "changeId");
         chatRoomid = id;
         chatRoomIdML.setValue(chatRoomid);
+    }
+
+    public ObservableField<String> getReceiverNickName() {
+        return receiverNickName;
     }
 }

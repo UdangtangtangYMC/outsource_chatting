@@ -106,6 +106,7 @@ public class RepositoryImpl implements Repository {
     public void insertChatRoom(ChatRoomDTO chatRoomDTO) {
         chatRoomService.insert(chatRoomDTO);
     }
+
     @Override
     public void insertChatMessage(ChatMessageDTO chatMessageDTO) {
         chatMessageService.insert(chatMessageDTO);

@@ -65,14 +65,14 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
             txtLastSendTime = itemView.findViewById(R.id.txt_last_send_time);
         }
 
-        public void onBind(ChatRoomDisplayInfo chatRoom){
-            String nickName = chatRoom.getReceiverNickName();
-            String lastMessage = chatRoom.getLastMessage();
-            String lastTime = chatRoom.getLastMessageTime();
+            public void onBind(ChatRoomDisplayInfo chatRoom){
+                String nickName = chatRoom.getReceiverNickName();
+                String lastMessage = chatRoom.getLastMessage();
+                String lastTime = chatRoom.getLastMessageTime();
 
-            txtNickName.setText(nickName);
-            txtLastMessage.setText(lastMessage);
-            txtLastSendTime.setText(lastTime);
+                txtNickName.setText(nickName);
+                txtLastMessage.setText(lastMessage);
+                txtLastSendTime.setText(lastTime);
 
             itemView.setOnClickListener(view -> {
                 intentChatRoom(chatRoom);

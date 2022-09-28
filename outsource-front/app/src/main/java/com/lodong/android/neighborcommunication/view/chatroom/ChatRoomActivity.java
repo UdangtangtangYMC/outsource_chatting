@@ -43,36 +43,39 @@ public class ChatRoomActivity extends AppCompatActivity {
         viewModel.getChatRoomId();
     }
 
-    private void init(){
+    private void init() {
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         adapter = new ChattingAdapter();
         binding.recyclerview.setAdapter(adapter);
     }
 
-    private void setLiveData(){
+    private void setLiveData() {
         viewModel.getChatRoomIdML().observe(this, chatRoomId -> {
             Log.d(TAG, "chatRoomId : " + chatRoomId);
-            getChatMessageList(chatRoomId);
+            if (chatRoomId != -99) {
+                getChatMessageList(chatRoomId);
+            }
         });
     }
 
-    public void sendMessage(){
+    public void sendMessage() {
         Log.d(TAG, "sendMessage");
         String message = binding.edtMessage.getText().toString();
         viewModel.sendMessage(message);
         binding.edtMessage.setText("");
     }
 
-    public void openDrawer(){
+    public void openDrawer() {
         binding.drawer.openDrawer(GravityCompat.END);
     }
 
-    private void getChatMessageList(long chatRoomId){
+    private void getChatMessageList(long chatRoomId) {
         viewModel.getChatMessageList(chatRoomId).observe(this, chatMessageDTOS
                 -> {
             Log.d(TAG, "chatMessageCount : " + chatMessageDTOS.size());
             adapter.setChatMessageList(chatMessageDTOS);
-            binding.recyclerview.scrollToPosition(chatMessageDTOS.size()-1);
+            adapter.setNickName(viewModel.getReceiverNickName().get());
+            binding.recyclerview.scrollToPosition(chatMessageDTOS.size() - 1);
         });
     }
 }

@@ -19,6 +19,11 @@ import java.util.List;
 public class ChattingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ChatMessageDTO> chatMessageList;
+    private String nickName;
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public void setChatMessageList(List<ChatMessageDTO> chatMessageList) {
         this.chatMessageList = chatMessageList;
@@ -48,7 +53,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(holder instanceof CenterViewHolder){
             ((CenterViewHolder)holder).content.setText(chatMessageList.get(position).getMessage());
         }else if(holder instanceof LeftViewHolder){
-            ((LeftViewHolder) holder).txtName.setText(chatMessageList.get(position).getSender());
+            ((LeftViewHolder) holder).txtName.setText(nickName);
             ((LeftViewHolder) holder).txtContent.setText(chatMessageList.get(position).getMessage());
         }else{
             ((RightViewHolder) holder).content.setText(chatMessageList.get(position).getMessage());
