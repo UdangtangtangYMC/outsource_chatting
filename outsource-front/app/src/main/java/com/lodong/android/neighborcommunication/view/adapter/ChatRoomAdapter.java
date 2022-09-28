@@ -41,8 +41,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ViewHo
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 room1LastTime = LocalDateTime.parse(room1LastMessageTime, formatter);
                 room2LastTime = LocalDateTime.parse(room2LastMessageTime, formatter);
-                if(room1LastTime.isBefore(room2LastTime)) return -1;
-                else if(room1LastTime.isAfter(room2LastTime)) return 1;
+                if(room1LastTime.isBefore(room2LastTime)) return 1;
+                else if(room1LastTime.isAfter(room2LastTime)) return -1;
                 else return 0;
             }
             return 0;
