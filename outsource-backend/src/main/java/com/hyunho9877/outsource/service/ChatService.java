@@ -68,7 +68,7 @@ public class ChatService {
         return chatRoomRepository.existsByUserOneAndUserTwo(requester, subject);
     }
 
-    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException {
+    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException, IllegalArgumentException {
         ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
         rabbitTemplate.convertAndSend(chat.getSender(), chat);
 
