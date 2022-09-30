@@ -8,6 +8,7 @@ import com.hyunho9877.outsource.service.ChatService;
 import com.hyunho9877.outsource.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -41,4 +42,5 @@ public class ChatController {
     public ResponseEntity<ChatRoom> newChat(@RequestBody ChatRoomDTO chatRoomDTO) {
         return ResponseEntity.ok(chatService.registerNewChatRoom(chatRoomDTO.getId(), chatRoomDTO.getSubject()));
     }
+
 }
