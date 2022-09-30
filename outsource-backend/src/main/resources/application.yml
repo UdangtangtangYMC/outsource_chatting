@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&characterEncoding=UTF-8
-    username: extract
-    password: Lodong8881@
+    url: jdbc:mysql://localhost:3306/outsource?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: rlrkfpdhfn1!
     hikari:
       auto-commit: true
   jpa:
@@ -10,5 +10,3 @@ spring:
       ddl-auto: update
     show-sql: false
     open-in-view: false
-server:
-  port: 13883
