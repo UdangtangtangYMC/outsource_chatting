@@ -61,6 +61,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     public void sendMessage() {
         Log.d(TAG, "sendMessage");
         String message = binding.edtMessage.getText().toString();
+        if(message.isEmpty()) return;
         viewModel.sendMessage(message);
         binding.edtMessage.setText("");
     }

@@ -67,6 +67,7 @@ public class StompUtils {
         return new RoomCreateCallBack() {
             @Override
             public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
+                Log.d(TAG, "chat room : " + chatRoom.toString());
                 message.setRoomId(chatRoom.getRoomId());
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
@@ -76,6 +77,7 @@ public class StompUtils {
 
             @Override
             public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message) {
+                Log.d(TAG, "chat room : " + chatRoom.toString());
                 message.setRoomId(chatRoom.getRoomId());
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);

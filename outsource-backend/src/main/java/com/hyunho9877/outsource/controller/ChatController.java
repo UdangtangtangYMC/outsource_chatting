@@ -27,10 +27,11 @@ public class ChatController {
 
     @MessageMapping("/msg")
     public void sendMessage(@Payload ChatMessage message) throws FirebaseMessagingException {
+        log.info("message received : {}", message);
         if (userService.isBlocked(message.getSender(), message.getReceiver())) return;
-        chatService.send(message);
+        ChatMessage send = chatService.send(message);
         try {
-            chatService.sendNotification(message);
+            chatService.sendNotification(send);
         } catch (IllegalArgumentException ignored) {
             
         }

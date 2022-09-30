@@ -71,7 +71,6 @@ public class ChatService {
     public void sendNotification(ChatMessage chat) throws FirebaseMessagingException, IllegalArgumentException {
         ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
         rabbitTemplate.convertAndSend(chat.getSender(), chat);
-
         if(!applicationUser.isReceiveNotification()) return;
         String token = applicationUser.getFcmToken();
         Message message = Message.builder()
