@@ -4,15 +4,12 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,25 +25,23 @@ import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
 import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
-import com.lodong.android.neighborcommunication.view.MainActivity;
 import com.lodong.android.neighborcommunication.view.chatroom.ChatRoomActivity;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-public class FCMService extends FirebaseMessagingService{
+public class FCMService extends FirebaseMessagingService {
     private final String TAG = FCMService.class.getSimpleName();
     private final String channelID = "CHATTING";
     private final String channelName = "CHATTING CHANNEL";
     private final String description = "THIS IS CHATTING CHANNEL";
     private Repository repository;
+    private UserInfo userInfo;
     private static final Gson gson = new Gson();
 
 
     public FCMService() {
         repository = RepositoryImpl.getInstance();
+        userInfo = UserInfo.getInstance();
     }
 
     @Override
@@ -99,7 +94,7 @@ public class FCMService extends FirebaseMessagingService{
         super.handleIntent(intent);
     }
 
-    public void handleMessage(RemoteMessage remoteMessage){
+    public void handleMessage(RemoteMessage remoteMessage) {
         Intent intent = new Intent(this, ChatRoomActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //title이 보내는 사람
@@ -110,7 +105,8 @@ public class FCMService extends FirebaseMessagingService{
         Log.d(TAG, "data : " + chatMessage.toString());
         if (!repository.isChatRoomExists(chatMessage.getSender(), UserInfo.getInstance().getId()))
             repository.insertChatRoom(new ChatRoomDTO(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getReceiver(), chatMessage.getSenderNickName(), chatMessage.getReceiverNickName()));
-        if (chatMessage.getSender().equals(UserInfo.getInstance().getId())) chatMessage.setViewType(Code.ViewType.RIGHT_CONTENT);
+        if (chatMessage.getSender().equals(UserInfo.getInstance().getId()))
+            chatMessage.setViewType(Code.ViewType.RIGHT_CONTENT);
         else chatMessage.setViewType(Code.ViewType.LEFT_CONTENT);
         repository.insertChatMessage(chatMessage);
         repository.insertChatDisplay(new ChatDisplayDTO(chatMessage.getRoomId(), chatMessage.getChatId()));
@@ -124,11 +120,12 @@ public class FCMService extends FirebaseMessagingService{
         Log.d(TAG, "chatRoomId" + chatRoomId);
         Log.d(TAG, "receiver" + receiver);
         Log.d(TAG, "receiverNickName" + receiverNickName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT|PendingIntent.FLAG_MUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_MUTABLE);
 
+        //notification style
         //알림 관련
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel notificationChannel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             notificationChannel.setDescription("channel description");
             notificationChannel.enableLights(true);
@@ -142,13 +139,26 @@ public class FCMService extends FirebaseMessagingService{
         //알림 사운드 관련
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+     /*   //style 관련
+        Person user;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            user = new Person.Builder().
+                    setName(chatMessage.getSenderNickName()).build();
+            @SuppressLint("RestrictedApi")
+            NotificationCompat.MessagingStyle style = new NotificationCompat.MessagingStyle(androidx.core.app.Person.fromAndroidPerson(user));
+            style.addMessage(chatMessage.getMessage(), chatMessage.)
+        }*/
+
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(remoteMessage.getData().get("title"))
                 .setContentText(remoteMessage.getData().get("body"))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
 
 
         NotificationManager notificationManager =

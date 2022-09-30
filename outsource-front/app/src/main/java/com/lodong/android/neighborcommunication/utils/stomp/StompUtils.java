@@ -15,6 +15,8 @@ import com.lodong.android.neighborcommunication.utils.preferences.PreferenceMana
 import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -31,18 +33,26 @@ public class StompUtils {
         String subscribeURL = "/queue/" + getId(context);
         Log.d(TAG, subscribeURL);
         stompClient.connect();
-        stompClient.topic(subscribeURL).subscribe(data -> {
-            String payload = data.getPayload();
-            ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-            Log.d(TAG, message.toString());
-            if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
-                repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
-            if (message.getSender().equals(getId(context)))
-                message.setViewType(Code.ViewType.RIGHT_CONTENT);
-            else message.setViewType(Code.ViewType.LEFT_CONTENT);
-            repository.insertChatMessage(message);
-            repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
-        });
+        stompClient
+                .topic(subscribeURL)
+                .subscribe(data -> {
+                    String payload = data.getPayload();
+                    ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+                    Log.d(TAG, "init message : " + message.toString());
+                    if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                        Log.d(TAG, "create chatting room");
+                    repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
+                    if (message.getSender().equals(getId(context)))
+                        message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                    else message.setViewType(Code.ViewType.LEFT_CONTENT);
+                    Log.d(TAG, "insert chatmessage");
+                    repository.insertChatMessage(message);
+                    Log.d(TAG, "insert chatDisplay");
+                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
+                }, throwable -> {
+                    Log.d(TAG, "데이터 수신 오류 : "+throwable.getMessage());
+                });
+
     }
 
     private static String getId(Context context) {
@@ -59,7 +69,9 @@ public class StompUtils {
             repository.createChatRoom(message.getSender(), message.getReceiver(), message);
         } else {
             String toJson = gson.toJson(message);
-            stompClient.send("/pub/msg", toJson).subscribe();
+            stompClient.send("/pub/msg", toJson)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe();
         }
     }
 
@@ -67,7 +79,8 @@ public class StompUtils {
         return new RoomCreateCallBack() {
             @Override
             public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
-                Log.d(TAG, "chat room : " + chatRoom.toString());
+                Log.d(TAG, "chatRoom : " + chatRoom.toString());
+                Log.d(TAG, "chatMessage : " + message.toString());
                 message.setRoomId(chatRoom.getRoomId());
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
@@ -77,7 +90,8 @@ public class StompUtils {
 
             @Override
             public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message) {
-                Log.d(TAG, "chat room : " + chatRoom.toString());
+                Log.d(TAG, "chatRoom : " + chatRoom.toString());
+                Log.d(TAG, "chatMessage : " + message.toString());
                 message.setRoomId(chatRoom.getRoomId());
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
@@ -85,5 +99,19 @@ public class StompUtils {
                 stompClient.send("/pub/msg", toJson).subscribe();
             }
         };
+    }
+
+    public boolean isConnect(){
+        return stompClient.isConnected();
+    }
+
+  /*  public void reconnect() {
+        Log.d(TAG, "stompClient.isConnected() : " + stompClient.isConnected());
+        stompClient.reconnect();
+        Log.d(TAG, "stompClient.isConnected() : " + stompClient.isConnected());
+    }*/
+
+    public static StompClient getStompClient() {
+        return stompClient;
     }
 }

@@ -59,9 +59,7 @@ public class SignUpViewModel extends ViewModel {
                     alertDialog.dismiss();
                     mRef.get().finish();
                 });
-
             }
-
             @Override
             public void onFailed() {
                 Toast.makeText(mRef.get(), "회원가입에 실패하였습니다.", Toast.LENGTH_LONG).show();

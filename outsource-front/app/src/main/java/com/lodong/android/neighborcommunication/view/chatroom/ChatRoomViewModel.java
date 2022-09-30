@@ -12,11 +12,8 @@ import androidx.lifecycle.ViewModel;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
-import com.lodong.android.neighborcommunication.repository.model.ChatMessage;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
-import com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;
 import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
-import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
 
 import java.lang.ref.WeakReference;
