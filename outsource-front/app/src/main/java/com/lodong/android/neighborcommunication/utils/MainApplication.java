@@ -44,13 +44,14 @@ public class MainApplication extends Application {
                             StompUtils.disconnect();
                             connectStomp();
                         }
-                    },500);
+                    }, 500);
                 }
             }
 
             @Override
             public void onLost(Network network) {
                 Log.e(TAG, "The application no longer has a default network. The last default network was " + network);
+                StompUtils.disconnect();
             }
 
             @Override
@@ -64,6 +65,7 @@ public class MainApplication extends Application {
             }
         });
     }
+
     public void connectStomp() {
         StompUtils.init(getApplicationContext());
     }
