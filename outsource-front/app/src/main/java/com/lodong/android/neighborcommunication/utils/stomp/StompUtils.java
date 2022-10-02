@@ -59,7 +59,7 @@ public class StompUtils {
         return PreferenceManager.getId(context);
     }
 
-    public void disconnect() {
+    public static void disconnect() {
         stompClient.disconnect();
     }
 
@@ -105,11 +105,9 @@ public class StompUtils {
         return stompClient.isConnected();
     }
 
-  /*  public void reconnect() {
-        Log.d(TAG, "stompClient.isConnected() : " + stompClient.isConnected());
+    public static void reconnect() {
         stompClient.reconnect();
-        Log.d(TAG, "stompClient.isConnected() : " + stompClient.isConnected());
-    }*/
+    }
 
     public static StompClient getStompClient() {
         return stompClient;
