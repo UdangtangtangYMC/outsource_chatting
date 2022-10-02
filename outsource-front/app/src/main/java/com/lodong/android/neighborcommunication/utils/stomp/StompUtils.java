@@ -15,18 +15,14 @@ import com.lodong.android.neighborcommunication.utils.preferences.PreferenceMana
 import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
-import java.util.Optional;
-
-import io.reactivex.CompletableObserver;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
 public class StompUtils {
     private static final String TAG = StompUtils.class.getSimpleName();
-    private static final String BASE_URL = "ws://192.168.219.103:8080/ws";
+    private static final String BASE_URL = "ws://210.99.223.38:13884/ws";
     public static final StompUtils INSTANCE = new StompUtils();
     private static final Gson gson = new Gson();
     private static final Repository repository = RepositoryImpl.getInstance();
@@ -36,7 +32,7 @@ public class StompUtils {
     public static void init(Context context) {
         String subscribeURL = "/queue/" + getId(context);
         Log.d(TAG, subscribeURL);
-        stompClient.reconnect();
+        stompClient.connect();
         stompClient
                 .topic(subscribeURL)
                 .subscribe(data -> {
@@ -54,15 +50,9 @@ public class StompUtils {
                     Log.d(TAG, "insert chatDisplay");
                     repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
                 }, throwable -> {
-                    Log.d(TAG, "데이터 수신 오류 : " + throwable.getMessage());
+                    Log.d(TAG, "데이터 수신 오류 : "+throwable.getMessage());
                 });
-        stompClient.lifecycle().subscribe(lifecycleEvent -> {
-            switch (lifecycleEvent.getType()){
-                case ERROR:
-                    Log.e(TAG, "lifecycleEvent: "+lifecycleEvent.getException().toString());
-                    break;
-            }
-        });
+
     }
 
     private static String getId(Context context) {
@@ -81,23 +71,7 @@ public class StompUtils {
             String toJson = gson.toJson(message);
             stompClient.send("/pub/msg", toJson)
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            Log.w(TAG, "~~~~ onCompleted " + d.toString());
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            Log.w(TAG, "~~~~ onCompleted ");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.w(TAG, "~~~~ onCompleted "+e.getMessage());
-                        }
-
-                    });
+                    .subscribe();
         }
     }
 
@@ -127,12 +101,8 @@ public class StompUtils {
         };
     }
 
-    public boolean isConnect() {
+    public boolean isConnect(){
         return stompClient.isConnected();
-    }
-
-    public void reConnect() {
-        stompClient.reconnect();
     }
 
   /*  public void reconnect() {
@@ -143,14 +113,5 @@ public class StompUtils {
 
     public static StompClient getStompClient() {
         return stompClient;
-    }
-
-    public static Optional<String> getStompId(Context context) {
-        try {
-            return Optional.ofNullable(stompClient.getTopicId("/queue/" + getId(context)));
-        } catch (NullPointerException e) {
-            Log.d(TAG, e.toString());
-            return Optional.empty();
-        }
     }
 }
