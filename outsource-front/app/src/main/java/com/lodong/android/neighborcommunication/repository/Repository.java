@@ -40,7 +40,6 @@ public interface Repository {
     void disablePush();
     public ChatMessageDTO getChatMessageById(long chatId);
     public ChatRoomDTO getChatRoomById(long chatRoomId);
-    public void initRetrofit();
 
     //settingCallBack
     public void setGetMemberListCallBack(GetMemberListCallBack callBack);
