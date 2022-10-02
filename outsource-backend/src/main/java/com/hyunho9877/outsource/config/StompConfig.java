@@ -1,9 +1,17 @@
 package com.hyunho9877.outsource.config;
 
+import com.google.common.base.Utf8;
+import com.hyunho9877.outsource.domain.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -21,8 +29,8 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry
                 .setApplicationDestinationPrefixes("/pub")
                 .enableStompBrokerRelay("/topic", "/queue")
-                .setRelayHost("localhost")
-                .setRelayPort(1613)
+                .setRelayHost("rabbitmq")
+                .setRelayPort(61613)
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
     }
@@ -37,7 +45,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                log.info("message outbound : {}", message);
+                log.info("message inbound : {}", message);
                 return message;
             }
         });
@@ -48,10 +56,25 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                MessageHeaders headers = message.getHeaders();
                 log.info("message outbound : {}", message);
                 return message;
             }
         });
     }
 
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setHost("rabbitmq");
+        return cachingConnectionFactory;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setEncoding("utf8");
+        return rabbitTemplate;
+    }
 }

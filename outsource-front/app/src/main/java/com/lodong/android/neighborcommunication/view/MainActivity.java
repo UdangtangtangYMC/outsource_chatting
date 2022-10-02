@@ -47,18 +47,24 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
         repository = RepositoryImpl.getInstance();
-        MainApplication.getInstance().registerBroadCast();
+        //MainApplication.getInstance().registerBroadCast();
     }
 
     private void settingLoginUserInfo() {
         String id = PreferenceManager.getId(this);
         String statusMessage = PreferenceManager.getStatusMessage(this);
         String nickName = PreferenceManager.getNickName(this);
+        String token = PreferenceManager.getToken(this);
 
         UserInfo userInfo = UserInfo.getInstance();
         userInfo.setId(id);
         userInfo.setMessage(statusMessage);
         userInfo.setNickName(nickName);
+        userInfo.setToken(token);
+
+        repository.initRetrofit();
+
+        StompUtils.init(getApplicationContext());
     }
 
     private void getNowFCMToken() {
@@ -82,7 +88,4 @@ public class MainActivity extends AppCompatActivity {
     private void sendFCMToken(String fcmToken) {
         repository.sendFcmToken(UserInfo.getInstance().getId(), fcmToken);
     }
-
-
-
 }

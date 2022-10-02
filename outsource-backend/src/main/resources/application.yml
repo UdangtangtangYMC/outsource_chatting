@@ -6,7 +6,18 @@ spring:
     hikari:
       auto-commit: true
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: update
     show-sql: false
     open-in-view: false
+
+
+application:
+  jwt:
+    secretKey: ddldddtkqslkxhddogkcrgnriklkurfqlstdsndqdkqnlrsdelrmfsdgdgkrdlwlsfhlnkdssjstmfqrrnalqfmsfwniksrPoruodgfrvdjtlkkhsldlnhghkavkceeiorkr
+    tokenExpirationAfterDays: 10
+    issuerHeader: iss
+    issuer: http://lodong
+    roleHeader: role
+
