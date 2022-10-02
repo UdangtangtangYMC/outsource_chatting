@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 
-import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.MemberDTO;
@@ -20,6 +19,7 @@ import com.lodong.android.neighborcommunication.view.callback.GetLogInResultCall
 import java.lang.ref.WeakReference;
 
 public class LoginViewModel extends ViewModel {
+
     private final String TAG = LoginViewModel.class.getSimpleName();
     private WeakReference<Activity> mRef;
     private Repository repository;
@@ -39,7 +39,7 @@ public class LoginViewModel extends ViewModel {
     public GetLogInResultCallBack getLogInResultCallBack(){
         return new GetLogInResultCallBack() {
             @Override
-            public void onSuccess(MemberDTO member, String accessToken) {
+            public void onSuccess(MemberDTO member) {
                 if(member == null){
                     Toast.makeText(mRef.get(), "아이디 혹은 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     return;
@@ -51,16 +51,18 @@ public class LoginViewModel extends ViewModel {
                 PreferenceManager.setStatusMessage(context, member.getMessage());
                 PreferenceManager.setIsLogin(context, true);
                 PreferenceManager.setNotificationEnabled(context, member.isReceiveNotification());
-                PreferenceManager.setToken(context, accessToken);
 
                 Intent intent = new Intent(context, MainActivity.class);
                 mRef.get().startActivity(intent);
                 mRef.get().finish();
             }
+
             @Override
             public void onFailed(Throwable t) {
                 Log.e(TAG, t.getMessage());
             }
         };
     }
+
+
 }

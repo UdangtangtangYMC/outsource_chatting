@@ -120,12 +120,7 @@ public class FCMService extends FirebaseMessagingService {
         Log.d(TAG, "chatRoomId" + chatRoomId);
         Log.d(TAG, "receiver" + receiver);
         Log.d(TAG, "receiverNickName" + receiverNickName);
-        PendingIntent pendingIntent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        }else{
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_MUTABLE);
 
         //notification style
         //알림 관련
@@ -157,8 +152,8 @@ public class FCMService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(chatMessage.getSenderNickName())
-                .setContentText(chatMessage.getMessage())
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)

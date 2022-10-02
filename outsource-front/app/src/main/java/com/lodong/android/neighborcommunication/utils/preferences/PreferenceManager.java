@@ -46,13 +46,6 @@ public class PreferenceManager {
         editor.apply();
     }
 
-    public static void setToken(Context context, String token){
-        SharedPreferences preferences = getPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(UserInfo.TOKEN.getName(), token);
-        editor.apply();
-    }
-
     public static String getId(Context context) {
         SharedPreferences preferences = getPreferences(context);
         return preferences.getString(UserInfo.ID.getName(), null);
@@ -68,11 +61,6 @@ public class PreferenceManager {
         return preferences.getString(UserInfo.NickName.getName(), null);
     }
 
-    public static String getToken(Context context){
-        SharedPreferences preferences = getPreferences(context);
-        return preferences.getString(UserInfo.TOKEN.getName(), null);
-    }
-
     public static boolean isLogin(Context context) {
         SharedPreferences preferences = getPreferences(context);
         return preferences.getBoolean(UserInfo.IsLogIn.getName(), false);
@@ -82,6 +70,4 @@ public class PreferenceManager {
         SharedPreferences preferences = getPreferences(context);
         return preferences.getBoolean(UserInfo.Notification.getName(), false);
     }
-
-
 }

@@ -73,7 +73,10 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void login(String id, String password) {
-        loginService.login(id, password);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("password", password);
+        loginService.login(jsonObject);
     }
 
     @Override
@@ -157,11 +160,6 @@ public class RepositoryImpl implements Repository {
     @Override
     public ChatRoomDTO getChatRoomById(long chatRoomId) {
         return chatRoomService.getChatRoomById(chatRoomId);
-    }
-
-    @Override
-    public void initRetrofit() {
-        loginService.initRetrofit();
     }
 
     @Override
