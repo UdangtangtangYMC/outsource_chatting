@@ -36,7 +36,7 @@ public class StompUtils {
     public static void init(Context context) {
         String subscribeURL = "/queue/" + getId(context);
         Log.d(TAG, subscribeURL);
-        stompClient.connect();
+        stompClient.reconnect();
         stompClient
                 .topic(subscribeURL)
                 .subscribe(data -> {
@@ -56,6 +56,13 @@ public class StompUtils {
                 }, throwable -> {
                     Log.d(TAG, "데이터 수신 오류 : " + throwable.getMessage());
                 });
+        stompClient.lifecycle().subscribe(lifecycleEvent -> {
+            switch (lifecycleEvent.getType()){
+                case ERROR:
+                    Log.e(TAG, "lifecycleEvent: "+lifecycleEvent.getException().toString());
+                    break;
+            }
+        });
     }
 
     private static String getId(Context context) {

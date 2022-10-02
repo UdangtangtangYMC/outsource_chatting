@@ -11,6 +11,8 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public interface RetrofitServiceInterface {
@@ -18,8 +20,9 @@ public interface RetrofitServiceInterface {
     @POST("/api/v1/auth/registration")
     Call<SignUpRequestDTO> getSignUpResult(@Body JsonObject jsonObject);
 
+    @FormUrlEncoded
     @POST("/api/v1/auth/do")
-    Call<MemberDTO> getLoginResult(@Body JsonObject jsonObject);
+    Call<MemberDTO> getLoginResult(@Field("id")String id, @Field("password") String password);
 
     @POST("/api/v1/user/getUsers")
     Call<List<MemberDTO>> getMemberList(@Body JsonObject jsonObject);
