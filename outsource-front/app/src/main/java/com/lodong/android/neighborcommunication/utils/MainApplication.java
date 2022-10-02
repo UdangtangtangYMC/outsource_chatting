@@ -19,8 +19,6 @@ public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
     private static MainApplication mInstance;
 
-    IntentFilter intentFilter = new IntentFilter();
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,16 +37,19 @@ public class MainApplication extends Application {
             public void onAvailable(Network network) {
                 Log.e(TAG, "The default network is now: " + network);
                 Log.d(TAG, StompUtils.getStompId(getApplicationContext()).orElse("no id"));
-                if (!StompUtils.INSTANCE.isConnect()) {
-                    Log.d(TAG, "stomp is connect : " + StompUtils.INSTANCE.isConnect());
-                    StompUtils.INSTANCE.disconnect();
-                    connectStomp();
-                }
+                new Handler().postDelayed(() -> {
+                    if (!StompUtils.INSTANCE.isConnect()) {
+                        Log.d(TAG, "stomp is connect : " + StompUtils.INSTANCE.isConnect());
+                        StompUtils.INSTANCE.disconnect();
+                        connectStomp();
+                    }
+                },500);
             }
 
             @Override
             public void onLost(Network network) {
                 Log.e(TAG, "The application no longer has a default network. The last default network was " + network);
+                StompUtils.INSTANCE.disconnect();
             }
 
             @Override

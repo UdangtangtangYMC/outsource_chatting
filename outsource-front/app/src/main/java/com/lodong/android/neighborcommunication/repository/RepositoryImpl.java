@@ -160,6 +160,11 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
+    public void initRetrofit() {
+        loginService.initRetrofit();
+    }
+
+    @Override
     public LiveData<List<ChatDisplayDTO>> getChatDisplayList() {
         return chatDisplayService.getAll();
     }

@@ -17,7 +17,7 @@ public class LoginService {
         retrofitService = RetrofitService.getInstance();
     }
 
-    public void login(String id,String password){
+    public void login(String id, String password){
         retrofitService.getLoginResult(id, password, logInResultCallBack);
     }
 
@@ -37,5 +37,9 @@ public class LoginService {
     public void disablePushNotification() {
         String id = UserInfo.getInstance().getId();
         retrofitService.disablePushNotification(id, notificationCallBack);
+    }
+
+    public void initRetrofit(){
+        retrofitService.initRetrofit();
     }
 }

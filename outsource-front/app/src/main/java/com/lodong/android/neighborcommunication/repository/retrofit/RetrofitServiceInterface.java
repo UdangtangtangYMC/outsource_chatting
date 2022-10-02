@@ -20,9 +20,9 @@ public interface RetrofitServiceInterface {
     @POST("/api/v1/auth/registration")
     Call<SignUpRequestDTO> getSignUpResult(@Body JsonObject jsonObject);
 
-    @POST("/api/v1/auth/do")
     @FormUrlEncoded
-    Call<MemberDTO> getLoginResult(@Field("id") String id, @Field("password") String password);
+    @POST("/api/v1/auth/do")
+    Call<MemberDTO> getLoginResult(@Field("id")String id, @Field("password") String password);
 
     @POST("/api/v1/user/getUsers")
     Call<List<MemberDTO>> getMemberList(@Body JsonObject jsonObject);

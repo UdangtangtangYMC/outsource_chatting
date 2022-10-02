@@ -2,6 +2,8 @@ package com.lodong.android.neighborcommunication.repository.retrofit;
 
 import android.util.Log;
 
+import androidx.work.Data;
+
 import com.google.gson.JsonObject;
 import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.model.BlockDTO;
@@ -19,8 +21,12 @@ import com.lodong.android.neighborcommunication.view.callback.UserBlockedCallBac
 import com.lodong.android.neighborcommunication.view.callback.UserUnblockedCallBack;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,19 +34,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
-
     private static RetrofitService instance;
     private final String TAG = RetrofitService.class.getSimpleName();
-    private final String base_url = "http://192.168.219.103:8080";
+    private final String base_url = "http://210.99.223.38:13884";
+    private final String AUTHORIZATION = "Authorization";
 
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(base_url)
-            .addConverterFactory(new NullOnEmptyConverterFactory())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    RetrofitServiceInterface retrofitServiceInterface = retrofit.create(RetrofitServiceInterface.class);
+    private Interceptor interceptor;
+    private OkHttpClient okHttpClient;
+
+    private Retrofit retrofit;
+
+    private RetrofitServiceInterface retrofitServiceInterface;
 
     private RetrofitService() {
+        initRetrofit();
     }
 
     public static RetrofitService getInstance() {
@@ -48,6 +55,26 @@ public class RetrofitService {
             instance = new RetrofitService();
         }
         return instance;
+    }
+
+    public void initRetrofit(){
+        interceptor = chain -> {
+            String token = UserInfo.getInstance().getToken();
+            Request newRequest = chain.request().newBuilder().
+                    addHeader(AUTHORIZATION, token == null ? "" : token).build();
+            return chain.proceed(newRequest);
+        };
+
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
+
+        retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(base_url)
+                .addConverterFactory(new NullOnEmptyConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitServiceInterface = retrofit.create(RetrofitServiceInterface.class);
     }
 
     public void getSignUpResult(JsonObject jsonObject, SignUpCallBack callBack) {
@@ -74,13 +101,13 @@ public class RetrofitService {
         });
     }
 
-    public void getLoginResult(String id,String password, GetLogInResultCallBack callBack) {
+    public void getLoginResult(String id, String password, GetLogInResultCallBack callBack) {
         retrofitServiceInterface.getLoginResult(id, password).enqueue(new Callback<MemberDTO>() {
             @Override
             public void onResponse(Call<MemberDTO> call, Response<MemberDTO> response) {
                 Log.d(TAG, "login is success : " + response.isSuccessful());
-                Log.d(TAG, response.body().toString());
-                callBack.onSuccess(response.body());
+                String accessToken = response.headers().get("accessToken");
+                callBack.onSuccess(response.body(), accessToken);
             }
 
             @Override
