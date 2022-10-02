@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.getNavController());
         repository = RepositoryImpl.getInstance();
-        MainApplication.getInstance().registerBroadCast();
+        //MainApplication.getInstance().registerBroadCast();
     }
 
     private void settingLoginUserInfo() {
