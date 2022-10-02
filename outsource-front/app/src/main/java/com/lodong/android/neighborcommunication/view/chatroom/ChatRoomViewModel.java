@@ -13,6 +13,7 @@ import com.lodong.android.neighborcommunication.data.UserInfo;
 import com.lodong.android.neighborcommunication.repository.Repository;
 import com.lodong.android.neighborcommunication.repository.RepositoryImpl;
 import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+import com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;
 import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.utils.stomp.StompUtils;
 
@@ -27,6 +28,7 @@ public class ChatRoomViewModel extends ViewModel {
     private long chatRoomid;
     private final long noChatRoomId = -99;
     private String receiver;
+    private String userId;
     public ObservableField<String> receiverNickName = new ObservableField<>();
 
     private MutableLiveData<Long> chatRoomIdML = new MutableLiveData<>();
@@ -37,6 +39,11 @@ public class ChatRoomViewModel extends ViewModel {
 
     public void init() {
         repository = RepositoryImpl.getInstance();
+        if(!StompUtils.INSTANCE.isConnect()){
+            Log.d(TAG, "stomp is disconnect");
+            StompUtils.init(mRef.get());
+        }
+        userId = UserInfo.getInstance().getId() == null ? PreferenceManager.getId(mRef.get()) : UserInfo.getInstance().getId();
     }
 
     public void getChatRoomId(){
@@ -51,8 +58,8 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     public void sendMessage(String message) {
-        ChatMessageDTO chatMessage = new ChatMessageDTO(chatRoomid, UserInfo.getInstance().getId(), receiver, message);
-        Log.d(TAG, "send message info : " + chatMessage.toString());
+        ChatMessageDTO chatMessage = new ChatMessageDTO(chatRoomid, userId, receiver, message);
+        Log.d(TAG, "send message info : " + chatMessage);
         StompUtils.INSTANCE.send(chatMessage, getChatRoomIdCallBack());
     }
 
