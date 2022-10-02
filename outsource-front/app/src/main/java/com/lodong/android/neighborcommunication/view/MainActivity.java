@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         userInfo.setId(id);
         userInfo.setMessage(statusMessage);
         userInfo.setNickName(nickName);
+
+        if(!StompUtils.INSTANCE.isConnect()){
+            StompUtils.init(getApplicationContext());
+        }
     }
 
     private void getNowFCMToken() {

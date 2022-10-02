@@ -15,7 +15,11 @@ import com.lodong.android.neighborcommunication.utils.preferences.PreferenceMana
 import com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;
 import com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
@@ -52,7 +56,6 @@ public class StompUtils {
                 }, throwable -> {
                     Log.d(TAG, "데이터 수신 오류 : "+throwable.getMessage());
                 });
-
     }
 
     private static String getId(Context context) {
@@ -71,7 +74,13 @@ public class StompUtils {
             String toJson = gson.toJson(message);
             stompClient.send("/pub/msg", toJson)
                     .subscribeOn(Schedulers.io())
-                    .subscribe();
+                    .subscribe(() -> {
+                        message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                        repository.insertChatMessage(message);
+                        Log.d(TAG, "sent data");
+                    }, throwable -> {
+                        Log.d(TAG, throwable.getMessage());
+                    });
         }
     }
 

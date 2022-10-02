@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "chatMessage")
 public class ChatMessageDTO {
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     private Long chatId;
 
     @ColumnInfo(name = "chatRoomId")
