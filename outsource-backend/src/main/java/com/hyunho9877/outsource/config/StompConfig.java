@@ -1,6 +1,11 @@
 package com.hyunho9877.outsource.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -21,8 +26,8 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry
                 .setApplicationDestinationPrefixes("/pub")
                 .enableStompBrokerRelay("/topic", "/queue")
-                .setRelayHost("localhost")
-                .setRelayPort(1613)
+                .setRelayHost("rabbitmq")
+                .setRelayPort(61613)
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
     }
@@ -60,4 +65,17 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         });
     }
 
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        cachingConnectionFactory.setHost("rabbitmq");
+        return cachingConnectionFactory;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        return rabbitTemplate;
+    }
 }
