@@ -34,28 +34,32 @@ public class StompUtils {
 
     @SuppressLint("CheckResult")
     public static void init(Context context) {
-        String subscribeURL = "/queue/" + getId(context);
-        Log.d(TAG, subscribeURL);
-        stompClient.connect();
-        stompClient
-                .topic(subscribeURL)
-                .subscribe(data -> {
-                    String payload = data.getPayload();
-                    ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
-                    Log.d(TAG, "init message : " + message.toString());
-                    if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
-                        Log.d(TAG, "create chatting room");
-                    repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
-                    if (message.getSender().equals(getId(context)))
-                        message.setViewType(Code.ViewType.RIGHT_CONTENT);
-                    else message.setViewType(Code.ViewType.LEFT_CONTENT);
-                    Log.d(TAG, "insert chatmessage");
-                    repository.insertChatMessage(message);
-                    Log.d(TAG, "insert chatDisplay");
-                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
-                }, throwable -> {
-                    Log.d(TAG, "데이터 수신 오류 : "+throwable.getMessage());
-                });
+        if(getId(context) != null){
+            String subscribeURL = "/queue/" + getId(context);
+            Log.d(TAG, subscribeURL);
+            stompClient.connect();
+            stompClient
+                    .topic(subscribeURL)
+                    .subscribe(data -> {
+                        String payload = data.getPayload();
+                        ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);
+                        Log.d(TAG, "init message : " + message.toString());
+                        if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))
+                            Log.d(TAG, "create chatting room");
+                        repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));
+                        if (message.getSender().equals(getId(context)))
+                            message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                        else message.setViewType(Code.ViewType.LEFT_CONTENT);
+                        Log.d(TAG, "insert chatmessage");
+                        repository.insertChatMessage(message);
+                        Log.d(TAG, "insert chatDisplay");
+                        repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));
+                    }, throwable -> {
+                        Log.d(TAG, "데이터 수신 오류 : " + throwable.getMessage());
+                    });
+        }else{
+            Log.e(TAG, "id is null");
+        }
     }
 
     private static String getId(Context context) {
@@ -94,7 +98,13 @@ public class StompUtils {
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
                 String toJson = new Gson().toJson(message);
-                stompClient.send("/pub/msg", toJson).subscribe();
+                stompClient.send("/pub/msg", toJson) .subscribe(() -> {
+                    message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                    repository.insertChatMessage(message);
+                    Log.d(TAG, "sent data");
+                }, throwable -> {
+                    Log.d(TAG, throwable.getMessage());
+                });
             }
 
             @Override

@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "chatMessage")
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "chatId")
     private Long chatId;
 
     @ColumnInfo(name = "chatRoomId")
@@ -65,11 +66,11 @@ public class ChatMessageDTO {
         this.receiverNickName = receiverNickName;
     }
 
-    public long getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
-    public void setChatId(long chatId) {
+    public void setChatId(Long chatId) {
         this.chatId = chatId;
     }
 
