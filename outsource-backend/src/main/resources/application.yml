@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/outsource?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: rlrkfpdhfn1!
+    hikari:
+      auto-commit: true
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+
+application:
+  jwt:
+    secretKey: ddldddtkqslkxhddogkcrgnriklkurfqlstdsndqdkqnlrsdelrmfsdgdgkrdlwlsfhlnkdssjstmfqrrnalqfmsfwniksrPoruodgfrvdjtlkkhsldlnhghkavkceeiorkr
+    tokenExpirationAfterDays: 10
+    issuerHeader: iss
+    issuer: http://lodong
+    roleHeader: role
+

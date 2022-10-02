@@ -1,5 +1,7 @@
 package com.hyunho9877.outsource.config;
 
+import com.google.common.base.Utf8;
+import com.hyunho9877.outsource.domain.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -42,13 +45,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                log.info("message outbound : {}", message);
-                return message;
-            }
-
-            @Override
-            public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-                log.info("channel interception received message : {}", message);
+                log.info("message inbound : {}", message);
                 return message;
             }
         });
@@ -59,6 +56,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                MessageHeaders headers = message.getHeaders();
                 log.info("message outbound : {}", message);
                 return message;
             }
@@ -76,6 +74,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setEncoding("utf8");
         return rabbitTemplate;
     }
 }

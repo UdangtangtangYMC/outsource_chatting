@@ -28,9 +28,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
+
     private static RetrofitService instance;
     private final String TAG = RetrofitService.class.getSimpleName();
-    private final String base_url = "http://210.99.223.38:13884";
+    private final String base_url = "http://192.168.219.103:8080";
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(base_url)
@@ -73,11 +74,12 @@ public class RetrofitService {
         });
     }
 
-    public void getLoginResult(JsonObject jsonObject, GetLogInResultCallBack callBack) {
-        retrofitServiceInterface.getLoginResult(jsonObject).enqueue(new Callback<MemberDTO>() {
+    public void getLoginResult(String id,String password, GetLogInResultCallBack callBack) {
+        retrofitServiceInterface.getLoginResult(id, password).enqueue(new Callback<MemberDTO>() {
             @Override
             public void onResponse(Call<MemberDTO> call, Response<MemberDTO> response) {
                 Log.d(TAG, "login is success : " + response.isSuccessful());
+                Log.d(TAG, response.body().toString());
                 callBack.onSuccess(response.body());
             }
 
