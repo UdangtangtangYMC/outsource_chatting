@@ -40,12 +40,6 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
                 log.info("message outbound : {}", message);
                 return message;
             }
-
-            @Override
-            public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-                log.info("channel interception received message : {}", message);
-                return message;
-            }
         });
     }
 
