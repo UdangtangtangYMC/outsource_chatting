@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitService {
     private static RetrofitService instance;
     private final String TAG = RetrofitService.class.getSimpleName();
-    private final String base_url = "http://49.174.169.48:13883";
+    private final String base_url = "http://210.99.223.38:13884";
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(base_url)

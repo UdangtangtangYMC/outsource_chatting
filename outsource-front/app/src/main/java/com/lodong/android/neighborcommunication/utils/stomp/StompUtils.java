@@ -22,7 +22,7 @@ import ua.naiksoftware.stomp.StompClient;
 
 public class StompUtils {
     private static final String TAG = StompUtils.class.getSimpleName();
-    private static final String BASE_URL = "ws://49.174.169.48:13883/ws";
+    private static final String BASE_URL = "ws://210.99.223.38:13884/ws";
     public static final StompUtils INSTANCE = new StompUtils();
     private static final Gson gson = new Gson();
     private static final Repository repository = RepositoryImpl.getInstance();
