@@ -4,7 +4,6 @@ import com.hyunho9877.outsource.domain.ApplicationUser;
 import com.hyunho9877.outsource.repo.ApplicationUserRepository;
 import com.hyunho9877.outsource.utils.rabbitmq.RabbitMQManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +13,9 @@ public class AuthService {
 
     private final ApplicationUserRepository userRepository;
     private final RabbitMQManager rabbitMQManager;
-    private final PasswordEncoder passwordEncoder;
 
     public void register(ApplicationUser user) {
         if(isDuplicated(user.getId())) throw new IllegalStateException();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         ApplicationUser savedUser = userRepository.save(user);
         registerNewRabbitMQAccount(savedUser.getId(), true);
     }

@@ -28,7 +28,7 @@ public class ChatService {
     private final ApplicationUserRepository userRepository;
 
     @Transactional
-    public ChatMessage send(ChatMessage message) {
+    public void send(ChatMessage message) {
         ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();
         ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();
         ChatRoom chatRoom = chatRoomRepository.findById(message.getRoomId()).orElseThrow();
@@ -40,8 +40,7 @@ public class ChatService {
         saved.setSenderNickName(sender.getNickName());
         saved.setReceiverNickName(receiver.getNickName());
 
-        rabbitTemplate.convertAndSend(message.getReceiver(), saved);
-        return saved;
+        rabbitTemplate.convertAndSend(message.getReceiver(), message);
     }
 
     public ChatRoom registerNewChatRoom(String requester, String subject) {
@@ -70,7 +69,6 @@ public class ChatService {
 
     public void sendNotification(ChatMessage chat) throws FirebaseMessagingException, IllegalArgumentException {
         ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
-        rabbitTemplate.convertAndSend(chat.getSender(), chat);
         if(!applicationUser.isReceiveNotification()) return;
         String token = applicationUser.getFcmToken();
         Message message = Message.builder()

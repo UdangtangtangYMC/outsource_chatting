@@ -9,24 +9,24 @@ import androidx.room.PrimaryKey;
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "chatId")
-    private Long chatId;
+    private Long chatId = 0L;
 
     @ColumnInfo(name = "chatRoomId")
     private Long roomId;
 
-    @ColumnInfo(name="sender")
+    @ColumnInfo(name = "sender")
     private String sender;
 
-    @ColumnInfo(name="receiver")
+    @ColumnInfo(name = "receiver")
     private String receiver;
 
-    @ColumnInfo(name="sendTime")
+    @ColumnInfo(name = "sendTime")
     private String timestamp;
 
-    @ColumnInfo(name="checkReceipt")
+    @ColumnInfo(name = "checkReceipt")
     private boolean checkReceipt;
 
-    @ColumnInfo(name="content")
+    @ColumnInfo(name = "content")
     private String message;
 
     @ColumnInfo(name = "viewType")

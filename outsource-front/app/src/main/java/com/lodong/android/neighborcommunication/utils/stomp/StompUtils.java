@@ -70,6 +70,7 @@ public class StompUtils {
         stompClient.disconnect();
     }
 
+    @SuppressLint("CheckResult")
     public void send(ChatMessageDTO message, GetChatRoomIdCallBack getChatRoomIdCallBack) {
         if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {
             repository.setRoomCreatedCallBack(getRoomCreateCallBack(getChatRoomIdCallBack));
@@ -77,19 +78,16 @@ public class StompUtils {
         } else {
             String toJson = gson.toJson(message);
             stompClient.send("/pub/msg", toJson)
-                    .subscribeOn(Schedulers.io())
                     .subscribe(() -> {
                         message.setViewType(Code.ViewType.RIGHT_CONTENT);
                         repository.insertChatMessage(message);
-                        Log.d(TAG, "sent data");
-                    }, throwable -> {
-                        Log.d(TAG, throwable.getMessage());
                     });
         }
     }
 
     public RoomCreateCallBack getRoomCreateCallBack(GetChatRoomIdCallBack getChatRoomIdCallBack) {
         return new RoomCreateCallBack() {
+            @SuppressLint("CheckResult")
             @Override
             public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
                 Log.d(TAG, "chatRoom : " + chatRoom.toString());
@@ -115,7 +113,11 @@ public class StompUtils {
                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
                 repository.insertChatRoom(chatRoom);
                 String toJson = new Gson().toJson(message);
-                stompClient.send("/pub/msg", toJson).subscribe();
+                stompClient.send("/pub/msg", toJson)
+                        .subscribe(() -> {
+                            message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                            repository.insertChatMessage(message);
+                        });
             }
         };
     }
