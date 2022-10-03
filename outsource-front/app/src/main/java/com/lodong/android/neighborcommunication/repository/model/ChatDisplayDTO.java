@@ -10,17 +10,18 @@ import androidx.room.PrimaryKey;
 public class ChatDisplayDTO {
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "room_id")
-    private long chatRoomId;
+    private Long chatRoomId;
+
 
     @ColumnInfo(name = "message_id")
-    private long messageId;
+    private Long messageId;
 
     @Ignore
-    public ChatDisplayDTO(long chatRoomId) {
+    public ChatDisplayDTO(Long chatRoomId) {
         this.chatRoomId = chatRoomId;
     }
 
-    public ChatDisplayDTO(long chatRoomId, long messageId) {
+    public ChatDisplayDTO(Long chatRoomId, Long messageId) {
         this.chatRoomId = chatRoomId;
         this.messageId = messageId;
     }
@@ -33,7 +34,7 @@ public class ChatDisplayDTO {
         this.chatRoomId = chatRoomId;
     }
 
-    public long getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 

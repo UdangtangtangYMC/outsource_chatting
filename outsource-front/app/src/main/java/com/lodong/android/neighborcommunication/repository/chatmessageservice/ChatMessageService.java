@@ -27,8 +27,8 @@ public class ChatMessageService {
         return chatMessageList;
     }
 
-    public void insert(ChatMessageDTO chatMessageDTO){
-        chatMessageDao.insert(chatMessageDTO);
+    public Long insert(ChatMessageDTO chatMessageDTO){
+        return chatMessageDao.insert(chatMessageDTO);
     }
 
     public void delete(ChatMessageDTO chatMessageDTO){

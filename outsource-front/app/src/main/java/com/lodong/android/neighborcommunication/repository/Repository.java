@@ -25,7 +25,7 @@ public interface Repository {
     public void sendFcmToken(String id, String fcm);
     public void changeStatusMessage(String id, String newMessage);
     public void insertChatRoom(ChatRoomDTO chatRoomDTO);
-    public void insertChatMessage(ChatMessageDTO chatMessageDTO);
+    public Long insertChatMessage(ChatMessageDTO chatMessageDTO);
     public boolean isChatRoomExists(String p1, String p2);
     public void createChatRoom(String id, String subject, ChatMessageDTO message);
     public ChatRoomDTO getChatRoom(String receiver);

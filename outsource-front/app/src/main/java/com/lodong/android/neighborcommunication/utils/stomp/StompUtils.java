@@ -80,7 +80,11 @@ public class StompUtils {
             stompClient.send("/pub/msg", toJson)
                     .subscribe(() -> {
                         message.setViewType(Code.ViewType.RIGHT_CONTENT);
-                        repository.insertChatMessage(message);
+                        Long messageId = repository.insertChatMessage(message);
+                        Log.d(TAG, "insert chatDisplay");
+                        repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), messageId));
+                    },throwable -> {
+                        Log.d(TAG, throwable.getMessage());
                     });
         }
     }
@@ -98,7 +102,9 @@ public class StompUtils {
                 String toJson = new Gson().toJson(message);
                 stompClient.send("/pub/msg", toJson) .subscribe(() -> {
                     message.setViewType(Code.ViewType.RIGHT_CONTENT);
-                    repository.insertChatMessage(message);
+                    Long messageId = repository.insertChatMessage(message);
+                    Log.d(TAG, "insert chatDisplay");
+                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), messageId));
                     Log.d(TAG, "sent data");
                 }, throwable -> {
                     Log.d(TAG, throwable.getMessage());

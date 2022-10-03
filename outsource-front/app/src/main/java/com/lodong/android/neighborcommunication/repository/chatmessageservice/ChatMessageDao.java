@@ -17,7 +17,7 @@ import java.util.List;
 @Dao
 public interface ChatMessageDao {
     @Insert(onConflict = IGNORE)
-    void insert(ChatMessageDTO chatMessageDTO);
+    Long insert(ChatMessageDTO chatMessageDTO);
 
     @Delete
     void delete(ChatMessageDTO chatMessageDTO);

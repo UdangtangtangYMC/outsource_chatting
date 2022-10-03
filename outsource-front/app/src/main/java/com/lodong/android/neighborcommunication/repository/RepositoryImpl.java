@@ -108,8 +108,8 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public void insertChatMessage(ChatMessageDTO chatMessageDTO) {
-        chatMessageService.insert(chatMessageDTO);
+    public Long insertChatMessage(ChatMessageDTO chatMessageDTO) {
+        return chatMessageService.insert(chatMessageDTO);
     }
 
     @Override
