@@ -5,6 +5,13 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 @Entity(tableName = "chatMessage")
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = true)
@@ -45,6 +52,15 @@ public class ChatMessageDTO {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            this.timestamp = LocalDateTime.now().format(formatter);
+        } else {
+            Date today = new Date();
+            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+            this.timestamp = formatter.format(today);
+        }
     }
 
     public ChatMessageDTO(String sender, String receiver, String message) {
