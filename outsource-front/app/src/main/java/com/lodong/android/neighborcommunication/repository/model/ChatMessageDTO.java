@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class ChatMessageDTO {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "chatId")
-    private Long chatId = 0L;
+    private Long chatId;
 
     @ColumnInfo(name = "chatRoomId")
     private Long roomId;
