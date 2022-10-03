@@ -1,0 +1,209 @@
+Index: app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.utils.stomp;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.content.Context;\r\nimport android.util.Log;\r\n\r\nimport com.google.gson.Gson;\r\nimport com.lodong.android.neighborcommunication.repository.Repository;\r\nimport com.lodong.android.neighborcommunication.repository.RepositoryImpl;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatDisplayDTO;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatRoomDTO;\r\nimport com.lodong.android.neighborcommunication.utils.preferences.Code;\r\nimport com.lodong.android.neighborcommunication.utils.preferences.PreferenceManager;\r\nimport com.lodong.android.neighborcommunication.view.callback.GetChatRoomIdCallBack;\r\nimport com.lodong.android.neighborcommunication.view.callback.RoomCreateCallBack;\r\n\r\nimport io.reactivex.CompletableObserver;\r\nimport io.reactivex.Scheduler;\r\nimport io.reactivex.disposables.Disposable;\r\nimport io.reactivex.functions.Action;\r\nimport io.reactivex.functions.Consumer;\r\nimport io.reactivex.schedulers.Schedulers;\r\nimport ua.naiksoftware.stomp.Stomp;\r\nimport ua.naiksoftware.stomp.StompClient;\r\n\r\npublic class StompUtils {\r\n    private static final String TAG = StompUtils.class.getSimpleName();\r\n    private static final String BASE_URL = \"ws://210.99.223.38:13884/ws\";\r\n    public static final StompUtils INSTANCE = new StompUtils();\r\n    private static final Gson gson = new Gson();\r\n    private static final Repository repository = RepositoryImpl.getInstance();\r\n    private static final StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, BASE_URL);\r\n\r\n    @SuppressLint(\"CheckResult\")\r\n    public static void init(Context context) {\r\n        String subscribeURL = \"/queue/\" + getId(context);\r\n        Log.d(TAG, subscribeURL);\r\n        stompClient.connect();\r\n        stompClient\r\n                .topic(subscribeURL)\r\n                .subscribe(data -> {\r\n                    String payload = data.getPayload();\r\n                    ChatMessageDTO message = gson.fromJson(payload, ChatMessageDTO.class);\r\n                    Log.d(TAG, \"init message : \" + message.toString());\r\n                    if (!repository.isChatRoomExists(message.getSender(), message.getReceiver()))\r\n                        Log.d(TAG, \"create chatting room\");\r\n                    repository.insertChatRoom(new ChatRoomDTO(message.getRoomId(), message.getSender(), message.getReceiver(), message.getSenderNickName(), message.getReceiverNickName()));\r\n                    if (message.getSender().equals(getId(context)))\r\n                        message.setViewType(Code.ViewType.RIGHT_CONTENT);\r\n                    else message.setViewType(Code.ViewType.LEFT_CONTENT);\r\n                    Log.d(TAG, \"insert chatmessage\");\r\n                    repository.insertChatMessage(message);\r\n                    Log.d(TAG, \"insert chatDisplay\");\r\n                    repository.insertChatDisplay(new ChatDisplayDTO(message.getRoomId(), message.getChatId()));\r\n                }, throwable -> {\r\n                    Log.d(TAG, \"데이터 수신 오류 : \"+throwable.getMessage());\r\n                });\r\n    }\r\n\r\n    private static String getId(Context context) {\r\n        return PreferenceManager.getId(context);\r\n    }\r\n\r\n    public static void disconnect() {\r\n        stompClient.disconnect();\r\n    }\r\n\r\n    public void send(ChatMessageDTO message, GetChatRoomIdCallBack getChatRoomIdCallBack) {\r\n        if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {\r\n            repository.setRoomCreatedCallBack(getRoomCreateCallBack(getChatRoomIdCallBack));\r\n            repository.createChatRoom(message.getSender(), message.getReceiver(), message);\r\n        } else {\r\n            String toJson = gson.toJson(message);\r\n            stompClient.send(\"/pub/msg\", toJson)\r\n                    .subscribeOn(Schedulers.io())\r\n                    .subscribe(() -> {\r\n                        message.setViewType(Code.ViewType.RIGHT_CONTENT);\r\n                        repository.insertChatMessage(message);\r\n                        Log.d(TAG, \"sent data\");\r\n                    }, throwable -> {\r\n                        Log.d(TAG, throwable.getMessage());\r\n                    });\r\n        }\r\n    }\r\n\r\n    public RoomCreateCallBack getRoomCreateCallBack(GetChatRoomIdCallBack getChatRoomIdCallBack) {\r\n        return new RoomCreateCallBack() {\r\n            @Override\r\n            public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {\r\n                Log.d(TAG, \"chatRoom : \" + chatRoom.toString());\r\n                Log.d(TAG, \"chatMessage : \" + message.toString());\r\n                message.setRoomId(chatRoom.getRoomId());\r\n                getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());\r\n                repository.insertChatRoom(chatRoom);\r\n                String toJson = new Gson().toJson(message);\r\n                stompClient.send(\"/pub/msg\", toJson).subscribe();\r\n            }\r\n\r\n            @Override\r\n            public void onFailed(ChatRoomDTO chatRoom, ChatMessageDTO message) {\r\n                Log.d(TAG, \"chatRoom : \" + chatRoom.toString());\r\n                Log.d(TAG, \"chatMessage : \" + message.toString());\r\n                message.setRoomId(chatRoom.getRoomId());\r\n                getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());\r\n                repository.insertChatRoom(chatRoom);\r\n                String toJson = new Gson().toJson(message);\r\n                stompClient.send(\"/pub/msg\", toJson).subscribe();\r\n            }\r\n        };\r\n    }\r\n\r\n    public boolean isConnect(){\r\n        return stompClient.isConnected();\r\n    }\r\n\r\n    public static void reconnect() {\r\n        stompClient.reconnect();\r\n    }\r\n\r\n    public static StompClient getStompClient() {\r\n        return stompClient;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java b/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/utils/stomp/StompUtils.java	(date 1664722326855)
+@@ -66,6 +66,7 @@
+         stompClient.disconnect();
+     }
+ 
++    @SuppressLint("CheckResult")
+     public void send(ChatMessageDTO message, GetChatRoomIdCallBack getChatRoomIdCallBack) {
+         if (!repository.isChatRoomExists(message.getSender(), message.getReceiver())) {
+             repository.setRoomCreatedCallBack(getRoomCreateCallBack(getChatRoomIdCallBack));
+@@ -73,19 +74,16 @@
+         } else {
+             String toJson = gson.toJson(message);
+             stompClient.send("/pub/msg", toJson)
+-                    .subscribeOn(Schedulers.io())
+                     .subscribe(() -> {
+                         message.setViewType(Code.ViewType.RIGHT_CONTENT);
+                         repository.insertChatMessage(message);
+-                        Log.d(TAG, "sent data");
+-                    }, throwable -> {
+-                        Log.d(TAG, throwable.getMessage());
+                     });
+         }
+     }
+ 
+     public RoomCreateCallBack getRoomCreateCallBack(GetChatRoomIdCallBack getChatRoomIdCallBack) {
+         return new RoomCreateCallBack() {
++            @SuppressLint("CheckResult")
+             @Override
+             public void onSuccess(ChatRoomDTO chatRoom, ChatMessageDTO message) {
+                 Log.d(TAG, "chatRoom : " + chatRoom.toString());
+@@ -94,7 +92,11 @@
+                 getChatRoomIdCallBack.onSuccess(chatRoom.getRoomId());
+                 repository.insertChatRoom(chatRoom);
+                 String toJson = new Gson().toJson(message);
+-                stompClient.send("/pub/msg", toJson).subscribe();
++                stompClient.send("/pub/msg", toJson)
++                        .subscribe(() -> {
++                            message.setViewType(Code.ViewType.RIGHT_CONTENT);
++                            repository.insertChatMessage(message);
++                        });
+             }
+ 
+             @Override
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/chatmessageservice/ChatMessageDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.chatmessageservice;\r\n\r\nimport static androidx.room.OnConflictStrategy.IGNORE;\r\nimport static androidx.room.OnConflictStrategy.REPLACE;\r\n\r\nimport androidx.lifecycle.LiveData;\r\nimport androidx.room.Dao;\r\nimport androidx.room.Delete;\r\nimport androidx.room.Insert;\r\nimport androidx.room.Query;\r\n\r\nimport com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;\r\n\r\nimport java.util.List;\r\n\r\n@Dao\r\npublic interface ChatMessageDao {\r\n    @Insert(onConflict = IGNORE)\r\n    void insert(ChatMessageDTO chatMessageDTO);\r\n\r\n    @Delete\r\n    void delete(ChatMessageDTO chatMessageDTO);\r\n\r\n    @Query(\"SELECT * FROM chatMessage WHERE chatId = :chatId\")\r\n    ChatMessageDTO getChatMessageById(long chatId);\r\n\r\n    @Query(\"SELECT * FROM chatMessage WHERE chatRoomId = :chatRoomId\")\r\n    LiveData<List<ChatMessageDTO>> getChatMessage(long chatRoomId);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatmessageservice/ChatMessageDao.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatmessageservice/ChatMessageDao.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatmessageservice/ChatMessageDao.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/chatmessageservice/ChatMessageDao.java	(date 1664721990708)
+@@ -7,6 +7,7 @@
+ import androidx.room.Dao;
+ import androidx.room.Delete;
+ import androidx.room.Insert;
++import androidx.room.PrimaryKey;
+ import androidx.room.Query;
+ 
+ import com.lodong.android.neighborcommunication.repository.model.ChatMessageDTO;
+Index: app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.lodong.android.neighborcommunication.repository.model;\r\n\r\nimport androidx.room.ColumnInfo;\r\nimport androidx.room.Entity;\r\nimport androidx.room.Ignore;\r\nimport androidx.room.PrimaryKey;\r\n\r\n@Entity(tableName = \"chatMessage\")\r\npublic class ChatMessageDTO {\r\n    @PrimaryKey(autoGenerate = true)\r\n    private Long chatId;\r\n\r\n    @ColumnInfo(name = \"chatRoomId\")\r\n    private Long roomId;\r\n\r\n    @ColumnInfo(name=\"sender\")\r\n    private String sender;\r\n\r\n    @ColumnInfo(name=\"receiver\")\r\n    private String receiver;\r\n\r\n    @ColumnInfo(name=\"sendTime\")\r\n    private String timestamp;\r\n\r\n    @ColumnInfo(name=\"checkReceipt\")\r\n    private boolean checkReceipt;\r\n\r\n    @ColumnInfo(name=\"content\")\r\n    private String message;\r\n\r\n    @ColumnInfo(name = \"viewType\")\r\n    private int viewType;\r\n\r\n    @Ignore\r\n    private String senderNickName;\r\n    @Ignore\r\n    private String receiverNickName;\r\n\r\n    public ChatMessageDTO() {\r\n    }\r\n\r\n    public ChatMessageDTO(long roomId, String sender, String receiver, String message) {\r\n        this.roomId = roomId;\r\n        this.sender = sender;\r\n        this.receiver = receiver;\r\n        this.message = message;\r\n    }\r\n\r\n    public ChatMessageDTO(String sender, String receiver, String message) {\r\n        this.sender = sender;\r\n        this.receiver = receiver;\r\n        this.message = message;\r\n    }\r\n\r\n    public ChatMessageDTO(long chatId, long roomId, String sender, String receiver, String timestamp, boolean checkReceipt, String message, int viewType, String senderNickName, String receiverNickName) {\r\n        this.chatId = chatId;\r\n        this.roomId = roomId;\r\n        this.sender = sender;\r\n        this.receiver = receiver;\r\n        this.timestamp = timestamp;\r\n        this.checkReceipt = checkReceipt;\r\n        this.message = message;\r\n        this.viewType = viewType;\r\n        this.senderNickName = senderNickName;\r\n        this.receiverNickName = receiverNickName;\r\n    }\r\n\r\n    public long getChatId() {\r\n        return chatId;\r\n    }\r\n\r\n    public void setChatId(long chatId) {\r\n        this.chatId = chatId;\r\n    }\r\n\r\n    public long getRoomId() {\r\n        return roomId;\r\n    }\r\n\r\n    public void setRoomId(long roomId) {\r\n        this.roomId = roomId;\r\n    }\r\n\r\n    public String getSender() {\r\n        return sender;\r\n    }\r\n\r\n    public void setSender(String sender) {\r\n        this.sender = sender;\r\n    }\r\n\r\n    public String getReceiver() {\r\n        return receiver;\r\n    }\r\n\r\n    public void setReceiver(String receiver) {\r\n        this.receiver = receiver;\r\n    }\r\n\r\n    public String getTimestamp() {\r\n        return timestamp;\r\n    }\r\n\r\n    public void setTimestamp(String timestamp) {\r\n        this.timestamp = timestamp;\r\n    }\r\n\r\n    public boolean isCheckReceipt() {\r\n        return checkReceipt;\r\n    }\r\n\r\n    public void setCheckReceipt(boolean checkReceipt) {\r\n        this.checkReceipt = checkReceipt;\r\n    }\r\n\r\n    public String getMessage() {\r\n        return message;\r\n    }\r\n\r\n    public void setMessage(String message) {\r\n        this.message = message;\r\n    }\r\n\r\n    public int getViewType() {\r\n        return viewType;\r\n    }\r\n\r\n    public void setViewType(int viewType) {\r\n        this.viewType = viewType;\r\n    }\r\n\r\n    public String getSenderNickName() {\r\n        return senderNickName;\r\n    }\r\n\r\n    public void setSenderNickName(String senderNickName) {\r\n        this.senderNickName = senderNickName;\r\n    }\r\n\r\n    public String getReceiverNickName() {\r\n        return receiverNickName;\r\n    }\r\n\r\n    public void setReceiverNickName(String receiverNickName) {\r\n        this.receiverNickName = receiverNickName;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"ChatMessageDTO{\" +\r\n                \"chatId=\" + chatId +\r\n                \", roomId=\" + roomId +\r\n                \", sender='\" + sender + '\\'' +\r\n                \", receiver='\" + receiver + '\\'' +\r\n                \", timestamp='\" + timestamp + '\\'' +\r\n                \", checkReceipt=\" + checkReceipt +\r\n                \", message='\" + message + '\\'' +\r\n                \", viewType=\" + viewType +\r\n                \", senderNickName='\" + senderNickName + '\\'' +\r\n                \", receiverNickName='\" + receiverNickName + '\\'' +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java
+--- a/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/app/src/main/java/com/lodong/android/neighborcommunication/repository/model/ChatMessageDTO.java	(date 1664722378204)
+@@ -8,24 +8,24 @@
+ @Entity(tableName = "chatMessage")
+ public class ChatMessageDTO {
+     @PrimaryKey(autoGenerate = true)
+-    private Long chatId;
++    private Long chatId = 0L;
+ 
+     @ColumnInfo(name = "chatRoomId")
+     private Long roomId;
+ 
+-    @ColumnInfo(name="sender")
++    @ColumnInfo(name = "sender")
+     private String sender;
+ 
+-    @ColumnInfo(name="receiver")
++    @ColumnInfo(name = "receiver")
+     private String receiver;
+ 
+-    @ColumnInfo(name="sendTime")
++    @ColumnInfo(name = "sendTime")
+     private String timestamp;
+ 
+-    @ColumnInfo(name="checkReceipt")
++    @ColumnInfo(name = "checkReceipt")
+     private boolean checkReceipt;
+ 
+-    @ColumnInfo(name="content")
++    @ColumnInfo(name = "content")
+     private String message;
+ 
+     @ColumnInfo(name = "viewType")
+@@ -65,7 +65,7 @@
+         this.receiverNickName = receiverNickName;
+     }
+ 
+-    public long getChatId() {
++    public Long getChatId() {
+         return chatId;
+     }
+ 
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.controller;\r\n\r\nimport com.google.firebase.messaging.FirebaseMessagingException;\r\nimport com.hyunho9877.outsource.domain.ChatMessage;\r\nimport com.hyunho9877.outsource.domain.ChatRoom;\r\nimport com.hyunho9877.outsource.dto.ChatRoomDTO;\r\nimport com.hyunho9877.outsource.service.ChatService;\r\nimport com.hyunho9877.outsource.service.UserService;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.amqp.rabbit.annotation.RabbitListener;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.messaging.handler.annotation.MessageMapping;\r\nimport org.springframework.messaging.handler.annotation.Payload;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n@Slf4j\r\n@RestController\r\n@RequiredArgsConstructor\r\n@RequestMapping(\"/api/v1/chat\")\r\npublic class ChatController {\r\n\r\n    private final ChatService chatService;\r\n    private final UserService userService;\r\n\r\n    @MessageMapping(\"/msg\")\r\n    public void sendMessage(@Payload ChatMessage message) throws FirebaseMessagingException {\r\n        log.info(\"message received : {}\", message);\r\n        if (userService.isBlocked(message.getSender(), message.getReceiver())) return;\r\n        ChatMessage send = chatService.send(message);\r\n        try {\r\n            chatService.sendNotification(send);\r\n        } catch (IllegalArgumentException ignored) {\r\n            \r\n        }\r\n    }\r\n\r\n    @PostMapping(\"/new\")\r\n    public ResponseEntity<ChatRoom> newChat(@RequestBody ChatRoomDTO chatRoomDTO) {\r\n        return ResponseEntity.ok(chatService.registerNewChatRoom(chatRoomDTO.getId(), chatRoomDTO.getSubject()));\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/controller/ChatController.java	(date 1664719332142)
+@@ -30,9 +30,9 @@
+     public void sendMessage(@Payload ChatMessage message) throws FirebaseMessagingException {
+         log.info("message received : {}", message);
+         if (userService.isBlocked(message.getSender(), message.getReceiver())) return;
+-        ChatMessage send = chatService.send(message);
++        chatService.send(message);
+         try {
+-            chatService.sendNotification(send);
++            chatService.sendNotification(message);
+         } catch (IllegalArgumentException ignored) {
+             
+         }
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.service;\r\n\r\nimport com.google.firebase.messaging.FirebaseMessaging;\r\nimport com.google.firebase.messaging.FirebaseMessagingException;\r\nimport com.google.firebase.messaging.Message;\r\nimport com.google.gson.Gson;\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.domain.ChatMessage;\r\nimport com.hyunho9877.outsource.domain.ChatRoom;\r\nimport com.hyunho9877.outsource.repo.ApplicationUserRepository;\r\nimport com.hyunho9877.outsource.repo.ChatMessageRepository;\r\nimport com.hyunho9877.outsource.repo.ChatRoomRepository;\r\nimport lombok.RequiredArgsConstructor;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.amqp.rabbit.core.RabbitTemplate;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n\r\n@Service\r\n@Slf4j\r\n@RequiredArgsConstructor\r\npublic class ChatService {\r\n\r\n    private final RabbitTemplate rabbitTemplate;\r\n    private final ChatRoomRepository chatRoomRepository;\r\n    private final ChatMessageRepository messageRepository;\r\n    private final ApplicationUserRepository userRepository;\r\n\r\n    @Transactional\r\n    public ChatMessage send(ChatMessage message) {\r\n        ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();\r\n        ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();\r\n        ChatRoom chatRoom = chatRoomRepository.findById(message.getRoomId()).orElseThrow();\r\n        message.setRoom(chatRoom);\r\n\r\n        ChatMessage saved = messageRepository.save(message);\r\n        log.info(\"message saved : {}\", saved);\r\n\r\n        saved.setSenderNickName(sender.getNickName());\r\n        saved.setReceiverNickName(receiver.getNickName());\r\n\r\n        rabbitTemplate.convertAndSend(message.getReceiver(), saved);\r\n        return saved;\r\n    }\r\n\r\n    public ChatRoom registerNewChatRoom(String requester, String subject) {\r\n        if(isChatRoomAlreadyExists(requester, subject)){\r\n            ChatRoom publicRoomDetails = ChatRoom.getPublicRoomDetails(chatRoomRepository.findByRoomUserOneAndRoomUserTwo(requester, subject).orElseThrow());\r\n            log.debug(\"already exists : {}\", publicRoomDetails);\r\n            return publicRoomDetails;\r\n        }\r\n        ApplicationUser req = userRepository.findById(requester).orElseThrow();\r\n        ApplicationUser sub = userRepository.findById(subject).orElseThrow();\r\n\r\n        ChatRoom chatRoom = ChatRoom.builder()\r\n                .roomUserOne(req)\r\n                .roomUserTwo(sub)\r\n                .build();\r\n\r\n        ChatRoom save = chatRoomRepository.save(chatRoom);\r\n        ChatRoom publicRoomDetails = ChatRoom.getPublicRoomDetails(save);\r\n        log.info(\"room Created : {}\", publicRoomDetails);\r\n        return publicRoomDetails;\r\n    }\r\n\r\n    private boolean isChatRoomAlreadyExists(String requester, String subject) {\r\n        return chatRoomRepository.existsByUserOneAndUserTwo(requester, subject);\r\n    }\r\n\r\n    public void sendNotification(ChatMessage chat) throws FirebaseMessagingException, IllegalArgumentException {\r\n        ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();\r\n        rabbitTemplate.convertAndSend(chat.getSender(), chat);\r\n        if(!applicationUser.isReceiveNotification()) return;\r\n        String token = applicationUser.getFcmToken();\r\n        Message message = Message.builder()\r\n                .putData(\"title\", chat.getSender())\r\n                .putData(\"body\", chat.getMessage())\r\n                .putData(\"data\", new Gson().toJson(ChatMessage.getPublicMessageDetails(chat)))\r\n                .setToken(token)\r\n                .build();\r\n        String response = FirebaseMessaging.getInstance().send(message);\r\n        log.info(\"chatId : {}, FCM response : {}\", chat.getChatId(), response);\r\n    }\r\n\r\n    public ChatRoom getChatRoomId(String id, String subject) {\r\n        return ChatRoom.getPublicRoomDetails(chatRoomRepository.findByRoomUserOneAndRoomUserTwo(id, subject).orElseThrow());\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/ChatService.java	(date 1664720114483)
+@@ -28,7 +28,7 @@
+     private final ApplicationUserRepository userRepository;
+ 
+     @Transactional
+-    public ChatMessage send(ChatMessage message) {
++    public void send(ChatMessage message) {
+         ApplicationUser sender = userRepository.findById(message.getSender()).orElseThrow();
+         ApplicationUser receiver = userRepository.findById(message.getReceiver()).orElseThrow();
+         ChatRoom chatRoom = chatRoomRepository.findById(message.getRoomId()).orElseThrow();
+@@ -40,8 +40,7 @@
+         saved.setSenderNickName(sender.getNickName());
+         saved.setReceiverNickName(receiver.getNickName());
+ 
+-        rabbitTemplate.convertAndSend(message.getReceiver(), saved);
+-        return saved;
++        rabbitTemplate.convertAndSend(message.getReceiver(), message);
+     }
+ 
+     public ChatRoom registerNewChatRoom(String requester, String subject) {
+@@ -70,7 +69,6 @@
+ 
+     public void sendNotification(ChatMessage chat) throws FirebaseMessagingException, IllegalArgumentException {
+         ApplicationUser applicationUser = userRepository.findById(chat.getReceiver()).orElseThrow();
+-        rabbitTemplate.convertAndSend(chat.getSender(), chat);
+         if(!applicationUser.isReceiveNotification()) return;
+         String token = applicationUser.getFcmToken();
+         Message message = Message.builder()
+Index: ../outsource-backend/src/main/java/com/hyunho9877/outsource/service/AuthService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hyunho9877.outsource.service;\r\n\r\nimport com.hyunho9877.outsource.domain.ApplicationUser;\r\nimport com.hyunho9877.outsource.repo.ApplicationUserRepository;\r\nimport com.hyunho9877.outsource.utils.rabbitmq.RabbitMQManager;\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.security.crypto.password.PasswordEncoder;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\n\r\n@Service\r\n@RequiredArgsConstructor\r\npublic class AuthService {\r\n\r\n    private final ApplicationUserRepository userRepository;\r\n    private final RabbitMQManager rabbitMQManager;\r\n    private final PasswordEncoder passwordEncoder;\r\n\r\n    public void register(ApplicationUser user) {\r\n        if(isDuplicated(user.getId())) throw new IllegalStateException();\r\n        user.setPassword(passwordEncoder.encode(user.getPassword()));\r\n        ApplicationUser savedUser = userRepository.save(user);\r\n        registerNewRabbitMQAccount(savedUser.getId(), true);\r\n    }\r\n\r\n    public ApplicationUser auth(ApplicationUser user) {\r\n        ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();\r\n        if(applicationUser.getPassword().equals(user.getPassword())){\r\n            return ApplicationUser.getPublicProfile(applicationUser, false);\r\n        } else {\r\n            return null;\r\n        }\r\n    }\r\n\r\n    private boolean isDuplicated(String username) {\r\n        return userRepository.existsById(username);\r\n    }\r\n\r\n    private void registerNewRabbitMQAccount(String username, boolean durability) {\r\n        rabbitMQManager.declareQueue(username, durability);\r\n    }\r\n\r\n    public void signOut(ApplicationUser user) {\r\n        ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();\r\n        applicationUser.setFcmToken(null);\r\n    }\r\n\r\n    @Transactional\r\n    public void registerFCMToken(ApplicationUser user) {\r\n        ApplicationUser applicationUser = userRepository.findById(user.getId()).orElseThrow();\r\n        applicationUser.setFcmToken(user.getFcmToken());\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/AuthService.java b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/AuthService.java
+--- a/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/AuthService.java	(revision 7cb579089f0dda56df2be586059163fca7766c14)
++++ b/../outsource-backend/src/main/java/com/hyunho9877/outsource/service/AuthService.java	(date 1664719447725)
+@@ -4,7 +4,6 @@
+ import com.hyunho9877.outsource.repo.ApplicationUserRepository;
+ import com.hyunho9877.outsource.utils.rabbitmq.RabbitMQManager;
+ import lombok.RequiredArgsConstructor;
+-import org.springframework.security.crypto.password.PasswordEncoder;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+@@ -14,11 +13,9 @@
+ 
+     private final ApplicationUserRepository userRepository;
+     private final RabbitMQManager rabbitMQManager;
+-    private final PasswordEncoder passwordEncoder;
+ 
+     public void register(ApplicationUser user) {
+         if(isDuplicated(user.getId())) throw new IllegalStateException();
+-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+         ApplicationUser savedUser = userRepository.save(user);
+         registerNewRabbitMQAccount(savedUser.getId(), true);
+     }
